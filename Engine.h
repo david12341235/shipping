@@ -3,13 +3,17 @@
 
 #include <string>
 
-#include "Ptr.h"
-#include "PtrInterface.h"
+#include "fwk/Ptr.h"
+#include "fwk/PtrInterface.h"
 #include "Instance.h"
 
 namespace Shipping {
 
-// Create your rep/engine interface here.
+class Engine : public Fwk::PtrInterface<Engine> {
+public:
+	typedef Fwk::Ptr<Engine> Ptr;
+	typedef Fwk::Ptr<Engine const> PtrConst;
+};
 
 } /* end namespace */
 

@@ -2,12 +2,16 @@
 #include <iostream>
 #include <map>
 #include <vector>
+#include <string>
 #include "Instance.h"
 #include "Engine.h"
+#include "fwk/ListRaw.h"
+#include "fwk/NamedInterface.h"
 
 namespace Shipping {
-
+	
 using namespace std;
+using std::string;
 
 //
 // Rep layer classes
@@ -31,6 +35,22 @@ public:
 private:
     map<string,Ptr<Instance> > instance_;
     Engine::Ptr engine_;
+};
+
+class Segment : public Fwk::NamedInterface {
+public:
+	typedef Fwk::Ptr<Segment const> PtrConst;
+	typedef Fwk::Ptr<Segment> Ptr;
+	typedef int SegmentId;
+	enum Mode {
+		truck_ = 0,
+		boat_ = 1,
+		plane_ = 2,
+	};
+	static inline Mode truck() { return truck_; }
+	static inline Mode boat() { return boat_; }
+	static inline Mode plane() { return plane_; }
+	static SegmentId SegmentIdInstance ( int v );
 };
 
 class LocationRep : public Instance {
@@ -166,7 +186,7 @@ public:
 class FleetRep : public Instance {
 public:
 
-    LocationRep(const string& name, ManagerImpl* manager) :
+    FleetRep(const string& name, ManagerImpl* manager) :
         Instance(name), manager_(manager)
     {
         // Nothing else to do.
@@ -206,7 +226,7 @@ private:
 class StatsRep : public Instance {
 public:
 
-    LocationRep(const string& name, ManagerImpl* manager) :
+    StatsRep(const string& name, ManagerImpl* manager) :
         Instance(name), manager_(manager)
     {
         // Nothing else to do.
@@ -270,35 +290,21 @@ Segment::SegmentId LocationRep::segmentNumber(const string& name) {
     return 0;
 }
 
-
+Segment::SegmentId Segment::SegmentIdInstance ( int v ) {
+	// TODO: implement
+	return 0;
 }
-
-class Segment : public Fwk::NamedInterface {
-public:
-	typedef Fwk::Ptr<Segment const> PtrConst;
-	typedef Fwk::Ptr<Segment> Ptr;
-	typedef int SegmentId;
-	enum Mode {
-		truck_ = 0;
-		boat_ = 1;
-		plane_ = 2;
-	};
-	static inline Mode truck() { return truck_; }
-	static inline Mode boat() { return boat_; }
-	static inline Mode plane() { return plane_; }
-	static SegmentId SegmentIdInstance ( int v );
-};
 
 class Location : public Fwk::NamedInterface {
 public:
 	typedef Fwk::Ptr<Location const> PtrConst;
 	typedef Fwk::Ptr<Location> Ptr;
 	enum Type {
-		customer_ = 0;
-		port_ = 1;
-		truck_ = 2;
-		boat_ = 3;
-		plane_ = 4;
+		customer_ = 0,
+		port_ = 1,
+		truck_ = 2,
+		boat_ = 3,
+		plane_ = 4,
 	};
 	static inline Type customer() { return customer_; }
 	static inline Type port() { return port_; }
@@ -320,6 +326,9 @@ public:
 		Location::PtrConst notifier() const { return notifier_; }
 		NotifieeConst const * lrNext() const { return lrNext_; }
 		NotifieeConst * lrNext() { return lrNext_; }
+		void lrNextIs(NotifieeConst * _lrNext) {
+			lrNext_ = _lrNext;
+		}
 	
 		~NotifieeConst();
 		virtual void notifierIs(const Location::PtrConst& _notifier);
@@ -336,7 +345,7 @@ public:
 		NotifieeConst* lrNext_;
 		NotifieeConst(): Fwk::NamedInterface::NotifieeConst(),
 			lrNext_(0) { }
-	}
+	};
 
 	class Notifiee : public virtual NotifieeConst, public virtual Fwk::NamedInterface::Notifiee {
 	public:
@@ -346,7 +355,7 @@ public:
 		Location::Ptr notifier() { return const_cast<Location *>(NotifieeConst::notifier().ptr()); }
 
 		static Notifiee::Ptr NotifieeIs() {
-			Ptr m = new NotifieeIs();
+			Ptr m = new Notifiee();
 			m->referencesDec(1);
 			return m;
 		}
@@ -371,6 +380,10 @@ protected:
 	Location( const string& _name, Type _type, Engine* _engine );
 	Type type_;
 	vector< Segment::Ptr > segment_;
+	NotifieeList notifiee_;
+};
+
+
 }
 
 
