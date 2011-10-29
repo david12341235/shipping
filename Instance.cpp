@@ -244,7 +244,9 @@ Ptr<Instance> ManagerImpl::instanceNew(const string& name, const string& type) {
 Ptr<Instance> ManagerImpl::instance(const string& name) {
     map<string,Ptr<Instance> >::const_iterator t = instance_.find(name);
 
-    return t == instance_.end() ? NULL : (*t).second;
+	if( t == instance_.end() ) return NULL;
+	else return (*t).second;
+    //return t == instance_.end() ? NULL : (*t).second;
 }
 
 void ManagerImpl::instanceDel(const string& name) {
