@@ -152,14 +152,13 @@ class Location : public Fwk::NamedInterface {
 public:
 	typedef Fwk::Ptr<Location const> PtrConst;
 	typedef Fwk::Ptr<Location> Ptr;
-};
-/*
+
 	enum Type {
-		customer_ = 0;
-		port_ = 1;
-		truck_ = 2;
-		boat_ = 3;
-		plane_ = 4;
+		customer_ = 0,
+		port_ = 1,
+		truck_ = 2,
+		boat_ = 3,
+		plane_ = 4,
 	};
 	static inline Type customer() { return customer_; }
 	static inline Type port() { return port_; }
@@ -169,8 +168,11 @@ public:
 
 	static Type TypeInstance( Fwk::String );
 	Type type() { return type_; }
-	virtual void typeIs( Type _type ) { type_ = _type }
-
+	virtual void typeIs( Type _type ) { type_ = _type; }
+// added to compile
+protected: 	Type type_;
+};
+/*
 	string segment( Segment::SegmentId _segmentId );
 	void segmentIs(); // does nothing
 
@@ -330,6 +332,7 @@ protected:
 	map<Mode, fleetInfo> fleet_;
 };
 */
+
 class Stats : public Fwk::NamedInterface {
 public:
 	typedef Fwk::Ptr<Stats const> PtrConst;
@@ -337,31 +340,36 @@ public:
 	typedef double Percentage; // make Value if needed
 
 	U32 customer() { return customer_; }
-	U32 customerIs() {}
+	void customerIs(U32 v) {}
 
 	U32 port() { return port_; }
-	U32 portIs() {}
+	void portIs(U32 v) {}
 
 	U32 truckTerminal() { return truckTerminal_; }
-	U32 truckTerminalIs() {}
+	void truckTerminalIs(U32 v) {}
 
 	U32 boatTerminal() { return boatTerminal_; }
-	U32 boatTerminalIs() {}
+	void boatTerminalIs(U32 v) {}
 
 	U32 planeTerminal() { return planeTerminal_; }
-	U32 planeTerminalIs() {}
+	void planeTerminalIs(U32 v) {}
 
 	U32 truckSegment() { return truckSegment_; }
-	U32 truckSegmentIs() {}
+	void truckSegmentIs(U32 v) {}
 
 	U32 boatSegment() { return boatSegment_; }
-	U32 boatSegmentIs() {}
+	void boatSegmentIs(U32 v) {}
 
 	U32 planeSegment() { return planeSegment_; }
-	U32 planeSegmentIs() {}
-
+	void planeSegmentIs(U32 v) {}
+	
 	Percentage expedite();
-	Percentage expediteIs() {}
+	void expediteIs(Percentage v) {}
+
+	U32 expediteNum();
+	void expediteNumIs(U32 v) {}
+	
+	U32 totalSegments();
 
 	typedef Fwk::ListRaw<NotifieeConst> NotifieeList;
 	typedef NotifieeList::IteratorConst NotifieeIteratorConst;
@@ -390,23 +398,8 @@ protected:
 	NotifieeList notifiee_;
 };
 
-
-class Stats;
 class Conn;
 class Fleet;
-class Segment;
-
-class SegmentReactor : public Segment::Notifiee {
-public:
-	SegmentReactor(Engine* e) : engine_(e) {}
-	// maybe not necessary?
-/*	virtual void onSourceIs( Segment::Ptr _segment ) {
-		Location::Ptr l = engine_->location(_segment->source());
-		// update location
-	}*/
-private:
-	Fwk::Ptr<Engine> engine_;
-};
 
 class Engine : public Fwk::PtrInterface<Engine> {
 public:
@@ -431,6 +424,103 @@ public:
 
 	Location::Ptr location(const string& name);
 	Segment::Ptr segment(const string& name);
+
+	class NotifieeConst : public virtual Fwk::NamedInterface::NotifieeConst {
+	public:
+		typedef Fwk::Ptr<NotifieeConst const> PtrConst;
+		typedef Fwk::Ptr<NotifieeConst> Ptr;
+		string name() const { return notifier_->name(); }
+		Segment::PtrConst notifier() const { return notifier_; }
+		NotifieeConst const * lrNext() const { return lrNext_; }
+		NotifieeConst * lrNext() { return lrNext_; }
+		void lrNextIs(NotifieeConst * _lrNext) {
+			lrNext_ = _lrNext;
+		}
+	
+		~NotifieeConst();
+		virtual void notifierIs(const Segment::PtrConst& _notifier);
+		virtual void onSegmentIs(Segment::Ptr s) {}
+		virtual void onLocationIs(Location::Ptr l) {}
+
+		static NotifieeConst::Ptr NotifieeConstIs() {
+			Ptr m = new NotifieeConst();
+			m->referencesDec(1);
+			return m;
+		}
+	protected:
+		Segment::PtrConst notifier_;
+
+		NotifieeConst* lrNext_;
+		NotifieeConst(): Fwk::NamedInterface::NotifieeConst(),
+			lrNext_(0) { }
+	};
+
+	class Notifiee : public virtual NotifieeConst, public virtual Fwk::NamedInterface::Notifiee {
+	public:
+		typedef Fwk::Ptr<Notifiee const> PtrConst;
+		typedef Fwk::Ptr<Notifiee> Ptr;
+		Segment::PtrConst notifier() const { return NotifieeConst::notifier(); }
+		Segment::Ptr notifier() { return const_cast<Segment *>(NotifieeConst::notifier().ptr()); }
+
+		static Notifiee::Ptr NotifieeIs() {
+			Ptr m = new Notifiee();
+			m->referencesDec(1);
+			return m;
+		}
+	protected:
+		Notifiee(): Fwk::NamedInterface::Notifiee() { }
+	};
+
+	typedef Fwk::ListRaw<NotifieeConst> NotifieeList;
+	typedef NotifieeList::IteratorConst NotifieeIteratorConst;
+	NotifieeIteratorConst notifieeIterConst() const { return notifiee_.iterator(); }
+	U32 notifiees() const { return notifiee_.members(); }
+
+private:
+	NotifieeList notifiee_;
+};
+
+class LocationSegmentReactor : public Engine::Notifiee {
+public:
+	LocationSegmentReactor(Stats* e) : stats_(e) {}
+	
+	virtual void onSegmentIs(Segment::Ptr s) {
+		switch(s->mode()) {
+		case Segment::truck_:
+			stats_->truckSegmentIs(stats_->truckSegment() + 1);
+			break;
+		case Segment::boat_:
+			stats_->boatSegmentIs(stats_->boatSegment() + 1);
+			break;
+		case Segment::plane_:
+			stats_->planeSegmentIs(stats_->planeSegment() + 1);
+			break;
+		}
+
+		if (s->expedite()) stats_->expediteNumIs(stats_->expediteNum() + 1);
+	}
+	
+	virtual void onLocationIs(Location::Ptr l) {
+		switch(l->type()) {
+		case Location::customer_:
+			stats_->customerIs(stats_->customer() + 1);
+			break;
+		case Location::port_:
+			stats_->portIs(stats_->port() + 1);
+			break;
+		case Location::truck_:
+			stats_->truckTerminalIs(stats_->truckTerminal() + 1);
+			break;
+		case Location::boat_:
+			stats_->boatTerminalIs(stats_->boatTerminal() + 1);
+			break;
+		case Location::plane_:
+			stats_->planeTerminalIs(stats_->planeTerminal() + 1);
+			break;
+		}
+	}
+private:
+	Stats::Ptr stats_;
 };
 
 } /* end namespace */
