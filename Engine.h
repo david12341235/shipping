@@ -8,32 +8,10 @@
 #include "fwk/PtrInterface.h"
 #include "fwk/NamedInterface.h"
 #include "fwk/ListRaw.h"
+#include "fwk/LinkedList.h"
 #include "Instance.h"
 
 namespace Shipping {
-
-class Segment : public Fwk::NamedInterface {
-public:
-	typedef Fwk::Ptr<Segment const> PtrConst;
-	typedef Fwk::Ptr<Segment> Ptr;
-	typedef int SegmentId;
-	enum Mode {
-		truck_ = 0,
-		boat_ = 1,
-		plane_ = 2,
-	};
-	static inline Mode truck() { return truck_; }
-	static inline Mode boat() { return boat_; }
-	static inline Mode plane() { return plane_; }
-	static SegmentId SegmentIdInstance ( int v );
-};
-
-class Engine : public Fwk::PtrInterface<Engine> {
-public:
-	typedef Fwk::Ptr<Engine> Ptr;
-	typedef Fwk::Ptr<Engine const> PtrConst;
-};
-
 class Location : public Fwk::NamedInterface {
 public:
 	typedef Fwk::Ptr<Location const> PtrConst;
@@ -73,6 +51,7 @@ public:
 		virtual void notifierIs(const Location::PtrConst& _notifier);
 		virtual void onSegmentNew( Segment::Ptr _segment ) {}
 		virtual void onSegmentDel( Segment::Ptr _segment ) {}
+		virtual void onSource( Segment::Ptr _segment ) {}
 		static NotifieeConst::Ptr NotifieeConstIs() {
 			Ptr m = new NotifieeConst();
 			m->referencesDec(1);
@@ -120,6 +99,78 @@ protected:
 	Type type_;
 	std::vector< Segment::Ptr > segment_;
 	NotifieeList notifiee_;
+};
+
+class Segment : public Fwk::NamedInterface {
+public:
+	typedef Fwk::Ptr<Segment const> PtrConst;
+	typedef Fwk::Ptr<Segment> Ptr;
+	typedef int SegmentId;
+	typedef int Length;
+	typedef bool ExpediteSupport;
+
+	enum Mode {
+		truck_ = 0,
+		boat_ = 1,
+		plane_ = 2,
+	};
+	static inline Mode truck() { return truck_; }
+	static inline Mode boat() { return boat_; }
+	static inline Mode plane() { return plane_; }
+	static SegmentId SegmentIdInstance ( int v );
+	
+	Location::Ptr source();
+	void sourceIs(Location::Ptr l);
+
+	Length length();
+	void lengthIs(Length l);
+
+	Segment::Ptr returnSegment();
+	void returnSegmentIs(Segment::Ptr p);
+
+	ExpediteSupport expediteSupport();
+	void expediteSupportIs(ExpediteSupport e);
+};
+
+class Stats;
+class Conn;
+class Fleet;
+
+class SegmentReactor : public Segment::Notifiee {
+public:
+	SegmentReactor(Engine* e) : engine_(e) {}
+	// maybe not necessary?
+/*	virtual void onSourceIs( Segment::Ptr _segment ) {
+		Location::Ptr l = engine_->location(_segment->source());
+		// update location
+	}*/
+private:
+	Engine::Ptr engine_;
+};
+
+class Engine : public Fwk::PtrInterface<Engine> {
+public:
+	typedef Fwk::Ptr<Engine> Ptr;
+	typedef Fwk::Ptr<Engine const> PtrConst;
+
+	Engine(Stats* s, Conn* c, Fleet* f);
+	
+	// add a new segment
+	void segmentIs(Segment s);
+
+	// add a new location
+	void locationIs(Location s);
+
+	// change to Stats::Ptr etc when the classes are defined
+	Stats* stats();
+	Stats* fleet();
+	Stats* conn();
+	
+	Fwk::LinkedList<Location::Ptr> locations();
+	Fwk::LinkedList<Segment::Ptr> segments();
+
+	Location::Ptr location(const string& name);
+	Segment::Ptr segment(const string& name);
 };
 
 } /* end namespace */
