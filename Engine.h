@@ -315,34 +315,35 @@ protected:
 	Fleet( const string& _name, Engine* _engine );
 	map<Mode, fleetInfo> fleet_;
 };
-
+*/
 class Stats : public Fwk::NamedInterface {
 public:
 	typedef Fwk::Ptr<Stats const> PtrConst;
 	typedef Fwk::Ptr<Stats> Ptr;
+	typedef double Percentage; // make Value if needed
 
-	U32 customer() { return customer_ }
+	U32 customer() { return customer_; }
 	U32 customerIs() {}
 
-	U32 port() { return port_ }
+	U32 port() { return port_; }
 	U32 portIs() {}
 
-	U32 truckTerminal() { return truckTerminal_ }
+	U32 truckTerminal() { return truckTerminal_; }
 	U32 truckTerminalIs() {}
 
-	U32 boatTerminal() { return boatTerminal_ }
+	U32 boatTerminal() { return boatTerminal_; }
 	U32 boatTerminalIs() {}
 
-	U32 planeTerminal() { return planeTerminal_ }
+	U32 planeTerminal() { return planeTerminal_; }
 	U32 planeTerminalIs() {}
 
-	U32 truckSegment() { return truckSegment_ }
+	U32 truckSegment() { return truckSegment_; }
 	U32 truckSegmentIs() {}
 
-	U32 boatSegment() { return boatSegment_ }
+	U32 boatSegment() { return boatSegment_; }
 	U32 boatSegmentIs() {}
 
-	U32 planeSegment() { return planeSegment_ }
+	U32 planeSegment() { return planeSegment_; }
 	U32 planeSegmentIs() {}
 
 	Percentage expedite();
@@ -372,8 +373,9 @@ protected:
 	U32 boatSegment_;
 	U32 planeSegment_;
 	U32 expedite_;
+	NotifieeList notifiee_;
 };
-*/
+
 
 class Stats;
 class Conn;
@@ -407,8 +409,8 @@ public:
 
 	// change to Stats::Ptr etc when the classes are defined
 	Stats* stats();
-	Stats* fleet();
-	Stats* conn();
+	Fleet* fleet();
+	Conn* conn();
 	
 	Fwk::LinkedList<Location::Ptr> locations();
 	Fwk::LinkedList<Segment::Ptr> segments();

@@ -269,7 +269,7 @@ public:
 
     Iterator iterator() { return Iterator( this, head_ ); }
 
-    void deleteAll() {
+    void deleteAll();/* {
         Ptr<T> c = head_;
         head_ = 0;
         if( c ) {
@@ -280,7 +280,7 @@ public:
 	}
         ++version_;
 	members_ = 0;
-    }
+    }*/
    virtual ~ListRaw() { deleteAll(); }
    U32 auditErrors( U32 scope ) const {
       U32 count = 0;
