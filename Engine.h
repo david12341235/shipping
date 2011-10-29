@@ -10,8 +10,24 @@
 #include "fwk/ListRaw.h"
 #include "fwk/LinkedList.h"
 #include "Instance.h"
+#include "Nominal.h"
 
 namespace Shipping {
+
+class Mile : public Ordinal<Mile, unsigned int> {
+public:
+	Mile( unsigned int num ) : Ordinal<Mile, unsigned int>(num) {}
+};
+
+class Difficulty : public Ordinal<Difficulty, double> {
+public:
+	Difficulty( double num ) : Ordinal<Difficulty, double>(num) {}
+};
+
+class Percentage : public Ordinal<Percentage, double> {
+public:
+	Percentage( double num ) : Ordinal<Percentage, double>(num) {}
+};
 
 class Engine;
 
@@ -20,8 +36,6 @@ public:
 	typedef Fwk::Ptr<Segment const> PtrConst;
 	typedef Fwk::Ptr<Segment> Ptr;
 	typedef int SegmentId;
-	typedef int Miles;
-	typedef double Difficulty; // make this Value class to check bounds
 
 	enum Mode {
 		truck_ = 0,
@@ -40,8 +54,8 @@ public:
 	static inline ExpVal expNo() { return expNo_; }
 	static inline ExpVal expYes() { return expYes_; }
 	static SegmentId SegmentIdInstance ( int v );
-	static Mode TypeInstance( Fwk::String );
-//	static ExpVal TypeInstance( Fwk::String );
+	static Mode ModeInstance( Fwk::String );
+	static ExpVal ExpValInstance( Fwk::String );
 
 	Mode mode() { return mode_; }
 	virtual void modeIs( Mode v ){ mode_ = v; }
@@ -49,8 +63,8 @@ public:
 	std::string source(){ return source_; }
 	void sourceIs( const std::string& _source );
 
-	Miles length(){ return length_; }
-	void lengthIs( const Miles& _length ) { length_ = _length; }
+	Mile length(){ return length_; }
+	void lengthIs( const Mile& _length ) { length_ = _length; }
 
 	string returnSegment(){ return returnSegment_; }
 	void returnSegmentIs( const string& _returnSegment ); 
@@ -127,7 +141,7 @@ protected:
 	Segment( const string& _name, Mode _mode, Engine* _engine );
 	Mode mode_;
 	string source_;
-	Miles length_;
+	Mile length_;
 	Difficulty difficulty_;
 	ExpVal expedite_;
 	string returnSegment_;
