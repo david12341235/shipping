@@ -2,10 +2,12 @@
 #define ENGINE_H
 
 #include <string>
+#include <vector>
 
 #include "fwk/Ptr.h"
 #include "fwk/PtrInterface.h"
 #include "fwk/NamedInterface.h"
+#include "fwk/ListRaw.h"
 #include "Instance.h"
 
 namespace Shipping {
@@ -116,7 +118,7 @@ protected:
 	Location( const Location& );
 	Location( const string& _name, Type _type, Engine* _engine );
 	Type type_;
-	vector< Segment::Ptr > segment_;
+	std::vector< Segment::Ptr > segment_;
 	NotifieeList notifiee_;
 };
 
