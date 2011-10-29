@@ -426,7 +426,7 @@ public:
 
 	Stats::Ptr stats();
 	Fleet::Ptr fleet();
-	Conn::Ptr conn();
+	Conn* conn();
 	
 	Fwk::LinkedList<Location::Ptr> locations();
 	Fwk::LinkedList<Segment::Ptr> segments();
