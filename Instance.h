@@ -2,8 +2,8 @@
 #define INSTANCE_H
 
 #include <string>
-#include "Ptr.h"
-#include "PtrInterface.h"
+#include "fwk/Ptr.h"
+#include "fwk/PtrInterface.h"
 
 using std::string;
 using Fwk::Ptr;

@@ -2,9 +2,12 @@
 #define ENGINE_H
 
 #include <string>
+#include <vector>
 
-#include "Ptr.h"
-#include "PtrInterface.h"
+#include "fwk/Ptr.h"
+#include "fwk/PtrInterface.h"
+#include "fwk/NamedInterface.h"
+#include "fwk/ListRaw.h"
 #include "Instance.h"
 
 namespace Shipping {
@@ -357,6 +360,12 @@ protected:
 	U32 boatSegment_;
 	U32 planeSegment_;
 	U32 expedite_;
+};
+
+class Engine : public Fwk::PtrInterface<Engine> {
+public:
+	typedef Fwk::Ptr<Engine> Ptr;
+	typedef Fwk::Ptr<Engine const> PtrConst;
 };
 
 

@@ -2,12 +2,16 @@
 #include <iostream>
 #include <map>
 #include <vector>
+#include <string>
 #include "Instance.h"
 #include "Engine.h"
+#include "fwk/ListRaw.h"
+#include "fwk/NamedInterface.h"
 
 namespace Shipping {
-
+	
 using namespace std;
+using std::string;
 
 //
 // Rep layer classes
@@ -32,6 +36,7 @@ private:
     map<string,Ptr<Instance> > instance_;
     Engine::Ptr engine_;
 };
+
 
 class LocationRep : public Instance {
 public:
@@ -166,7 +171,7 @@ public:
 class FleetRep : public Instance {
 public:
 
-    LocationRep(const string& name, ManagerImpl* manager) :
+    FleetRep(const string& name, ManagerImpl* manager) :
         Instance(name), manager_(manager)
     {
         // Nothing else to do.
@@ -206,7 +211,7 @@ private:
 class StatsRep : public Instance {
 public:
 
-    LocationRep(const string& name, ManagerImpl* manager) :
+    StatsRep(const string& name, ManagerImpl* manager) :
         Instance(name), manager_(manager)
     {
         // Nothing else to do.
