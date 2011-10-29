@@ -105,7 +105,7 @@ public:
 		virtual void onLength() {}
 		virtual void onReturnSegment() {}
 		virtual void onDifficulty() {}
-		virtual void onExpedite() {}
+		virtual void onExpedite(Segment::Ptr s) {}
 
 		static NotifieeConst::Ptr NotifieeConstIs() {
 			Ptr m = new NotifieeConst();
@@ -531,6 +531,20 @@ public:
 private:
 	Stats::Ptr stats_;
 };
+
+class SegmentExpediteReactor : public Segment::Notifiee {
+public:
+	SegmentExpediteReactor(Stats* e) : stats_(e) {}
+	virtual void onExpedite(Segment::Ptr s) {
+		if (s->expedite())
+			stats_->expediteNumIs(stats_->expediteNum() + 1);
+		else
+			stats_->expediteNumIs(stats_->expediteNum() - 1);
+	}
+private:
+	Stats::Ptr stats_;
+};
+
 
 } /* end namespace */
 
