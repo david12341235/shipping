@@ -3,6 +3,7 @@
 
 #include <string>
 #include <vector>
+#include <map>
 
 #include "fwk/Ptr.h"
 #include "fwk/PtrInterface.h"
@@ -13,6 +14,7 @@
 #include "Nominal.h"
 
 namespace Shipping {
+using namespace std;
 
 class Mile : public Ordinal<Mile, unsigned int> {
 public:
@@ -27,6 +29,16 @@ public:
 class Percentage : public Ordinal<Percentage, double> {
 public:
 	Percentage( double num ) : Ordinal<Percentage, double>(num) {}
+};
+
+class Mph : public Ordinal<Mph, double> {
+public:
+	Mph( double num ) : Ordinal<Mph, double>(num) {}
+};
+
+class Dollar : public Ordinal<Dollar, double> {
+public:
+	Dollar( double num ) : Ordinal<Dollar, double>(num) {}
 };
 
 class Engine;
@@ -169,10 +181,6 @@ public:
 	static Type TypeInstance( Fwk::String );
 	Type type() { return type_; }
 	virtual void typeIs( Type _type ) { type_ = _type; }
-// added to compile
-protected: 	Type type_;
-};
-/*
 	string segment( Segment::SegmentId _segmentId );
 	void segmentIs(); // does nothing
 
@@ -200,7 +208,7 @@ protected: 	Type type_;
 		NotifieeConst* lrNext_;
 		NotifieeConst(): Fwk::NamedInterface::NotifieeConst(),
 			lrNext_(0) { }
-	}
+	};
 
 	class Notifiee : public virtual NotifieeConst, public virtual Fwk::NamedInterface::Notifiee {
 	public:
@@ -210,7 +218,7 @@ protected: 	Type type_;
 		Location::Ptr notifier() { return const_cast<Location *>(NotifieeConst::notifier().ptr()); }
 
 		static Notifiee::Ptr NotifieeIs() {
-			Ptr m = new NotifieeIs();
+			Ptr m = new Notifiee();
 			m->referencesDec(1);
 			return m;
 		}
@@ -235,6 +243,7 @@ protected:
 	Location( const string& _name, Type _type, Engine* _engine );
 	Type type_;
 	vector< string > segment_;
+	NotifieeList notifiee_;
 };
 
 class Fleet : public Fwk::NamedInterface {
@@ -243,17 +252,20 @@ public:
 	typedef Fwk::Ptr<Fleet> Ptr;
 
 	enum Mode {
-		truck_ = 0;
-		boat_ = 1;
-		plane_ = 2;
+		truck_ = 0,
+		boat_ = 1,
+		plane_ = 2,
 	};
 
 	struct fleetInfo
 	{
 		Mph speed_;
 		U32 capacity_;
-		Dollars cost;
-	}
+		Dollar cost_;
+
+		public:
+			fleetInfo() : speed_(0.0), capacity_(0), cost_(0.0) {}
+	};
 
 	static inline Mode truck() { return truck_; }
 	static inline Mode boat() { return boat_; }
@@ -261,14 +273,14 @@ public:
 
 	static Mode TypeInstance( Fwk::String );
 
-	Mph speed( Mode m ) { return fleet_[m].speed_ }
-	void speedIs( Mph _speed ) { fleet_[m].speed_ = _speed }
+	Mph speed( Mode m ) { return fleet_[m].speed_; }
+	void speedIs( Mode m, Mph _speed ) { fleet_[m].speed_ = _speed; }
 
-	U32 capacity( Mode m ) { return fleet_[m].capacity_ }
-	void capacityIs( U32 _capacity ) { fleet_[m].capacity_ = _capacity }
+	U32 capacity( Mode m ) { return fleet_[m].capacity_; }
+	void capacityIs( Mode m, U32 _capacity ) { fleet_[m].capacity_ = _capacity; }
 
-	Dollars cost( Mode m ) { return fleet_[m].cost_ }
-	void costIs( Dollars _cost ) { fleet_[m].cost_ = _cost }
+	Dollar cost( Mode m ) { return fleet_[m].cost_; }
+	void costIs( Mode m, Dollar _cost ) { fleet_[m].cost_ = _cost; }
 
 	class NotifieeConst : public virtual Fwk::NamedInterface::NotifieeConst {
 	public:
@@ -306,7 +318,7 @@ public:
 		Fleet::Ptr notifier() { return const_cast<Fleet *>(NotifieeConst::notifier().ptr()); }
 
 		static Notifiee::Ptr NotifieeIs() {
-			Ptr m = new NotifieeIs();
+			Ptr m = new Notifiee();
 			m->referencesDec(1);
 			return m;
 		}
@@ -330,8 +342,8 @@ protected:
 	Fleet( const Fleet& );
 	Fleet( const string& _name, Engine* _engine );
 	map<Mode, fleetInfo> fleet_;
+	NotifieeList notifiee_;
 };
-*/
 
 class Stats : public Fwk::NamedInterface {
 public:
@@ -408,16 +420,13 @@ public:
 
 	Engine(Stats* s, Conn* c, Fleet* f);
 	
-	// add a new segment
 	void segmentIs(Segment s);
 
-	// add a new location
 	void locationIs(Location s);
 
-	// change to Stats::Ptr etc when the classes are defined
-	Stats* stats();
-	Fleet* fleet();
-	Conn* conn();
+	Stats::Ptr stats();
+	Fleet::Ptr fleet();
+	Conn::Ptr conn();
 	
 	Fwk::LinkedList<Location::Ptr> locations();
 	Fwk::LinkedList<Segment::Ptr> segments();
@@ -439,8 +448,8 @@ public:
 	
 		~NotifieeConst();
 		virtual void notifierIs(const Segment::PtrConst& _notifier);
-		virtual void onSegmentIs(Segment::Ptr s) {}
-		virtual void onLocationIs(Location::Ptr l) {}
+		virtual void onSegment(Segment::Ptr s) {}
+		virtual void onLocation(Location::Ptr l) {}
 
 		static NotifieeConst::Ptr NotifieeConstIs() {
 			Ptr m = new NotifieeConst();
