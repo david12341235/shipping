@@ -996,7 +996,7 @@ public:
 	class SegmentExpediteReactor;
 	class LocationSegmentReactor;
 	
-	static Stats::Ptr StatsIs( const string& _name, Engine* _engine ) {
+	static Stats::Ptr statsNew( const string& _name, Engine* _engine ) {
 		Ptr m = new Stats( _name, _engine );
 		m->referencesDec(1);
 		return m;
