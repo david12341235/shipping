@@ -55,9 +55,8 @@ public:
 
 private:
     Ptr<ManagerImpl> manager_;
-
     Segment::SegmentId segmentNumber(const string& name);
-
+	Location::Ptr location_;
 };
                                                                                                   
 class CustomerRep : public LocationRep {
@@ -132,7 +131,7 @@ public:
 
 private:
     Ptr<ManagerImpl> manager_;
-
+	Segment::Ptr segment_;
 };
 
 class TruckSegmentRep : public SegmentRep {
@@ -185,7 +184,7 @@ public:
 
 private:
     Ptr<ManagerImpl> manager_;
-
+	Fleet::Ptr fleet_;
 };
 
 class ConnRep : public Instance {
@@ -205,16 +204,16 @@ public:
 
 private:
     Ptr<ManagerImpl> manager_;
-
+	Conn::Ptr conn_;
 };
 
 class StatsRep : public Instance {
 public:
 
     StatsRep(const string& name, ManagerImpl* manager) :
-        Instance(name), manager_(manager)
+	  Instance(name), manager_(manager)
     {
-        // Nothing else to do.
+		stats_ = Stats::statsNew(name);
     }
 
     // Instance method
@@ -225,7 +224,7 @@ public:
 
 private:
     Ptr<ManagerImpl> manager_;
-
+	Stats::Ptr stats_;
 };
 
 ManagerImpl::ManagerImpl() {
@@ -329,4 +328,8 @@ Segment::SegmentId LocationRep::segmentNumber(const string& name) {
  */
 Ptr<Instance::Manager> shippingInstanceManager() {
     return new Shipping::ManagerImpl();
+}
+
+Shipping::Engine::Ptr Shipping::ManagerImpl::engine() {
+	return NULL;
 }

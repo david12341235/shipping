@@ -19,6 +19,7 @@ using namespace std;
 
 class Engine;
 class Location;
+typedef Fwk::Ptr<Engine> EnginePtr;
 
 class Segment : public Fwk::NamedInterface {
 public:
@@ -787,6 +788,9 @@ public:
 	void expeditedIs( Segment::ExpVal _expedited ) { expedited_ = _expedited; }
 
 	string value();
+	
+	EnginePtr engine() { return engine_; };
+	void engineIs(EnginePtr e) { engine_ = e; };
 
 	class NotifieeConst : public virtual Fwk::NamedInterface::NotifieeConst {
 	public:
@@ -842,12 +846,14 @@ public:
 
 protected:
 	Conn( const Conn& );
+	Conn( const string& _name);
 	Conn( const string& _name, Engine* _engine );
 	NotifieeList notifiee_;
 	Mile distance_;
 	Dollar cost_;
 	Hour time_;
 	Segment::ExpVal expedited_;
+	EnginePtr engine_;
 };
 
 class Fleet : public Fwk::NamedInterface {
@@ -885,6 +891,9 @@ public:
 
 	Dollar cost( Mode m ) { return fleet_[m].cost_; }
 	void costIs( Mode m, Dollar _cost ) { fleet_[m].cost_ = _cost; }
+	
+	EnginePtr engine() { return engine_; };
+	void engineIs(EnginePtr e) { engine_ = e; };
 
 	class NotifieeConst : public virtual Fwk::NamedInterface::NotifieeConst {
 	public:
@@ -944,9 +953,11 @@ public:
 
 protected:
 	Fleet( const Fleet& );
-	Fleet( const string& _name, Engine* _engine );
+	Fleet( const string& _name, EnginePtr _engine );
+	Fleet( const string& _name);
 	map<Mode, fleetInfo> fleet_;
 	NotifieeList notifiee_;
+	EnginePtr engine_;
 };
 
 class Stats : public Fwk::NamedInterface {
@@ -987,6 +998,9 @@ public:
 	
 	U32 totalSegments();
 
+	EnginePtr engine() { return engine_; };
+	void engineIs(EnginePtr e) { engine_ = e; };
+
 	typedef Fwk::ListRaw<NotifieeConst> NotifieeList;
 	typedef NotifieeList::IteratorConst NotifieeIteratorConst;
 	NotifieeIteratorConst notifieeIterConst() const { return notifiee_.iterator(); }
@@ -996,15 +1010,22 @@ public:
 	class SegmentExpediteReactor;
 	class LocationSegmentReactor;
 	
-	static Stats::Ptr statsNew( const string& _name, Engine::Ptr _engine ) {
+	static Stats::Ptr statsNew( const string& _name, EnginePtr _engine ) {
 		Ptr m = new Stats( _name, _engine );
+		m->referencesDec(1);
+		return m;
+	}
+
+	static Stats::Ptr statsNew( const string& _name) {
+		Ptr m = new Stats( _name);
 		m->referencesDec(1);
 		return m;
 	}
 
 protected:
 	Stats( const Stats& );
-	Stats( const string& _name, Engine* _engine );
+	Stats( const string& _name) : NamedInterface(_name) { };
+	Stats( const string& _name, EnginePtr _engine);
 	U32 customer_;
 	U32 port_;
 	U32 truckTerminal_;
@@ -1015,6 +1036,8 @@ protected:
 	U32 planeSegment_;
 	U32 expedite_;
 	NotifieeList notifiee_;
+	EnginePtr engine_;
+	string name_;
 };
 
 
