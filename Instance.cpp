@@ -48,10 +48,10 @@ public:
     }
 
     // Instance method
-    string attribute(const string& name);
+	string attribute(const string& name);
 
     // Instance method
-    void attributeIs(const string& name, const string& v);
+	void attributeIs(const string& name, const string& v);
 
 private:
     Ptr<ManagerImpl> manager_;
@@ -125,10 +125,10 @@ public:
     }
 
     // Instance method
-    string attribute(const string& name);
+	string attribute(const string& name) { return ""; };
 
     // Instance method
-    void attributeIs(const string& name, const string& v);
+	void attributeIs(const string& name, const string& v) {};
 
 private:
     Ptr<ManagerImpl> manager_;
@@ -178,10 +178,10 @@ public:
     }
 
     // Instance method
-    string attribute(const string& name);
+	string attribute(const string& name) { return ""; };
 
     // Instance method
-    void attributeIs(const string& name, const string& v);
+	void attributeIs(const string& name, const string& v) {};
 
 private:
     Ptr<ManagerImpl> manager_;
@@ -198,10 +198,10 @@ public:
     }
 
     // Instance method
-    string attribute(const string& name);
+	string attribute(const string& name) { return ""; };
 
     // Instance method
-    void attributeIs(const string& name, const string& v);
+	void attributeIs(const string& name, const string& v) {};
 
 private:
     Ptr<ManagerImpl> manager_;
@@ -218,10 +218,10 @@ public:
     }
 
     // Instance method
-    string attribute(const string& name);
+	string attribute(const string& name) { return ""; };
 
     // Instance method
-    void attributeIs(const string& name, const string& v);
+	void attributeIs(const string& name, const string& v) {};
 
 private:
     Ptr<ManagerImpl> manager_;
@@ -234,6 +234,46 @@ ManagerImpl::ManagerImpl() {
 Ptr<Instance> ManagerImpl::instanceNew(const string& name, const string& type) {
     if (type == "Truck terminal") {
         Ptr<TruckTerminalRep> t = new TruckTerminalRep(name, this);
+        instance_[name] = t;
+        return t;
+    } else if (type == "Boat terminal") {
+        Ptr<BoatTerminalRep> t = new BoatTerminalRep(name, this);
+        instance_[name] = t;
+        return t;
+    } else if (type == "Plane terminal") {
+        Ptr<PlaneTerminalRep> t = new PlaneTerminalRep(name, this);
+        instance_[name] = t;
+        return t;
+    } else if (type == "Customer") {
+        Ptr<CustomerRep> t = new CustomerRep(name, this);
+        instance_[name] = t;
+        return t;
+    } else if (type == "Port") {
+        Ptr<PortRep> t = new PortRep(name, this);
+        instance_[name] = t;
+        return t;
+    } else if (type == "Truck segment") {
+        Ptr<TruckSegmentRep> t = new TruckSegmentRep(name, this);
+        instance_[name] = t;
+        return t;
+    } else if (type == "Boat segment") {
+        Ptr<BoatSegmentRep> t = new BoatSegmentRep(name, this);
+        instance_[name] = t;
+        return t;
+    } else if (type == "Plane segment") {
+        Ptr<PlaneSegmentRep> t = new PlaneSegmentRep(name, this);
+        instance_[name] = t;
+        return t;
+    } else if (type == "Stats") {
+        Ptr<StatsRep> t = new StatsRep(name, this);
+        instance_[name] = t;
+        return t;
+    } else if (type == "Conn") {
+        Ptr<ConnRep> t = new ConnRep(name, this);
+        instance_[name] = t;
+        return t;
+    } else if (type == "Fleet") {
+        Ptr<FleetRep> t = new FleetRep(name, this);
         instance_[name] = t;
         return t;
     }
