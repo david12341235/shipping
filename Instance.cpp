@@ -137,12 +137,8 @@ protected:
 
 class SegmentRep : public Instance {
 public:
-
-    SegmentRep(const string& name, ManagerImpl* manager) :
-        Instance(name), manager_(manager)
-    {
-        // Nothing else to do.
-    }
+	typedef Fwk::Ptr<SegmentRep const> PtrConst;
+	typedef Fwk::Ptr<SegmentRep> Ptr;
 
     // Instance method
 	string attribute(const string& name) { return ""; };
@@ -151,93 +147,117 @@ public:
 	void attributeIs(const string& name, const string& v) {};
 
 protected:
-	Segment::Ptr segment_;
+    SegmentRep(const string& name, ManagerImpl* manager) :
+        Instance(name), manager_(manager) {}
 
-private:
-    Ptr<ManagerImpl> manager_;
+    Segment::Ptr segment_;
+    Fwk::Ptr<ManagerImpl> manager_;
 };
 
 class TruckSegmentRep : public SegmentRep {
 public:
+	static SegmentRep::Ptr TruckSegmentRepNew( const string& _name, ManagerImpl* manager) {
+		Ptr m = new TruckSegmentRep(_name, manager);
+		m->referencesDec(1);
+		return m;
+	}
 
+protected:
     TruckSegmentRep(const string& name, ManagerImpl *manager) :
-        SegmentRep(name, manager)
-    {
-        // Nothing else to do.
-    }
-
+        SegmentRep(name, manager) {}
 };
 
 class BoatSegmentRep : public SegmentRep {
 public:
+	static SegmentRep::Ptr BoatSegmentRepNew( const string& _name, ManagerImpl* manager) {
+		Ptr m = new BoatSegmentRep(_name, manager);
+		m->referencesDec(1);
+		return m;
+	}
 
+private:
     BoatSegmentRep(const string& name, ManagerImpl *manager) :
-        SegmentRep(name, manager)
-    {
-        // Nothing else to do.
-    }
+        SegmentRep(name, manager) {}
 
 };
 
 class PlaneSegmentRep : public SegmentRep {
 public:
+	static SegmentRep::Ptr PlaneSegmentRepNew( const string& _name, ManagerImpl* manager) {
+		Ptr m = new PlaneSegmentRep(_name, manager);
+		m->referencesDec(1);
+		return m;
+	}
 
+protected:
     PlaneSegmentRep(const string& name, ManagerImpl *manager) :
-        SegmentRep(name, manager)
-    {
-        // Nothing else to do.
-    }
-
+        SegmentRep(name, manager) {}
 };
 
 class FleetRep : public Instance {
 public:
+	typedef Fwk::Ptr<FleetRep const> PtrConst;
+	typedef Fwk::Ptr<FleetRep> Ptr;
 
+	static FleetRep::Ptr FleetRepNew( const string& _name, ManagerImpl* manager) {
+		Ptr m = new FleetRep(_name, manager);
+		m->referencesDec(1);
+		return m;
+	}
+
+    // Instance method
+	string attribute(const string& name) { return ""; };
+
+    // Instance method
+	void attributeIs(const string& name, const string& v) {};
+
+protected:
     FleetRep(const string& name, ManagerImpl* manager) :
         Instance(name), manager_(manager)
     {
         // Nothing else to do.
     }
-
-    // Instance method
-	string attribute(const string& name) { return ""; };
-
-    // Instance method
-	void attributeIs(const string& name, const string& v) {};
-
-private:
-    Ptr<ManagerImpl> manager_;
+    Fwk::Ptr<ManagerImpl> manager_;
 	Fleet::Ptr fleet_;
 };
 
 class ConnRep : public Instance {
 public:
+	typedef Fwk::Ptr<ConnRep const> PtrConst;
+	typedef Fwk::Ptr<ConnRep> Ptr;
 
+	static ConnRep::Ptr ConnRepNew( const string& _name, ManagerImpl* manager) {
+		Ptr m = new ConnRep(_name, manager);
+		m->referencesDec(1);
+		return m;
+	}
+
+    // Instance method
+	string attribute(const string& name) { return ""; };
+
+    // Instance method
+	void attributeIs(const string& name, const string& v) {};
+
+protected:
     ConnRep(const string& name, ManagerImpl* manager) :
         Instance(name), manager_(manager)
     {
         // Nothing else to do.
     }
-
-    // Instance method
-	string attribute(const string& name) { return ""; };
-
-    // Instance method
-	void attributeIs(const string& name, const string& v) {};
-
-private:
-    Ptr<ManagerImpl> manager_;
+    Fwk::Ptr<ManagerImpl> manager_;
 	Conn::Ptr conn_;
 };
 
 class StatsRep : public Instance {
 public:
+	typedef Fwk::Ptr<StatsRep const> PtrConst;
+	typedef Fwk::Ptr<StatsRep> Ptr;
 
-    StatsRep(const string& name, ManagerImpl* manager) :
-	  Instance(name), manager_(manager)
-    {
-		//stats_ = Stats::StatsNew(name, manager_->engine());
-    }
+	static StatsRep::Ptr StatsRepNew( const string& _name, ManagerImpl* manager) {
+		Ptr m = new StatsRep(_name, manager);
+		m->referencesDec(1);
+		return m;
+	}
 
     // Instance method
 	string attribute(const string& name) { return ""; };
@@ -245,8 +265,13 @@ public:
     // Instance method
 	void attributeIs(const string& name, const string& v) {};
 
-private:
-    Ptr<ManagerImpl> manager_;
+protected:
+    StatsRep(const string& name, ManagerImpl* manager) :
+	  Instance(name), manager_(manager)
+    {
+		//stats_ = Stats::StatsNew(name, manager_->engine());
+    }
+    Fwk::Ptr<ManagerImpl> manager_;
 	Stats::Ptr stats_;
 };
 
@@ -254,6 +279,13 @@ ManagerImpl::ManagerImpl() {
 }
 
 Ptr<Instance> ManagerImpl::instanceNew(const string& name, const string& type) {
+	// Return null if an instance for this name already exists
+	
+	if( instance_.find( name ) != instance_.end() )
+	{
+		return NULL;
+	}
+	
     if (type == "Truck terminal") {
         LocationRep::Ptr t = TruckTerminalRep::TruckTerminalRepNew(name, this);
         instance_[name] = t;
@@ -275,27 +307,27 @@ Ptr<Instance> ManagerImpl::instanceNew(const string& name, const string& type) {
         instance_[name] = t;
         return t;
     } else if (type == "Truck segment") {
-        Ptr<TruckSegmentRep> t = new TruckSegmentRep(name, this);
+	   SegmentRep::Ptr t = TruckSegmentRep::TruckSegmentRepNew(name, this);
         instance_[name] = t;
         return t;
     } else if (type == "Boat segment") {
-        Ptr<BoatSegmentRep> t = new BoatSegmentRep(name, this);
+	   SegmentRep::Ptr t = BoatSegmentRep::BoatSegmentRepNew(name, this);
         instance_[name] = t;
         return t;
     } else if (type == "Plane segment") {
-        Ptr<PlaneSegmentRep> t = new PlaneSegmentRep(name, this);
+	   SegmentRep::Ptr t = PlaneSegmentRep::PlaneSegmentRepNew(name, this);
         instance_[name] = t;
         return t;
     } else if (type == "Stats") {
-        Ptr<StatsRep> t = new StatsRep(name, this);
+	   StatsRep::Ptr t = StatsRep::StatsRepNew(name, this);
         instance_[name] = t;
         return t;
     } else if (type == "Conn") {
-        Ptr<ConnRep> t = new ConnRep(name, this);
+	   ConnRep::Ptr t = ConnRep::ConnRepNew(name, this);
         instance_[name] = t;
         return t;
     } else if (type == "Fleet") {
-        Ptr<FleetRep> t = new FleetRep(name, this);
+	   FleetRep::Ptr t = FleetRep::FleetRepNew(name, this);
         instance_[name] = t;
         return t;
     }
