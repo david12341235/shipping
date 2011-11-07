@@ -55,8 +55,8 @@ public:
 	Mile length(){ return length_; }
 	void lengthIs( const Mile& _length ) { length_ = _length; }
 
-	string returnSegment(){ return returnSegment_; }
-	void returnSegmentIs( const string& _returnSegment ); 
+	PtrConst returnSegment(){ return returnSegment_; }
+	void returnSegmentIs( PtrConst& _returnSegment ); 
 
 	Difficulty difficulty(){ return difficulty_; }
 	void difficultyIs( const Difficulty& _difficulty ) { difficulty_ = _difficulty; }
@@ -133,7 +133,7 @@ protected:
 	Mile length_;
 	Difficulty difficulty_;
 	ExpVal expedite_;
-	string returnSegment_;
+	PtrConst returnSegment_;
 	NotifieeList notifiee_;
 };
 
