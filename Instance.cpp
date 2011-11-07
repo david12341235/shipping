@@ -65,7 +65,7 @@ public:
     CustomerRep(const string& name, ManagerImpl *manager) :
         LocationRep(name, manager)
     {
-		manager->engine()->locationIs(Customer::customerNew(name, manager->engine()));
+		manager->engine()->locationIs(Customer::CustomerNew(name, manager->engine()));
     }
 
 };
@@ -129,9 +129,11 @@ public:
     // Instance method
 	void attributeIs(const string& name, const string& v) {};
 
+protected:
+	Segment::Ptr segment_;
+
 private:
     Ptr<ManagerImpl> manager_;
-	Segment::Ptr segment_;
 };
 
 class TruckSegmentRep : public SegmentRep {
@@ -213,7 +215,7 @@ public:
     StatsRep(const string& name, ManagerImpl* manager) :
 	  Instance(name), manager_(manager)
     {
-		stats_ = Stats::statsNew(name);
+		//stats_ = Stats::StatsNew(name, manager_->engine());
     }
 
     // Instance method

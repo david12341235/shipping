@@ -119,7 +119,7 @@ public:
 	U32 notifiees() const { return notifiee_.members(); }
 	~Segment();
 	
-	static Segment::Ptr SegmentIs( const string& _name, Mode _mode, Engine* _engine ) {
+	static Segment::Ptr SegmentNew( const string& _name, Mode _mode, Fwk::Ptr<Engine> _engine ) {
 		Ptr m = new Segment( _name, _mode, _engine );
 		m->referencesDec(1);
 		return m;
@@ -127,7 +127,7 @@ public:
 
 protected:
 	Segment( const Segment& );
-	Segment( const string& _name, Mode _mode, Engine* _engine );
+	Segment( const string& _name, Mode _mode, Fwk::Ptr<Engine> _engine );
 	Mode mode_;
 	Fwk::Ptr<Location> source_;
 	Mile length_;
@@ -192,7 +192,7 @@ public:
 	NotifieeIteratorConst notifieeIterConst() const { return notifiee_.iterator(); }
 	U32 notifiees() const { return notifiee_.members(); }
 	
-	static TruckSegment::Ptr TruckSegmentIs( const string& _name, Engine* _engine ) {
+	static TruckSegment::Ptr TruckSegmentNew( const string& _name, Fwk::Ptr<Engine> _engine ) {
 		Ptr m = new TruckSegment( _name, _engine );
 		m->referencesDec(1);
 		return m;
@@ -200,7 +200,7 @@ public:
 
 protected:
 	TruckSegment( const TruckSegment& );
-	TruckSegment( const string& _name, Engine* _engine ) : Segment( _name, mode(), _engine ) {};
+	TruckSegment( const string& _name, Fwk::Ptr<Engine> _engine ) : Segment( _name, mode(), _engine ) {};
 	NotifieeList notifiee_;
 };
 
@@ -259,7 +259,7 @@ public:
 	NotifieeIteratorConst notifieeIterConst() const { return notifiee_.iterator(); }
 	U32 notifiees() const { return notifiee_.members(); }
 	
-	static BoatSegment::Ptr BoatSegmentIs( const string& _name, Engine* _engine ) {
+	static BoatSegment::Ptr BoatSegmentNew( const string& _name, Fwk::Ptr<Engine> _engine ) {
 		Ptr m = new BoatSegment( _name, _engine );
 		m->referencesDec(1);
 		return m;
@@ -267,7 +267,7 @@ public:
 
 protected:
 	BoatSegment( const BoatSegment& );
-	BoatSegment( const string& _name, Engine* _engine ) : Segment( _name, mode(), _engine ) {};
+	BoatSegment( const string& _name, Fwk::Ptr<Engine> _engine ) : Segment( _name, mode(), _engine ) {};
 	NotifieeList notifiee_;
 };
 
@@ -326,7 +326,7 @@ public:
 	NotifieeIteratorConst notifieeIterConst() const { return notifiee_.iterator(); }
 	U32 notifiees() const { return notifiee_.members(); }
 	
-	static PlaneSegment::Ptr PlaneSegmentIs( const string& _name, Engine* _engine ) {
+	static PlaneSegment::Ptr PlaneSegmentNew( const string& _name, Fwk::Ptr<Engine> _engine ) {
 		Ptr m = new PlaneSegment( _name, _engine );
 		m->referencesDec(1);
 		return m;
@@ -334,7 +334,7 @@ public:
 
 protected:
 	PlaneSegment( const PlaneSegment& );
-	PlaneSegment( const string& _name, Engine* _engine ) : Segment( _name, mode(), _engine ) {};
+	PlaneSegment( const string& _name, Fwk::Ptr<Engine> _engine ) : Segment( _name, mode(), _engine ) {};
 	NotifieeList notifiee_;
 };
 
@@ -498,7 +498,7 @@ public:
 	NotifieeIteratorConst notifieeIterConst() const { return notifiee_.iterator(); }
 	U32 notifiees() const { return notifiee_.members(); }
 	
-	static Customer::Ptr customerNew( const string& _name, Fwk::Ptr<Engine> _engine ) {
+	static Customer::Ptr CustomerNew( const string& _name, Fwk::Ptr<Engine> _engine ) {
 		Ptr m = new Customer( _name, _engine );
 		m->referencesDec(1);
 		return m;
@@ -565,7 +565,7 @@ public:
 	NotifieeIteratorConst notifieeIterConst() const { return notifiee_.iterator(); }
 	U32 notifiees() const { return notifiee_.members(); }
 	
-	static Port::Ptr PortIs( const string& _name, Engine* _engine ) {
+	static Port::Ptr PortNew( const string& _name, Fwk::Ptr<Engine> _engine ) {
 		Ptr m = new Port( _name, _engine );
 		m->referencesDec(1);
 		return m;
@@ -573,7 +573,7 @@ public:
 
 protected:
 	Port( const Port& );
-	Port( const string& _name, Engine* _engine ) : Location( _name, type(), _engine ) {};
+	Port( const string& _name, Fwk::Ptr<Engine> _engine ) : Location( _name, type(), _engine ) {};
 	NotifieeList notifiee_;
 };
 
@@ -632,7 +632,7 @@ public:
 	NotifieeIteratorConst notifieeIterConst() const { return notifiee_.iterator(); }
 	U32 notifiees() const { return notifiee_.members(); }
 	
-	static TruckLocation::Ptr TruckLocationIs( const string& _name, Engine* _engine ) {
+	static TruckLocation::Ptr TruckLocationNew( const string& _name, Fwk::Ptr<Engine> _engine ) {
 		Ptr m = new TruckLocation( _name, _engine );
 		m->referencesDec(1);
 		return m;
@@ -640,7 +640,7 @@ public:
 
 protected:
 	TruckLocation( const TruckLocation& );
-	TruckLocation( const string& _name, Engine* _engine ) : Location( _name, type(), _engine ) {};
+	TruckLocation( const string& _name, Fwk::Ptr<Engine> _engine ) : Location( _name, type(), _engine ) {};
 	NotifieeList notifiee_;
 };
 
@@ -699,7 +699,7 @@ public:
 	NotifieeIteratorConst notifieeIterConst() const { return notifiee_.iterator(); }
 	U32 notifiees() const { return notifiee_.members(); }
 	
-	static BoatLocation::Ptr BoatLocationIs( const string& _name, Engine* _engine ) {
+	static BoatLocation::Ptr BoatLocationNew( const string& _name, Fwk::Ptr<Engine> _engine ) {
 		Ptr m = new BoatLocation( _name, _engine );
 		m->referencesDec(1);
 		return m;
@@ -707,7 +707,7 @@ public:
 
 protected:
 	BoatLocation( const BoatLocation& );
-	BoatLocation( const string& _name, Engine* _engine ) : Location( _name, type(), _engine ) {};
+	BoatLocation( const string& _name, Fwk::Ptr<Engine> _engine ) : Location( _name, type(), _engine ) {};
 	NotifieeList notifiee_;
 };
 
@@ -766,7 +766,7 @@ public:
 	NotifieeIteratorConst notifieeIterConst() const { return notifiee_.iterator(); }
 	U32 notifiees() const { return notifiee_.members(); }
 	
-	static PlaneLocation::Ptr PlaneLocationIs( const string& _name, Engine* _engine ) {
+	static PlaneLocation::Ptr PlaneLocationNew( const string& _name, Fwk::Ptr<Engine> _engine ) {
 		Ptr m = new PlaneLocation( _name, _engine );
 		m->referencesDec(1);
 		return m;
@@ -774,7 +774,7 @@ public:
 
 protected:
 	PlaneLocation( const PlaneLocation& );
-	PlaneLocation( const string& _name, Engine* _engine ) : Location( _name, type(), _engine ) {};
+	PlaneLocation( const string& _name, Fwk::Ptr<Engine> _engine ) : Location( _name, type(), _engine ) {};
 	NotifieeList notifiee_;
 };
 
@@ -856,7 +856,7 @@ public:
 	U32 notifiees() const { return notifiee_.members(); }
 	~Conn();
 	
-	static Conn::Ptr ConnIs( const string& _name, Engine* _engine ) {
+	static Conn::Ptr ConnNew( const string& _name, Fwk::Ptr<Engine> _engine ) {
 		Ptr m = new Conn( _name, _engine );
 		m->referencesDec(1);
 		return m;
@@ -865,7 +865,7 @@ public:
 protected:
 	Conn( const Conn& );
 	Conn( const string& _name);
-	Conn( const string& _name, Engine* _engine );
+	Conn( const string& _name, Fwk::Ptr<Engine> _engine );
 	NotifieeList notifiee_;
 	Mile distance_;
 	Dollar cost_;
@@ -963,7 +963,7 @@ public:
 	U32 notifiees() const { return notifiee_.members(); }
 	~Fleet();
 	
-	static Fleet::Ptr FleetIs( const string& _name, Engine* _engine ) {
+	static Fleet::Ptr FleetNew( const string& _name, Fwk::Ptr<Engine> _engine ) {
 		Ptr m = new Fleet( _name, _engine );
 		m->referencesDec(1);
 		return m;
@@ -972,7 +972,6 @@ public:
 protected:
 	Fleet( const Fleet& );
 	Fleet( const string& _name, Fwk::Ptr<Engine> _engine );
-	Fleet( const string& _name);
 	map<Mode, fleetInfo> fleet_;
 	NotifieeList notifiee_;
 	Fwk::Ptr<Engine> engine_;
@@ -1019,7 +1018,8 @@ public:
 	Fwk::Ptr<Engine> engine() const { return engine_; };
 	void engineIs(Fwk::Ptr<Engine> e) { engine_ = e; };
 
-/*	typedef Fwk::ListRaw<NotifieeConst> NotifieeList;
+/*
+	typedef Fwk::ListRaw<NotifieeConst> NotifieeList;
 	typedef NotifieeList::IteratorConst NotifieeIteratorConst;
 	NotifieeIteratorConst notifieeIterConst() const { return notifiee_.iterator(); }
 	U32 notifiees() const { return notifiee_.members(); }*/
@@ -1028,21 +1028,15 @@ public:
 	class SegmentExpediteReactor;
 	class LocationSegmentReactor;
 	
-	static Stats::Ptr statsNew( const string& _name, Fwk::Ptr<Engine> _engine ) {
+	static Stats::Ptr StatsNew( const string& _name, Fwk::Ptr<Engine> _engine ) {
 		Ptr m = new Stats( _name, _engine );
 		m->referencesDec(1);
 		return m;
 	}
 
-	static Stats::Ptr statsNew( const string& _name) {
-		Ptr m = new Stats( _name);
-		m->referencesDec(1);
-		return m;
-	}
 
-protected:
+private:
 	Stats( const Stats& );
-	Stats( const string& _name) : NamedInterface(_name) { };
 	Stats( const string& _name, Fwk::Ptr<Engine> _engine);
 	U32 customer_;
 	U32 port_;
@@ -1130,7 +1124,14 @@ public:
 	NotifieeIteratorConst notifieeIterConst() const { return notifiee_.iterator(); }
 	U32 notifiees() const { return notifiee_.members(); }
 
+	static Engine::Ptr EngineNew() {
+		Ptr m = new Engine();
+		m->referencesDec(1);
+		return m;
+	}
+
 private:
+	Engine() {}
 	NotifieeList notifiee_;
 };
 

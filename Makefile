@@ -6,7 +6,7 @@ LIBS = fwk/BaseCollection.o fwk/BaseNotifiee.o fwk/Exception.o
 
 default:	example
 
-example:	example.o $(OBJECTS)
+example:	example.o $(OBJECTS) $(LIBS)
 	$(CXX) $(CXXFLAGS) -o $@ $^
 
 clean:
