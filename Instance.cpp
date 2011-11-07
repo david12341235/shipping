@@ -234,7 +234,33 @@ public:
 	};
 
     // Instance method
-	void attributeIs(const string& name, const string& v) {};
+	void attributeIs(const string& name, const string& v) {
+		stringstream ss(name);
+		string sub;
+		ss >> sub;
+		Fleet::Mode m;
+		if (sub.find("Boat")) {
+			m = Fleet::boat_;
+		} else if (sub.find("Plane")) {
+			m = Fleet::plane_;
+		} else if (sub.find("Truck")) {
+			m = Fleet::truck_;
+		} else {
+			return;
+		}
+
+		ss >> sub;
+		double val;
+		stringstream ss2(v);
+		ss2 >> val;
+		if (sub == "speed") {
+			fleet_->speedIs(m, val);
+		} else if (sub == "cost") {
+			fleet_->costIs(m, val);
+		} else if (sub == "capacity") {
+			fleet_->capacityIs(m, val);
+		}
+	};
 
 protected:
     FleetRep(const string& name, ManagerImpl* manager) :
