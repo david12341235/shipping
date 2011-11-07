@@ -10,6 +10,7 @@
 #include "fwk/NamedInterface.h"
 #include "fwk/ListRaw.h"
 #include "fwk/LinkedList.h"
+#include "fwk/LinkedQueue.h"
 #include "Instance.h"
 #include "Nominal.h"
 #include "ShippingTypes.h"
@@ -360,9 +361,13 @@ public:
 	static Type TypeInstance( Fwk::String );
 	Type type() const { return type_; }
 	virtual void typeIs( Type _type ) { type_ = _type; }
-	Fwk::Ptr<Segment> segment( Segment::SegmentId _segmentId ) const;
-	virtual void segmentIs( Fwk::Ptr<Segment const> _segment ) {};
-	void segmentDel( Fwk::Ptr<Segment const> _segment );
+	Segment::PtrConst segment( Segment::SegmentId _segmentId ) const {
+		return segment_.at(_segmentId);
+	};
+	virtual void segmentIs( Segment::PtrConst  _segment ) {
+		segment_.push_back(_segment);
+	};
+	void segmentDel( Segment::PtrConst _segment );
 
 	class NotifieeConst : public virtual Fwk::NamedInterface::NotifieeConst {
 	public:
@@ -425,6 +430,7 @@ public:
 	NotifieeIterator notifieeIter() { return notifiee_.iterator(); }
 
 protected:
+	typedef vector<Segment::PtrConst > SegmentList;
 	Location( const Location& );
 	Location( const string& _name, Type _type, Fwk::Ptr<Engine> _engine ) :
 	    NamedInterface(_name), type_(_type), engine_(_engine) {};
@@ -438,7 +444,7 @@ protected:
    }
 	Type type_;
 	Fwk::Ptr<Engine> engine_;
-	vector< Fwk::Ptr<Segment const> > segment_;
+	SegmentList segment_;
 	NotifieeList notifiee_;
     void onZeroReferences();
 };

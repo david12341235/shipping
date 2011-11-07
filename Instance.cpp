@@ -350,7 +350,7 @@ void ManagerImpl::instanceDel(const string& name) {
 string LocationRep::attribute(const string& name) {
     int i = segmentNumber(name);
     if (i != 0) {
-        cout << "Tried to read interface " << i;
+		return location_->segment(i)->name();
     }
     return "";
 }
