@@ -818,6 +818,9 @@ public:
 		Conn::PtrConst notifier() const { return notifier_; }
 		NotifieeConst const * lrNext() const { return lrNext_; }
 		NotifieeConst * lrNext() { return lrNext_; }
+		void lrNextIs(NotifieeConst * _lrNext) {
+			lrNext_ = _lrNext;
+		}
 	
 		~NotifieeConst();
 
@@ -921,6 +924,9 @@ public:
 		Fleet::PtrConst notifier() const { return notifier_; }
 		NotifieeConst const * lrNext() const { return lrNext_; }
 		NotifieeConst * lrNext() { return lrNext_; }
+		void lrNextIs(NotifieeConst * _lrNext) {
+			lrNext_ = _lrNext;
+		}
 	
 		~NotifieeConst();
 		virtual void notifierIs(const Fleet::PtrConst& _notifier);
