@@ -71,7 +71,8 @@ protected:
     CustomerRep(const string& name, ManagerImpl *manager) :
         LocationRep(name, manager)
     {
-		manager->engine()->locationIs(Customer::CustomerNew(name, manager->engine()));
+		location_ = Customer::CustomerNew(name, manager->engine());
+		manager->engine()->locationIs(location_);
     }
 };
 
@@ -86,7 +87,8 @@ protected:
     PortRep(const string& name, ManagerImpl *manager) :
         LocationRep(name, manager)
     {
-		manager->engine()->locationIs(Port::PortNew(name, manager->engine()));
+		location_ = Port::PortNew(name, manager->engine());
+		manager->engine()->locationIs(location_);
     }
 };
 
@@ -101,7 +103,8 @@ protected:
     TruckTerminalRep(const string& name, ManagerImpl *manager) :
         LocationRep(name, manager)
     {
-		manager->engine()->locationIs(TruckLocation::TruckLocationNew(name, manager->engine()));
+		location_ = TruckLocation::TruckLocationNew(name, manager->engine());
+		manager->engine()->locationIs(location_);
     }
 };
 
@@ -116,7 +119,8 @@ protected:
     BoatTerminalRep(const string& name, ManagerImpl *manager) :
         LocationRep(name, manager)
     {
-		manager->engine()->locationIs(BoatLocation::BoatLocationNew(name, manager->engine()));
+		location_ = BoatLocation::BoatLocationNew(name, manager->engine());
+		manager->engine()->locationIs(location_);
     }
 };
 
@@ -131,7 +135,8 @@ protected:
     PlaneTerminalRep(const string& name, ManagerImpl *manager) :
         LocationRep(name, manager)
     {
-		manager->engine()->locationIs(PlaneLocation::PlaneLocationNew(name, manager->engine()));
+		location_ = PlaneLocation::PlaneLocationNew(name, manager->engine());
+		manager->engine()->locationIs(location_);
     }
 };
 
@@ -148,8 +153,7 @@ public:
 
 protected:
     SegmentRep(const string& name, ManagerImpl* manager) :
-        Instance(name), manager_(manager) {}
-
+		 Instance(name), manager_(manager) {}
     Segment::Ptr segment_;
     Fwk::Ptr<ManagerImpl> manager_;
     string miles( Mile _length);
@@ -167,7 +171,10 @@ public:
 
 protected:
     TruckSegmentRep(const string& name, ManagerImpl *manager) :
-        SegmentRep(name, manager) {}
+        SegmentRep(name, manager) {
+			segment_ = TruckSegment::TruckSegmentNew(name, manager->engine());
+			manager->engine()->segmentIs(segment_);
+		}
 };
 
 class BoatSegmentRep : public SegmentRep {
@@ -180,7 +187,10 @@ public:
 
 private:
     BoatSegmentRep(const string& name, ManagerImpl *manager) :
-        SegmentRep(name, manager) {}
+        SegmentRep(name, manager) {
+			segment_ = BoatSegment::BoatSegmentNew(name, manager->engine());
+			manager->engine()->segmentIs(segment_);
+		}
 
 };
 
@@ -194,7 +204,10 @@ public:
 
 protected:
     PlaneSegmentRep(const string& name, ManagerImpl *manager) :
-        SegmentRep(name, manager) {}
+        SegmentRep(name, manager) {
+			segment_ = PlaneSegment::PlaneSegmentNew(name, manager->engine());
+			manager->engine()->segmentIs(segment_);
+		}
 };
 
 class FleetRep : public Instance {
