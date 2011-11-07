@@ -65,7 +65,7 @@ public:
     CustomerRep(const string& name, ManagerImpl *manager) :
         LocationRep(name, manager)
     {
-        // Nothing else to do.
+		manager->engine()->locationIs(Customer::customerNew(name, manager->engine()));
     }
 
 };
