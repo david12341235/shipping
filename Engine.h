@@ -146,7 +146,7 @@ public:
 
 	Mode mode() const { return Segment::truck(); }
 	virtual void modeIs( Mode v ) {}
-	virtual void sourceIs( Fwk::Ptr<Location> _source );
+	virtual void sourceIs( Fwk::Ptr<Location> _source ) {};
 
 	class NotifieeConst : public virtual Segment::NotifieeConst {
 	public:
@@ -213,7 +213,7 @@ public:
 
 	Mode mode() const { return Segment::truck(); }
 	virtual void modeIs( Mode v ) {}
-	virtual void sourceIs( Fwk::Ptr<Location> _source );
+	virtual void sourceIs( Fwk::Ptr<Location> _source ) {};
 
 	class NotifieeConst : public virtual Segment::NotifieeConst {
 	public:
@@ -280,7 +280,7 @@ public:
 
 	Mode mode() const { return Segment::truck(); }
 	virtual void modeIs( Mode v ) {}
-	virtual void sourceIs( Fwk::Ptr<Location> _source );
+	virtual void sourceIs( Fwk::Ptr<Location> _source ) {};
 
 	class NotifieeConst : public virtual Segment::NotifieeConst {
 	public:
@@ -1090,8 +1090,8 @@ public:
 	Fwk::LinkedList<Location::Ptr> locations() const;
 	Fwk::LinkedList<Segment::Ptr> segments() const;
 
-	Location::Ptr location (const string& name) const;
-	Segment::Ptr segment (const string& name) const;
+	Location::Ptr location (const string& name) const { return NULL; };
+	Segment::Ptr segment (const string& name) const { return NULL; };
 
 	class NotifieeConst : public virtual Fwk::NamedInterface::NotifieeConst {
 	public:
