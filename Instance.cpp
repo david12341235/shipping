@@ -347,7 +347,9 @@ public:
 			val = stats_->planeSegment();
 		} else if (name == "expedite percentage") {
 			return stats_->expedite();
-		} 
+		} else {
+			return "unknown";
+		}
 
 		stringstream ss;
 		ss << val;
