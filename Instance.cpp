@@ -370,6 +370,7 @@ protected:
 };
 
 ManagerImpl::ManagerImpl() {
+	engine_ = Engine::EngineNew();
 }
 
 Ptr<Instance> ManagerImpl::instanceNew(const string& name, const string& type) {

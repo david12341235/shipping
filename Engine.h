@@ -11,6 +11,7 @@
 #include "fwk/ListRaw.h"
 #include "fwk/LinkedList.h"
 #include "fwk/LinkedQueue.h"
+#include "fwk/HashMap.h"
 #include "Instance.h"
 #include "Nominal.h"
 #include "ShippingTypes.h"
@@ -25,6 +26,16 @@ class Segment : public Fwk::NamedInterface {
 public:
 	typedef Fwk::Ptr<Segment const> PtrConst;
 	typedef Fwk::Ptr<Segment> Ptr;
+    Fwk::String fwkKey() const { return this->name(); }
+	Segment const * fwkHmNext() const { return fwkHmNext_.ptr(); }
+	Segment * fwkHmNext() { return fwkHmNext_.ptr(); }
+	Segment const * fwkPtr() const { return this; }
+	Segment * fwkPtr() { return this; }
+	void fwkHmNextIs(Segment * _fwkHmNext) const {
+		fwkHmNext_ = _fwkHmNext;
+	}
+	Segment::PtrConst fwkValue() const { return this; }
+	Segment::Ptr fwkValue() { return this; }
 	typedef int SegmentId;
 
 	enum Mode {
@@ -129,6 +140,7 @@ public:
 protected:
 	Segment( const Segment& );
 	Segment( const string& _name, Mode _mode, Fwk::Ptr<Engine> _engine );
+    mutable Segment::Ptr fwkHmNext_;
 	Mode mode_;
 	Fwk::Ptr<Engine> engine_;
 	Fwk::Ptr<Location> source_;
@@ -346,6 +358,16 @@ class Location : public Fwk::NamedInterface {
 public:
 	typedef Fwk::Ptr<Location const> PtrConst;
 	typedef Fwk::Ptr<Location> Ptr;
+    Fwk::String fwkKey() const { return this->name(); }
+	Location const * fwkHmNext() const { return fwkHmNext_.ptr(); }
+	Location * fwkHmNext() { return fwkHmNext_.ptr(); }
+	Location const * fwkPtr() const { return this; }
+	Location * fwkPtr() { return this; }
+	void fwkHmNextIs(Location * _fwkHmNext) const {
+		fwkHmNext_ = _fwkHmNext;
+	}
+	Location::PtrConst fwkValue() const { return this; }
+	Location::Ptr fwkValue() { return this; }
 
 	enum Type {
 		customer_ = 0,
@@ -433,6 +455,7 @@ public:
 
 protected:
 	typedef vector<Segment::PtrConst > SegmentList;
+    mutable Location::Ptr fwkHmNext_;
 	Location( const Location& );
 	Location( const string& _name, Type _type, Fwk::Ptr<Engine> _engine );
    void newNotifiee( Location::NotifieeConst * n ) const {
@@ -1082,16 +1105,29 @@ public:
 
 	Engine(Stats::Ptr s, Conn::Ptr c, Fleet::Ptr f);
 	
-	void segmentIs(Segment::Ptr s) {};
+    typedef Fwk::HashMap< Segment, Fwk::String, Segment, Segment::PtrConst, Segment::Ptr > SegmentMap;
+	U32 segments() const { return segment_.members(); }
+	U32 segmentVersion() const { return segment_.version(); }
+	typedef SegmentMap::IteratorConst SegmentIteratorConst;
+	SegmentIteratorConst segmentIterConst() const { return segment_.iterator(); }
+	typedef SegmentMap::Iterator SegmentIterator;
+	SegmentIterator segmentIter() { return segment_.iterator(); }
 
-	void locationIs(Location::Ptr s) {};
+    typedef Fwk::HashMap< Location, Fwk::String, Location, Location::PtrConst, Location::Ptr > LocationMap;
+	U32 locations() const { return location_.members(); }
+	U32 locationVersion() const { return location_.version(); }
+	typedef LocationMap::IteratorConst LocationIteratorConst;
+	LocationIteratorConst locationIterConst() const { return location_.iterator(); }
+	typedef LocationMap::Iterator LocationIterator;
+	LocationIterator locationIter() { return location_.iterator(); }
+
+	void segmentIs(Segment::Ptr s);
+
+	void locationIs(Location::Ptr s);
 
 	Stats::Ptr stats() const;
 	Fleet::Ptr fleet() const;
 	Conn::Ptr conn() const;
-	
-	Fwk::LinkedList<Location::Ptr> locations() const;
-	Fwk::LinkedList<Segment::Ptr> segments() const;
 
 	Location::Ptr location (const string& name) const { return NULL; };
 	Segment::Ptr segment (const string& name) const { return NULL; };
@@ -1102,14 +1138,21 @@ public:
 		typedef Fwk::Ptr<NotifieeConst> Ptr;
 		string name() const { return notifier_->name(); }
 		Segment::PtrConst notifier() const { return notifier_; }
+	    bool isNonReferencing() const { return isNonReferencing_; }
+        static const AttributeId segment__ = AttributeId(Fwk::NamedInterface::NotifieeConst::tacNextAttributeId__);
+        static const AttributeId location__ = AttributeId(Fwk::NamedInterface::NotifieeConst::tacNextAttributeId__+1);
+        static const AttributeId tacNextAttributeId__ = AttributeId(location__+1);
+        Fwk::String tacKeyForSegment() const { return tacKeyForSegment_; }
+        U8 tacSegmentChanges() const { return tacSegmentChanges_; }
 		NotifieeConst const * lrNext() const { return lrNext_; }
 		NotifieeConst * lrNext() { return lrNext_; }
-		void lrNextIs(NotifieeConst * _lrNext) {
-			lrNext_ = _lrNext;
-		}
 	
 		~NotifieeConst();
 		virtual void notifierIs(const Segment::PtrConst& _notifier);
+		void isNonReferencingIs(bool _isNonReferencing);
+		void lrNextIs(NotifieeConst * _lrNext) {
+			lrNext_ = _lrNext;
+		}
 		virtual void onSegmentIs(Segment::Ptr s) {}
 		virtual void onLocationIs(Location::Ptr l) {}
 
@@ -1119,7 +1162,10 @@ public:
 			return m;
 		}
 	protected:
+        Fwk::String tacKeyForSegment_;
+		U8 tacSegmentChanges_;
 		Segment::PtrConst notifier_;
+		bool isNonReferencing_;
 
 		NotifieeConst* lrNext_;
 		NotifieeConst(): Fwk::NamedInterface::NotifieeConst(),
@@ -1152,10 +1198,14 @@ public:
 		m->referencesDec(1);
 		return m;
 	}
+   typedef NotifieeList::Iterator NotifieeIterator;
+   NotifieeIterator notifieeIter() { return notifiee_.iterator(); }
 
 private:
 	Engine() {}
 	NotifieeList notifiee_;
+	SegmentMap segment_;
+	LocationMap location_;
 };
 
 class Stats::LocationSegmentReactor : public Engine::Notifiee {

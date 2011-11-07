@@ -127,3 +127,36 @@ Location::attributeString( Fwk::RootNotifiee::AttributeId a ) const {
 Stats::~Stats() {
 }
 
+void Engine::segmentIs(Segment::Ptr s) {
+  string name = s->name();
+  Segment::Ptr m = segment_[name];
+   if(m) {
+      throw Fwk::NameInUseException(name);
+   } else {
+     m = s;
+     segment_.newMember(m);
+   }
+   retrycell:
+   U32 ver = notifiee_.version();
+   if(notifiees()) for(NotifieeIterator n=notifieeIter();n.ptr();++n) try {
+	   n->onSegmentIs(s);
+      if( ver != notifiee_.version() ) goto retrycell;
+   } catch(...) { n->onNotificationException(NotifieeConst::segment__); }
+}
+
+void Engine::locationIs(Location::Ptr s) {
+  string name = s->name();
+  Location::Ptr m = location_[name];
+   if(m) {
+      throw Fwk::NameInUseException(name);
+   } else {
+     m = s;
+     location_.newMember(m);
+   }
+   retrycell:
+   U32 ver = notifiee_.version();
+   if(notifiees()) for(NotifieeIterator n=notifieeIter();n.ptr();++n) try {
+	   n->onLocationIs(s);
+      if( ver != notifiee_.version() ) goto retrycell;
+   } catch(...) { n->onNotificationException(NotifieeConst::location__); }
+}
