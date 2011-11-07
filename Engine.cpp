@@ -210,3 +210,5 @@ void Engine::locationIs(Location::Ptr s) {
       if( ver != notifiee_.version() ) goto retrycell;
    } catch(...) { n->onNotificationException(NotifieeConst::location__); }
 }
+
+Fwk::String valueToStrep(string s) { return s; }

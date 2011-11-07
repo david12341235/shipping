@@ -71,8 +71,11 @@ protected:
     CustomerRep(const string& name, ManagerImpl *manager) :
         LocationRep(name, manager)
     {
-		location_ = Customer::CustomerNew(name, manager->engine());
-		manager->engine()->locationIs(location_);
+		try {
+			location_ = Customer::CustomerNew(name, manager->engine());
+		} catch (Fwk::NameInUseException ex) {
+			cerr << "ERROR: Name " << name << " already in use." << endl;
+		}
     }
 };
 
@@ -87,8 +90,11 @@ protected:
     PortRep(const string& name, ManagerImpl *manager) :
         LocationRep(name, manager)
     {
-		location_ = Port::PortNew(name, manager->engine());
-		manager->engine()->locationIs(location_);
+		try {
+			location_ = Port::PortNew(name, manager->engine());
+		} catch (Fwk::NameInUseException ex) {
+			cerr << "ERROR: Name " << name << " already in use." << endl;
+		}
     }
 };
 
@@ -103,8 +109,11 @@ protected:
     TruckTerminalRep(const string& name, ManagerImpl *manager) :
         LocationRep(name, manager)
     {
-		location_ = TruckLocation::TruckLocationNew(name, manager->engine());
-		manager->engine()->locationIs(location_);
+		try {
+			location_ = TruckLocation::TruckLocationNew(name, manager->engine());
+		} catch (Fwk::NameInUseException ex) {
+			cerr << "ERROR: Name " << name << " already in use." << endl;
+		}
     }
 };
 
@@ -119,8 +128,11 @@ protected:
     BoatTerminalRep(const string& name, ManagerImpl *manager) :
         LocationRep(name, manager)
     {
-		location_ = BoatLocation::BoatLocationNew(name, manager->engine());
-		manager->engine()->locationIs(location_);
+		try {
+			location_ = BoatLocation::BoatLocationNew(name, manager->engine());
+		} catch (Fwk::NameInUseException ex) {
+			cerr << "ERROR: Name " << name << " already in use." << endl;
+		}
     }
 };
 
@@ -135,8 +147,11 @@ protected:
     PlaneTerminalRep(const string& name, ManagerImpl *manager) :
         LocationRep(name, manager)
     {
-		location_ = PlaneLocation::PlaneLocationNew(name, manager->engine());
-		manager->engine()->locationIs(location_);
+		try {
+			location_ = PlaneLocation::PlaneLocationNew(name, manager->engine());
+		} catch (Fwk::NameInUseException ex) {
+			cerr << "ERROR: Name " << name << " already in use." << endl;
+		}
     }
 };
 
@@ -172,8 +187,11 @@ public:
 protected:
     TruckSegmentRep(const string& name, ManagerImpl *manager) :
         SegmentRep(name, manager) {
-			segment_ = TruckSegment::TruckSegmentNew(name, manager->engine());
-			manager->engine()->segmentIs(segment_);
+			try {
+				segment_ = TruckSegment::TruckSegmentNew(name, manager->engine());
+			} catch (Fwk::NameInUseException ex) {
+				cerr << "ERROR: Name " << name << " already in use." << endl;
+			}
 		}
 };
 
@@ -188,8 +206,11 @@ public:
 private:
     BoatSegmentRep(const string& name, ManagerImpl *manager) :
         SegmentRep(name, manager) {
-			segment_ = BoatSegment::BoatSegmentNew(name, manager->engine());
-			manager->engine()->segmentIs(segment_);
+			try {
+				segment_ = BoatSegment::BoatSegmentNew(name, manager->engine());
+			} catch (Fwk::NameInUseException ex) {
+				cerr << "ERROR: Name " << name << " already in use." << endl;
+			}
 		}
 
 };
@@ -205,8 +226,11 @@ public:
 protected:
     PlaneSegmentRep(const string& name, ManagerImpl *manager) :
         SegmentRep(name, manager) {
-			segment_ = PlaneSegment::PlaneSegmentNew(name, manager->engine());
-			manager->engine()->segmentIs(segment_);
+			try {
+				segment_ = PlaneSegment::PlaneSegmentNew(name, manager->engine());
+			} catch (Fwk::NameInUseException ex) {
+				cerr << "ERROR: Name " << name << " already in use." << endl;
+			}
 		}
 };
 
@@ -561,5 +585,5 @@ Ptr<Instance::Manager> shippingInstanceManager() {
 }
 
 Shipping::Engine::Ptr Shipping::ManagerImpl::engine() {
-	return NULL;
+	return engine_;
 }
