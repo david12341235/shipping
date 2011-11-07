@@ -144,7 +144,7 @@ public:
 
 	Mode mode() const { return Segment::truck(); }
 	virtual void modeIs( Mode v ) {}
-	virtual void sourceIs( Location*& _source );
+	virtual void sourceIs( Fwk::Ptr<Location> _source );
 
 	class NotifieeConst : public virtual Segment::NotifieeConst {
 	public:
@@ -211,7 +211,7 @@ public:
 
 	Mode mode() const { return Segment::truck(); }
 	virtual void modeIs( Mode v ) {}
-	virtual void sourceIs( Location*& _source );
+	virtual void sourceIs( Fwk::Ptr<Location> _source );
 
 	class NotifieeConst : public virtual Segment::NotifieeConst {
 	public:
@@ -278,7 +278,7 @@ public:
 
 	Mode mode() const { return Segment::truck(); }
 	virtual void modeIs( Mode v ) {}
-	virtual void sourceIs( Location*& _source );
+	virtual void sourceIs( Fwk::Ptr<Location> _source );
 
 	class NotifieeConst : public virtual Segment::NotifieeConst {
 	public:
