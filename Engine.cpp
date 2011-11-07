@@ -2,12 +2,6 @@
 
 using namespace Shipping;
 
-
-Segment::SegmentId Segment::SegmentIdInstance ( int v ) {
-	// TODO: implement
-	return 0;
-}
-
 void Segment::sourceIs( Fwk::Ptr<Location> _source )
 {
 	if( _source )
@@ -19,8 +13,64 @@ void Segment::sourceIs( Fwk::Ptr<Location> _source )
 	return;
 }
 
+void TruckSegment::sourceIs( Fwk::Ptr<Location> _source )
+{
+	if( _source && _source->type() != Location::boat() && _source->type() != Location::plane()  )
+	{
+		source_->segmentDel( this );
+		source_ = _source;
+		source_->segmentIs( this );
+	}
+	return;
+}
+
+void BoatSegment::sourceIs( Fwk::Ptr<Location> _source )
+{
+	if( _source && _source->type() != Location::truck() && _source->type() != Location::plane()  )
+	{
+		source_->segmentDel( this );
+		source_ = _source;
+		source_->segmentIs( this );
+	}
+	return;
+}
+
+void PlaneSegment::sourceIs( Fwk::Ptr<Location> _source )
+{
+	if( _source && _source->type() != Location::truck() && _source->type() != Location::boat()  )
+	{
+		source_->segmentDel( this );
+		source_ = _source;
+		source_->segmentIs( this );
+	}
+	return;
+}
+
 void Segment::returnSegmentIs( Segment::Ptr _returnSegment )
 {
+	if( returnSegment_ == _returnSegment ||  mode() != _returnSegment->mode() )
+	{
+		return;
+	}
+
+	if( returnSegment_ )
+	{
+		returnSegment_->returnSegmentIs( NULL );
+	}
+	
+	if( _returnSegment )
+	{
+		returnSegment_ = _returnSegment;
+		if( returnSegment_->returnSegment() != this )
+		{
+			returnSegment_->returnSegmentIs( this );
+		}
+	}
+	else
+	{
+		returnSegment_ = NULL;
+	}
+
 	return;
 }
 

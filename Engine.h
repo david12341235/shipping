@@ -43,7 +43,7 @@ public:
 	static inline Mode plane() { return plane_; }
 	static inline ExpVal expNo() { return expNo_; }
 	static inline ExpVal expYes() { return expYes_; }
-	static SegmentId SegmentIdInstance ( int v );
+	static inline SegmentId SegmentIdInstance ( int v ) { return (Segment::SegmentId)v; }
 	static inline Mode ModeInstance( const Fwk::String );
 	static inline ExpVal ExpValInstance( const Fwk::String v ) { return v == "Yes" ? expYes() : expNo(); }
 
@@ -146,7 +146,7 @@ public:
 
 	Mode mode() const { return Segment::truck(); }
 	virtual void modeIs( Mode v ) {}
-	virtual void sourceIs( Fwk::Ptr<Location> _source ) {};
+	virtual void sourceIs( Fwk::Ptr<Location> _source );
 
 	class NotifieeConst : public virtual Segment::NotifieeConst {
 	public:
@@ -213,7 +213,7 @@ public:
 
 	Mode mode() const { return Segment::truck(); }
 	virtual void modeIs( Mode v ) {}
-	virtual void sourceIs( Fwk::Ptr<Location> _source ) {};
+	virtual void sourceIs( Fwk::Ptr<Location> _source );
 
 	class NotifieeConst : public virtual Segment::NotifieeConst {
 	public:
@@ -280,7 +280,7 @@ public:
 
 	Mode mode() const { return Segment::truck(); }
 	virtual void modeIs( Mode v ) {}
-	virtual void sourceIs( Fwk::Ptr<Location> _source ) {};
+	virtual void sourceIs( Fwk::Ptr<Location> _source );
 
 	class NotifieeConst : public virtual Segment::NotifieeConst {
 	public:
