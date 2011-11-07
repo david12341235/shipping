@@ -899,7 +899,7 @@ public:
 	struct fleetInfo
 	{
 		Mph speed_;
-		U32 capacity_;
+		NumPackages capacity_;
 		Dollar cost_;
 
 		public:
@@ -912,13 +912,13 @@ public:
 
 	static Mode TypeInstance( Fwk::String );
 
-	Mph speed( Mode m ) const;
+	Mph speed( Mode m ) const { return fleet_.at(m).speed_; };
 	void speedIs( Mode m, Mph _speed ) { fleet_[m].speed_ = _speed; }
 
-	U32 capacity( Mode m ) const;
-	void capacityIs( Mode m, U32 _capacity ) { fleet_[m].capacity_ = _capacity; }
+	NumPackages capacity( Mode m ) const { return fleet_.at(m).capacity_; };
+	void capacityIs( Mode m, NumPackages _capacity ) { fleet_[m].capacity_ = _capacity; }
 
-	Dollar cost( Mode m ) const;
+	Dollar cost( Mode m ) const { return fleet_.at(m).cost_; };
 	void costIs( Mode m, Dollar _cost ) { fleet_[m].cost_ = _cost; }
 	
 	Fwk::Ptr<Engine> engine() const { return engine_; };
@@ -986,7 +986,11 @@ public:
 protected:
 	Fleet( const Fleet& );
 	Fleet( const string& _name, Fwk::Ptr<Engine> _engine ) :
-	NamedInterface(_name), engine_(_engine) {};
+	NamedInterface(_name), engine_(_engine) {
+		fleet_[boat_];
+		fleet_[truck_];
+		fleet_[plane_];
+	};
 	map<Mode, fleetInfo> fleet_;
 	NotifieeList notifiee_;
 	Fwk::Ptr<Engine> engine_;

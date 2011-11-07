@@ -206,7 +206,32 @@ public:
 	}
 
     // Instance method
-	string attribute(const string& name) { return ""; };
+	string attribute(const string& name) { 
+		istringstream iss(name);
+		string sub;
+		iss >> sub;
+		Fleet::Mode m;
+		if (sub.find("Boat")) {
+			m = Fleet::boat_;
+		} else if (sub.find("Plane")) {
+			m = Fleet::plane_;
+		} else if (sub.find("Truck")) {
+			m = Fleet::truck_;
+		} else {
+			cout << sub << endl;
+			return "";
+		}
+
+		iss >> sub;
+		if (sub == "speed") {
+			return fleet_->speed(m);
+		} else if (sub == "cost") {
+			return fleet_->cost(m);
+		} else if (sub == "capacity") {
+			return fleet_->capacity(m);
+		}
+		return "";
+	};
 
     // Instance method
 	void attributeIs(const string& name, const string& v) {};
