@@ -453,11 +453,13 @@ string SegmentRep::attribute(const string& name) {
 	}
 	else if( name == "return segment" )
 	{
+	
 		Segment::PtrConst _returnSeg = segment_->returnSegment();
 		if( _returnSeg )
 		{
 			return _returnSeg->name();
 		}
+		
 	}
 	else if( name == "difficulty" )
 	{

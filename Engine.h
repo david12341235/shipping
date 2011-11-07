@@ -57,7 +57,7 @@ public:
 	void lengthIs( const Mile& _length ) { length_ = _length; }
 
 	PtrConst returnSegment() const { return returnSegment_; }
-	void returnSegmentIs( PtrConst& _returnSegment ); 
+	void returnSegmentIs( Segment::Ptr _returnSegment ); 
 
 	Difficulty difficulty() const { return difficulty_; }
 	void difficultyIs( const Difficulty& _difficulty ) { difficulty_ = _difficulty; }
@@ -128,13 +128,14 @@ public:
 
 protected:
 	Segment( const Segment& );
-	Segment( const string& _name, Mode _mode, Fwk::Ptr<Engine> _engine );
+	Segment( const string& _name, Mode _mode, Fwk::Ptr<Engine> _engine ) : NamedInterface(_name), mode_(_mode), engine_(_engine), length_(0), difficulty_(0), expedite_(expNo_) {}
 	Mode mode_;
+	Fwk::Ptr<Engine> engine_;
 	Fwk::Ptr<Location> source_;
 	Mile length_;
 	Difficulty difficulty_;
 	ExpVal expedite_;
-	PtrConst returnSegment_;
+	Ptr returnSegment_;
 	NotifieeList notifiee_;
 };
 

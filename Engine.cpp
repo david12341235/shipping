@@ -8,6 +8,16 @@ Segment::SegmentId Segment::SegmentIdInstance ( int v ) {
 	return 0;
 }
 
+void Segment::sourceIs( Fwk::Ptr<Location> _source )
+{
+	return;
+}
+
+void Segment::returnSegmentIs( Segment::Ptr _returnSegment )
+{
+	return;
+}
+
 // ------- Location
 void
 Location::onZeroReferences() {
