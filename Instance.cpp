@@ -215,7 +215,7 @@ protected:
     FleetRep(const string& name, ManagerImpl* manager) :
         Instance(name), manager_(manager)
     {
-        // Nothing else to do.
+		fleet_ = Fleet::FleetNew(name, manager_->engine());
     }
     Fwk::Ptr<ManagerImpl> manager_;
 	Fleet::Ptr fleet_;
@@ -242,7 +242,7 @@ protected:
     ConnRep(const string& name, ManagerImpl* manager) :
         Instance(name), manager_(manager)
     {
-        // Nothing else to do.
+		conn_ = Conn::ConnNew(name, manager_->engine());
     }
     Fwk::Ptr<ManagerImpl> manager_;
 	Conn::Ptr conn_;

@@ -863,7 +863,7 @@ public:
 	typedef NotifieeList::IteratorConst NotifieeIteratorConst;
 	NotifieeIteratorConst notifieeIterConst() const { return notifiee_.iterator(); }
 	U32 notifiees() const { return notifiee_.members(); }
-	~Conn();
+	~Conn() {};
 	
 	static Conn::Ptr ConnNew( const string& _name, Fwk::Ptr<Engine> _engine ) {
 		Ptr m = new Conn( _name, _engine );
@@ -874,7 +874,9 @@ public:
 protected:
 	Conn( const Conn& );
 	Conn( const string& _name);
-	Conn( const string& _name, Fwk::Ptr<Engine> _engine );
+	Conn( const string& _name, Fwk::Ptr<Engine> _engine ) :
+	    NamedInterface(_name), engine_(_engine), 
+		distance_(0), cost_(0), time_(0) {};
 	NotifieeList notifiee_;
 	Mile distance_;
 	Dollar cost_;
@@ -973,7 +975,7 @@ public:
 	typedef NotifieeList::IteratorConst NotifieeIteratorConst;
 	NotifieeIteratorConst notifieeIterConst() const { return notifiee_.iterator(); }
 	U32 notifiees() const { return notifiee_.members(); }
-	~Fleet();
+	~Fleet() {};
 	
 	static Fleet::Ptr FleetNew( const string& _name, Fwk::Ptr<Engine> _engine ) {
 		Ptr m = new Fleet( _name, _engine );
@@ -983,7 +985,8 @@ public:
 
 protected:
 	Fleet( const Fleet& );
-	Fleet( const string& _name, Fwk::Ptr<Engine> _engine );
+	Fleet( const string& _name, Fwk::Ptr<Engine> _engine ) :
+	NamedInterface(_name), engine_(_engine) {};
 	map<Mode, fleetInfo> fleet_;
 	NotifieeList notifiee_;
 	Fwk::Ptr<Engine> engine_;
