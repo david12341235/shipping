@@ -1001,10 +1001,10 @@ public:
 	EnginePtr engine() { return engine_; };
 	void engineIs(EnginePtr e) { engine_ = e; };
 
-	typedef Fwk::ListRaw<NotifieeConst> NotifieeList;
+/*	typedef Fwk::ListRaw<NotifieeConst> NotifieeList;
 	typedef NotifieeList::IteratorConst NotifieeIteratorConst;
 	NotifieeIteratorConst notifieeIterConst() const { return notifiee_.iterator(); }
-	U32 notifiees() const { return notifiee_.members(); }
+	U32 notifiees() const { return notifiee_.members(); }*/
 	~Stats();
 
 	class SegmentExpediteReactor;
@@ -1035,7 +1035,6 @@ protected:
 	U32 boatSegment_;
 	U32 planeSegment_;
 	U32 expedite_;
-	NotifieeList notifiee_;
 	EnginePtr engine_;
 	string name_;
 };
