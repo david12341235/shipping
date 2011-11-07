@@ -118,7 +118,7 @@ public:
 	typedef NotifieeList::IteratorConst NotifieeIteratorConst;
 	NotifieeIteratorConst notifieeIterConst() const { return notifiee_.iterator(); }
 	U32 notifiees() const { return notifiee_.members(); }
-	~Segment() {};
+	~Segment() {}
 	
 	static Segment::Ptr SegmentNew( const string& _name, Mode _mode, Fwk::Ptr<Engine> _engine ) {
 		Ptr m = new Segment( _name, _mode, _engine );
@@ -270,7 +270,7 @@ public:
 
 protected:
 	BoatSegment( const BoatSegment& );
-	BoatSegment( const string& _name, Fwk::Ptr<Engine> _engine ) : Segment( _name, mode(), _engine ) {};
+	BoatSegment( const string& _name, Fwk::Ptr<Engine> _engine ) : Segment( _name, mode(), _engine ) {}
 	NotifieeList notifiee_;
 };
 
@@ -337,7 +337,7 @@ public:
 
 protected:
 	PlaneSegment( const PlaneSegment& );
-	PlaneSegment( const string& _name, Fwk::Ptr<Engine> _engine ) : Segment( _name, mode(), _engine ) {};
+	PlaneSegment( const string& _name, Fwk::Ptr<Engine> _engine ) : Segment( _name, mode(), _engine ) {}
 	NotifieeList notifiee_;
 };
 

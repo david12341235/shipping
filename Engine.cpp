@@ -21,6 +21,12 @@ Segment::SegmentId Segment::SegmentIdInstance ( int v ) {
 
 void Segment::sourceIs( Fwk::Ptr<Location> _source )
 {
+	if( _source )
+	{
+		source_->segmentDel( this );
+		source_ = _source;
+		source_->segmentIs( this );
+	}
 	return;
 }
 
@@ -30,6 +36,19 @@ void Segment::returnSegmentIs( Segment::Ptr _returnSegment )
 }
 
 // ------- Location
+
+void Location::segmentDel( Segment::PtrConst _segment )
+{
+	for( SegmentList::iterator iter = segment_.begin(); iter != segment_.end(); iter++ )
+	{
+		if( *iter == _segment )
+		{
+			segment_.erase( iter );
+			break;
+		}
+	}
+}
+
 void
 Location::onZeroReferences() {
   retry:
