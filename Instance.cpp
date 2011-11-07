@@ -48,16 +48,15 @@ public:
     }
 
     // Instance method
-    string attribute(const string& name);
+	string attribute(const string& name);
 
     // Instance method
-    void attributeIs(const string& name, const string& v);
+	void attributeIs(const string& name, const string& v);
 
 private:
     Ptr<ManagerImpl> manager_;
-
     Segment::SegmentId segmentNumber(const string& name);
-
+	Location::Ptr location_;
 };
                                                                                                   
 class CustomerRep : public LocationRep {
@@ -125,14 +124,14 @@ public:
     }
 
     // Instance method
-    string attribute(const string& name);
+	string attribute(const string& name) { return ""; };
 
     // Instance method
-    void attributeIs(const string& name, const string& v);
+	void attributeIs(const string& name, const string& v) {};
 
 private:
     Ptr<ManagerImpl> manager_;
-
+	Segment::Ptr segment_;
 };
 
 class TruckSegmentRep : public SegmentRep {
@@ -178,14 +177,14 @@ public:
     }
 
     // Instance method
-    string attribute(const string& name);
+	string attribute(const string& name) { return ""; };
 
     // Instance method
-    void attributeIs(const string& name, const string& v);
+	void attributeIs(const string& name, const string& v) {};
 
 private:
     Ptr<ManagerImpl> manager_;
-
+	Fleet::Ptr fleet_;
 };
 
 class ConnRep : public Instance {
@@ -198,34 +197,34 @@ public:
     }
 
     // Instance method
-    string attribute(const string& name);
+	string attribute(const string& name) { return ""; };
 
     // Instance method
-    void attributeIs(const string& name, const string& v);
+	void attributeIs(const string& name, const string& v) {};
 
 private:
     Ptr<ManagerImpl> manager_;
-
+	Conn::Ptr conn_;
 };
 
 class StatsRep : public Instance {
 public:
 
     StatsRep(const string& name, ManagerImpl* manager) :
-        Instance(name), manager_(manager)
+	  Instance(name), manager_(manager)
     {
-        // Nothing else to do.
+		stats_ = Stats::statsNew(name);
     }
 
     // Instance method
-    string attribute(const string& name);
+	string attribute(const string& name) { return ""; };
 
     // Instance method
-    void attributeIs(const string& name, const string& v);
+	void attributeIs(const string& name, const string& v) {};
 
 private:
     Ptr<ManagerImpl> manager_;
-
+	Stats::Ptr stats_;
 };
 
 ManagerImpl::ManagerImpl() {
@@ -234,6 +233,46 @@ ManagerImpl::ManagerImpl() {
 Ptr<Instance> ManagerImpl::instanceNew(const string& name, const string& type) {
     if (type == "Truck terminal") {
         Ptr<TruckTerminalRep> t = new TruckTerminalRep(name, this);
+        instance_[name] = t;
+        return t;
+    } else if (type == "Boat terminal") {
+        Ptr<BoatTerminalRep> t = new BoatTerminalRep(name, this);
+        instance_[name] = t;
+        return t;
+    } else if (type == "Plane terminal") {
+        Ptr<PlaneTerminalRep> t = new PlaneTerminalRep(name, this);
+        instance_[name] = t;
+        return t;
+    } else if (type == "Customer") {
+        Ptr<CustomerRep> t = new CustomerRep(name, this);
+        instance_[name] = t;
+        return t;
+    } else if (type == "Port") {
+        Ptr<PortRep> t = new PortRep(name, this);
+        instance_[name] = t;
+        return t;
+    } else if (type == "Truck segment") {
+        Ptr<TruckSegmentRep> t = new TruckSegmentRep(name, this);
+        instance_[name] = t;
+        return t;
+    } else if (type == "Boat segment") {
+        Ptr<BoatSegmentRep> t = new BoatSegmentRep(name, this);
+        instance_[name] = t;
+        return t;
+    } else if (type == "Plane segment") {
+        Ptr<PlaneSegmentRep> t = new PlaneSegmentRep(name, this);
+        instance_[name] = t;
+        return t;
+    } else if (type == "Stats") {
+        Ptr<StatsRep> t = new StatsRep(name, this);
+        instance_[name] = t;
+        return t;
+    } else if (type == "Conn") {
+        Ptr<ConnRep> t = new ConnRep(name, this);
+        instance_[name] = t;
+        return t;
+    } else if (type == "Fleet") {
+        Ptr<FleetRep> t = new FleetRep(name, this);
         instance_[name] = t;
         return t;
     }
@@ -289,4 +328,8 @@ Segment::SegmentId LocationRep::segmentNumber(const string& name) {
  */
 Ptr<Instance::Manager> shippingInstanceManager() {
     return new Shipping::ManagerImpl();
+}
+
+Shipping::Engine::Ptr Shipping::ManagerImpl::engine() {
+	return NULL;
 }
