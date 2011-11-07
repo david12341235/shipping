@@ -1049,7 +1049,8 @@ public:
 
 protected:
 	Stats( const Stats& );
-	Stats( const string& _name, Fwk::Ptr<Engine> _engine);
+	Stats( const string& _name, Fwk::Ptr<Engine> _engine) :
+	NamedInterface(_name), engine_(_engine) {};
 	U32 customer_;
 	U32 port_;
 	U32 truckTerminal_;

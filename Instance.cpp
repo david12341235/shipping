@@ -269,7 +269,7 @@ protected:
     StatsRep(const string& name, ManagerImpl* manager) :
 	  Instance(name), manager_(manager)
     {
-		//stats_ = Stats::StatsNew(name, manager_->engine());
+		stats_ = Stats::StatsNew(name, manager_->engine());
     }
     Fwk::Ptr<ManagerImpl> manager_;
 	Stats::Ptr stats_;
