@@ -863,7 +863,7 @@ public:
 	typedef NotifieeList::IteratorConst NotifieeIteratorConst;
 	NotifieeIteratorConst notifieeIterConst() const { return notifiee_.iterator(); }
 	U32 notifiees() const { return notifiee_.members(); }
-	~Conn();
+	~Conn() {};
 	
 	static Conn::Ptr ConnNew( const string& _name, Fwk::Ptr<Engine> _engine ) {
 		Ptr m = new Conn( _name, _engine );
@@ -874,7 +874,9 @@ public:
 protected:
 	Conn( const Conn& );
 	Conn( const string& _name);
-	Conn( const string& _name, Fwk::Ptr<Engine> _engine );
+	Conn( const string& _name, Fwk::Ptr<Engine> _engine ) :
+	    NamedInterface(_name), engine_(_engine), 
+		distance_(0), cost_(0), time_(0) {};
 	NotifieeList notifiee_;
 	Mile distance_;
 	Dollar cost_;
@@ -897,7 +899,7 @@ public:
 	struct fleetInfo
 	{
 		Mph speed_;
-		U32 capacity_;
+		NumPackages capacity_;
 		Dollar cost_;
 
 		public:
@@ -910,13 +912,13 @@ public:
 
 	static Mode TypeInstance( Fwk::String );
 
-	Mph speed( Mode m ) const;
+	Mph speed( Mode m ) const { return fleet_.at(m).speed_; };
 	void speedIs( Mode m, Mph _speed ) { fleet_[m].speed_ = _speed; }
 
-	U32 capacity( Mode m ) const;
-	void capacityIs( Mode m, U32 _capacity ) { fleet_[m].capacity_ = _capacity; }
+	NumPackages capacity( Mode m ) const { return fleet_.at(m).capacity_; };
+	void capacityIs( Mode m, NumPackages _capacity ) { fleet_[m].capacity_ = _capacity; }
 
-	Dollar cost( Mode m ) const;
+	Dollar cost( Mode m ) const { return fleet_.at(m).cost_; };
 	void costIs( Mode m, Dollar _cost ) { fleet_[m].cost_ = _cost; }
 	
 	Fwk::Ptr<Engine> engine() const { return engine_; };
@@ -973,7 +975,7 @@ public:
 	typedef NotifieeList::IteratorConst NotifieeIteratorConst;
 	NotifieeIteratorConst notifieeIterConst() const { return notifiee_.iterator(); }
 	U32 notifiees() const { return notifiee_.members(); }
-	~Fleet();
+	~Fleet() {};
 	
 	static Fleet::Ptr FleetNew( const string& _name, Fwk::Ptr<Engine> _engine ) {
 		Ptr m = new Fleet( _name, _engine );
@@ -983,7 +985,12 @@ public:
 
 protected:
 	Fleet( const Fleet& );
-	Fleet( const string& _name, Fwk::Ptr<Engine> _engine );
+	Fleet( const string& _name, Fwk::Ptr<Engine> _engine ) :
+	NamedInterface(_name), engine_(_engine) {
+		fleet_[boat_];
+		fleet_[truck_];
+		fleet_[plane_];
+	};
 	map<Mode, fleetInfo> fleet_;
 	NotifieeList notifiee_;
 	Fwk::Ptr<Engine> engine_;
@@ -1049,7 +1056,8 @@ public:
 
 protected:
 	Stats( const Stats& );
-	Stats( const string& _name, Fwk::Ptr<Engine> _engine);
+	Stats( const string& _name, Fwk::Ptr<Engine> _engine) :
+	NamedInterface(_name), engine_(_engine) {};
 	U32 customer_;
 	U32 port_;
 	U32 truckTerminal_;

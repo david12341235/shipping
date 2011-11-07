@@ -8,7 +8,6 @@ Segment::SegmentId Segment::SegmentIdInstance ( int v ) {
 	return 0;
 }
 
-
 // ------- Location
 void
 Location::onZeroReferences() {
@@ -81,6 +80,7 @@ Location::attributeString( Fwk::RootNotifiee::AttributeId a ) const {
       default: str = Fwk::RootNotifiee::attributeString(a); break;
    }
    return str;
+>>>>>>> d246abdc59a33bca662561918e0790d9051d3027
 }
 */
 
