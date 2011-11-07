@@ -460,6 +460,7 @@ string SegmentRep::attribute(const string& name) {
 void SegmentRep::attributeIs(const string& name, const string& v) {
 	if( name == "source" )
 	{
+		segment_->sourceIs( manager_->engine()->location( v ) );
 	}
 	else if( name == "length" )
 	{
@@ -468,6 +469,7 @@ void SegmentRep::attributeIs(const string& name, const string& v) {
 	}
 	else if( name == "return segment" )
 	{
+		segment_->returnSegmentIs( manager_->engine()->segment( v ) );
 	}
 	else if( name == "difficulty" )
 	{

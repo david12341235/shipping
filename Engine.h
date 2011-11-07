@@ -878,11 +878,11 @@ protected:
 	    NamedInterface(_name), engine_(_engine), 
 		distance_(0), cost_(0), time_(0) {};
 	NotifieeList notifiee_;
+	Fwk::Ptr<Engine> engine_;
 	Mile distance_;
 	Dollar cost_;
 	Hour time_;
 	Segment::ExpVal expedited_;
-	Fwk::Ptr<Engine> engine_;
 };
 
 class Fleet : public Fwk::NamedInterface {
