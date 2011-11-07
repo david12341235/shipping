@@ -128,7 +128,7 @@ public:
 
 protected:
 	Segment( const Segment& );
-	Segment( const string& _name, Mode _mode, Fwk::Ptr<Engine> _engine ) : NamedInterface(_name), mode_(_mode), engine_(_engine), length_(0), difficulty_(0), expedite_(expNo_) {}
+	Segment( const string& _name, Mode _mode, Fwk::Ptr<Engine> _engine );
 	Mode mode_;
 	Fwk::Ptr<Engine> engine_;
 	Fwk::Ptr<Location> source_;
@@ -202,7 +202,8 @@ public:
 
 protected:
 	TruckSegment( const TruckSegment& );
-	TruckSegment( const string& _name, Fwk::Ptr<Engine> _engine ) : Segment( _name, mode(), _engine ) {};
+	TruckSegment( const string& _name, Fwk::Ptr<Engine> _engine ) : 
+		Segment( _name, mode(), _engine ) {};
 	NotifieeList notifiee_;
 };
 
@@ -433,8 +434,7 @@ public:
 protected:
 	typedef vector<Segment::PtrConst > SegmentList;
 	Location( const Location& );
-	Location( const string& _name, Type _type, Fwk::Ptr<Engine> _engine ) :
-	    NamedInterface(_name), type_(_type), engine_(_engine) {};
+	Location( const string& _name, Type _type, Fwk::Ptr<Engine> _engine );
    void newNotifiee( Location::NotifieeConst * n ) const {
       Location* me = const_cast<Location*>(this);
       me->notifiee_.newMember(n);
@@ -1057,7 +1057,10 @@ public:
 protected:
 	Stats( const Stats& );
 	Stats( const string& _name, Fwk::Ptr<Engine> _engine) :
-	NamedInterface(_name), engine_(_engine) {};
+	NamedInterface(_name), engine_(_engine), customer_(0), 
+	port_(0), truckTerminal_(0), boatTerminal_(0),
+	planeTerminal_(0), boatSegment_(0), truckSegment_(0), 
+	planeSegment_(0), expedite_(0) {};
 	U32 customer_;
 	U32 port_;
 	U32 truckTerminal_;
@@ -1210,7 +1213,6 @@ public:
 private:
 	Stats::Ptr stats_;
 };
-
 
 } /* end namespace */
 

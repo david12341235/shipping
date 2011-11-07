@@ -333,17 +333,17 @@ public:
 			val = stats_->customer();
 		} else if (name == "Port") {
 			val = stats_->port();
-		} else if (name == "Plane Terminal") {
+		} else if (name == "Plane terminal") {
 			val = stats_->planeTerminal();
-		} else if (name == "Boat Terminal") {
+		} else if (name == "Boat terminal") {
 			val = stats_->boatTerminal();
-		} else if (name == "Truck Terminal") {
+		} else if (name == "Truck terminal") {
 			val = stats_->truckTerminal();
-		} else if (name == "Truck Segment") {
+		} else if (name == "Truck segment") {
 			val = stats_->truckSegment();
-		} else if (name == "Boat Segment") {
+		} else if (name == "Boat segment") {
 			val = stats_->boatSegment();
-		} else if (name == "Plane Segment") {
+		} else if (name == "Plane segment") {
 			val = stats_->planeSegment();
 		} else if (name == "expedite percentage") {
 			return stats_->expedite();

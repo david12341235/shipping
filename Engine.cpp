@@ -3,6 +3,17 @@
 using namespace Shipping;
 
 
+Segment::Segment( const string& _name, Mode _mode, Fwk::Ptr<Engine> _engine ) : 
+NamedInterface(_name), mode_(_mode), engine_(_engine), 
+	length_(0), difficulty_(0), expedite_(expNo_) {
+		engine_->segmentIs(this);
+}
+	
+Location::Location( const string& _name, Type _type, Fwk::Ptr<Engine> _engine ) :
+NamedInterface(_name), type_(_type), engine_(_engine) {
+	engine_->locationIs(this);
+}
+
 Segment::SegmentId Segment::SegmentIdInstance ( int v ) {
 	// TODO: implement
 	return 0;
