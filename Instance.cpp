@@ -327,7 +327,32 @@ public:
 	}
 
     // Instance method
-	string attribute(const string& name) { return ""; };
+	string attribute(const string& name) {
+		U32 val;
+		if (name == "Customer") {
+			val = stats_->customer();
+		} else if (name == "Port") {
+			val = stats_->port();
+		} else if (name == "Plane Terminal") {
+			val = stats_->planeTerminal();
+		} else if (name == "Boat Terminal") {
+			val = stats_->boatTerminal();
+		} else if (name == "Truck Terminal") {
+			val = stats_->truckTerminal();
+		} else if (name == "Truck Segment") {
+			val = stats_->truckSegment();
+		} else if (name == "Boat Segment") {
+			val = stats_->boatSegment();
+		} else if (name == "Plane Segment") {
+			val = stats_->planeSegment();
+		} else if (name == "expedite percentage") {
+			return stats_->expedite();
+		} 
+
+		stringstream ss;
+		ss << val;
+		return ss.str();
+	};
 
     // Instance method
 	void attributeIs(const string& name, const string& v) {};

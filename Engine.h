@@ -1000,7 +1000,6 @@ class Stats : public Fwk::NamedInterface {
 public:
 	typedef Fwk::Ptr<Stats const> PtrConst;
 	typedef Fwk::Ptr<Stats> Ptr;
-	typedef double Percentage; // make Value if needed
 
 	U32 customer() const { return customer_; }
 	void customerIs(U32 v) {}
@@ -1026,13 +1025,13 @@ public:
 	U32 planeSegment() const { return planeSegment_; }
 	void planeSegmentIs(U32 v) {}
 	
-	Percentage expedite() const;
+	Percentage expedite() const {return (double) expediteNum() / (double) totalSegments(); };
 	void expediteIs(Percentage v) {}
 
-	U32 expediteNum() const;
+	U32 expediteNum() const { return expedite_; };
 	void expediteNumIs(U32 v) {}
 	
-	U32 totalSegments() const;
+	U32 totalSegments() const { return boatSegment_ + truckSegment_ + planeSegment_; };
 
 	Fwk::Ptr<Engine> engine() const { return engine_; };
 	void engineIs(Fwk::Ptr<Engine> e) { engine_ = e; };
@@ -1107,8 +1106,8 @@ public:
 	
 		~NotifieeConst();
 		virtual void notifierIs(const Segment::PtrConst& _notifier);
-		virtual void onSegment(Segment::Ptr s) {}
-		virtual void onLocation(Location::Ptr l) {}
+		virtual void onSegmentIs(Segment::Ptr s) {}
+		virtual void onLocationIs(Location::Ptr l) {}
 
 		static NotifieeConst::Ptr NotifieeConstIs() {
 			Ptr m = new NotifieeConst();
@@ -1159,7 +1158,7 @@ class Stats::LocationSegmentReactor : public Engine::Notifiee {
 public:
 	LocationSegmentReactor(Stats* e) : stats_(e) {}
 	
-	virtual void onSegment(Segment::Ptr s) {
+	virtual void onSegmentIs(Segment::Ptr s) {
 		switch(s->mode()) {
 		case Segment::truck_:
 			stats_->truckSegmentIs(stats_->truckSegment() + 1);
@@ -1175,7 +1174,7 @@ public:
 		if (s->expedite()) stats_->expediteNumIs(stats_->expediteNum() + 1);
 	}
 	
-	virtual void onLocation(Location::Ptr l) {
+	virtual void onLocationIs(Location::Ptr l) {
 		switch(l->type()) {
 		case Location::customer_:
 			stats_->customerIs(stats_->customer() + 1);
