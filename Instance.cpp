@@ -141,7 +141,7 @@ public:
 	typedef Fwk::Ptr<SegmentRep> Ptr;
 
     // Instance method
-	string attribute(const string& name) { return ""; };
+	string attribute(const string& name);
 
     // Instance method
 	void attributeIs(const string& name, const string& v) {};
@@ -152,6 +152,9 @@ protected:
 
     Segment::Ptr segment_;
     Fwk::Ptr<ManagerImpl> manager_;
+    string miles( Mile _length);
+    string difficulty( Difficulty _difficulty );
+    string expVal( ExpVal _expVal );
 };
 
 class TruckSegmentRep : public SegmentRep {
@@ -369,6 +372,54 @@ Segment::SegmentId LocationRep::segmentNumber(const string& name) {
         return Segment::SegmentIdInstance( atoi(t) );
     }
     return 0;
+}
+
+string SegmentRep::attribute(const string& name) {
+	if( name == "source" )
+	{
+		Location::Ptr src = segment_->source();
+		if( src )
+		{
+			return src->name();
+		}
+	}
+	else if( name == "length" )
+	{
+		return miles( segment_->length() );
+		
+	}
+	else if( name == "return segment" )
+	{
+		Segment::PtrConst _returnSeg = _segment->returnSegment();
+		if( _returnSeg )
+		{
+			return _returnSeg->name();
+		}
+	}
+	else if( name == "difficulty" )
+	{
+		return difficulty( segment_->difficulty() );
+	}
+	else if( name == "expedite support" )
+	{
+		return expVal( segment_->expedite() );
+	}
+	return "";
+}
+
+string SegmentRep::miles( Mile _length )
+{
+	
+}
+
+string SegmentRep::difficulty( Difficulty _difficulty )
+{
+
+}
+
+string SegmentRep::expVal( Difficulty _expVal )
+{
+
 }
 
 }
