@@ -74,7 +74,7 @@ public:
 	void difficultyIs( const Difficulty& _difficulty ) { difficulty_ = _difficulty; }
 
 	ExpVal expedite() const { return expedite_; }
-	void expediteIs( ExpVal e ) { expedite_ = e; }
+	void expediteIs( ExpVal e );
 
 	class NotifieeConst : public virtual Fwk::NamedInterface::NotifieeConst {
 	public:
@@ -82,6 +82,8 @@ public:
 		typedef Fwk::Ptr<NotifieeConst> Ptr;
 		string name() const { return notifier_->name(); }
 		Segment::PtrConst notifier() const { return notifier_; }
+        static const AttributeId segment__ = AttributeId(Fwk::NamedInterface::NotifieeConst::tacNextAttributeId__);
+        static const AttributeId tacNextAttributeId__ = AttributeId(segment__+1);
 		NotifieeConst const * lrNext() const { return lrNext_; }
 		NotifieeConst * lrNext() { return lrNext_; }
 		void lrNextIs(NotifieeConst * _lrNext) {
@@ -127,7 +129,9 @@ public:
 
 	typedef Fwk::ListRaw<NotifieeConst> NotifieeList;
 	typedef NotifieeList::IteratorConst NotifieeIteratorConst;
+     typedef NotifieeList::Iterator NotifieeIterator;
 	NotifieeIteratorConst notifieeIterConst() const { return notifiee_.iterator(); }
+     NotifieeIterator notifieeIter() { return notifiee_.iterator(); }
 	U32 notifiees() const { return notifiee_.members(); }
 	~Segment() {}
 	
@@ -181,7 +185,7 @@ public:
 		TruckSegment::PtrConst notifier_;
 
 		NotifieeConst* lrNext_;
-		NotifieeConst(): Fwk::NamedInterface::NotifieeConst(),
+		NotifieeConst(): Segment::NotifieeConst(),
 			lrNext_(0) { }
 	};
 
@@ -198,14 +202,9 @@ public:
 			return m;
 		}
 	protected:
-		Notifiee(): Fwk::NamedInterface::Notifiee() { }
+		Notifiee(): Segment::Notifiee() { }
 	};
 
-	typedef Fwk::ListRaw<NotifieeConst> NotifieeList;
-	typedef NotifieeList::IteratorConst NotifieeIteratorConst;
-	NotifieeIteratorConst notifieeIterConst() const { return notifiee_.iterator(); }
-	U32 notifiees() const { return notifiee_.members(); }
-	
 	static TruckSegment::Ptr TruckSegmentNew( const string& _name, Fwk::Ptr<Engine> _engine ) {
 		Ptr m = new TruckSegment( _name, _engine );
 		m->referencesDec(1);
@@ -216,7 +215,6 @@ protected:
 	TruckSegment( const TruckSegment& );
 	TruckSegment( const string& _name, Fwk::Ptr<Engine> _engine ) : 
 		Segment( _name, mode(), _engine ) {};
-	NotifieeList notifiee_;
 };
 
 class BoatSegment : public Segment {
@@ -249,7 +247,7 @@ public:
 		BoatSegment::PtrConst notifier_;
 
 		NotifieeConst* lrNext_;
-		NotifieeConst(): Fwk::NamedInterface::NotifieeConst(),
+		NotifieeConst(): Segment::NotifieeConst(),
 			lrNext_(0) { }
 	};
 
@@ -266,14 +264,9 @@ public:
 			return m;
 		}
 	protected:
-		Notifiee(): Fwk::NamedInterface::Notifiee() { }
+		Notifiee(): Segment::Notifiee() { }
 	};
 
-	typedef Fwk::ListRaw<NotifieeConst> NotifieeList;
-	typedef NotifieeList::IteratorConst NotifieeIteratorConst;
-	NotifieeIteratorConst notifieeIterConst() const { return notifiee_.iterator(); }
-	U32 notifiees() const { return notifiee_.members(); }
-	
 	static BoatSegment::Ptr BoatSegmentNew( const string& _name, Fwk::Ptr<Engine> _engine ) {
 		Ptr m = new BoatSegment( _name, _engine );
 		m->referencesDec(1);
@@ -283,7 +276,6 @@ public:
 protected:
 	BoatSegment( const BoatSegment& );
 	BoatSegment( const string& _name, Fwk::Ptr<Engine> _engine ) : Segment( _name, mode(), _engine ) {}
-	NotifieeList notifiee_;
 };
 
 class PlaneSegment : public Segment {
@@ -316,7 +308,7 @@ public:
 		PlaneSegment::PtrConst notifier_;
 
 		NotifieeConst* lrNext_;
-		NotifieeConst(): Fwk::NamedInterface::NotifieeConst(),
+		NotifieeConst(): Segment::NotifieeConst(),
 			lrNext_(0) { }
 	};
 
@@ -333,14 +325,9 @@ public:
 			return m;
 		}
 	protected:
-		Notifiee(): Fwk::NamedInterface::Notifiee() { }
+		Notifiee(): Segment::Notifiee() { }
 	};
 
-	typedef Fwk::ListRaw<NotifieeConst> NotifieeList;
-	typedef NotifieeList::IteratorConst NotifieeIteratorConst;
-	NotifieeIteratorConst notifieeIterConst() const { return notifiee_.iterator(); }
-	U32 notifiees() const { return notifiee_.members(); }
-	
 	static PlaneSegment::Ptr PlaneSegmentNew( const string& _name, Fwk::Ptr<Engine> _engine ) {
 		Ptr m = new PlaneSegment( _name, _engine );
 		m->referencesDec(1);
@@ -350,7 +337,6 @@ public:
 protected:
 	PlaneSegment( const PlaneSegment& );
 	PlaneSegment( const string& _name, Fwk::Ptr<Engine> _engine ) : Segment( _name, mode(), _engine ) {}
-	NotifieeList notifiee_;
 };
 
 
@@ -399,6 +385,8 @@ public:
 		typedef Fwk::Ptr<NotifieeConst> Ptr;
 		string name() const { return notifier_->name(); }
 		Location::PtrConst notifier() const { return notifier_; }
+        static const AttributeId location__ = AttributeId(Fwk::NamedInterface::NotifieeConst::tacNextAttributeId__);
+        static const AttributeId tacNextAttributeId__ = AttributeId(location__+1);
 	    bool isNonReferencing() const { return isNonReferencing_; }
 		NotifieeConst const * lrNext() const { return lrNext_; }
 		NotifieeConst * lrNext() { return lrNext_; }
@@ -503,7 +491,7 @@ public:
 		Customer::PtrConst notifier_;
 
 		NotifieeConst* lrNext_;
-		NotifieeConst(): Fwk::NamedInterface::NotifieeConst(),
+		NotifieeConst(): Location::NotifieeConst(),
 			lrNext_(0) { }
 	};
 
@@ -520,13 +508,9 @@ public:
 			return m;
 		}
 	protected:
-		Notifiee(): Fwk::NamedInterface::Notifiee() { }
+		Notifiee(): Location::Notifiee() { }
 	};
 
-	typedef Fwk::ListRaw<NotifieeConst> NotifieeList;
-	typedef NotifieeList::IteratorConst NotifieeIteratorConst;
-	NotifieeIteratorConst notifieeIterConst() const { return notifiee_.iterator(); }
-	U32 notifiees() const { return notifiee_.members(); }
 	
 	static Customer::Ptr CustomerNew( const string& _name, Fwk::Ptr<Engine> _engine ) {
 		Ptr m = new Customer( _name, _engine );
@@ -537,7 +521,6 @@ public:
 protected:
 	Customer( const Customer& );
 	Customer( const string& _name, Fwk::Ptr<Engine> _engine ) : Location( _name, type(), _engine ) {};
-	NotifieeList notifiee_;
 };
 
 class Port : public Location {
@@ -570,7 +553,7 @@ public:
 		Port::PtrConst notifier_;
 
 		NotifieeConst* lrNext_;
-		NotifieeConst(): Fwk::NamedInterface::NotifieeConst(),
+		NotifieeConst(): Location::NotifieeConst(),
 			lrNext_(0) { }
 	};
 
@@ -587,14 +570,9 @@ public:
 			return m;
 		}
 	protected:
-		Notifiee(): Fwk::NamedInterface::Notifiee() { }
+		Notifiee(): Location::Notifiee() { }
 	};
 
-	typedef Fwk::ListRaw<NotifieeConst> NotifieeList;
-	typedef NotifieeList::IteratorConst NotifieeIteratorConst;
-	NotifieeIteratorConst notifieeIterConst() const { return notifiee_.iterator(); }
-	U32 notifiees() const { return notifiee_.members(); }
-	
 	static Port::Ptr PortNew( const string& _name, Fwk::Ptr<Engine> _engine ) {
 		Ptr m = new Port( _name, _engine );
 		m->referencesDec(1);
@@ -604,7 +582,6 @@ public:
 protected:
 	Port( const Port& );
 	Port( const string& _name, Fwk::Ptr<Engine> _engine ) : Location( _name, type(), _engine ) {};
-	NotifieeList notifiee_;
 };
 
 class TruckLocation : public Location {
@@ -637,7 +614,7 @@ public:
 		TruckLocation::PtrConst notifier_;
 
 		NotifieeConst* lrNext_;
-		NotifieeConst(): Fwk::NamedInterface::NotifieeConst(),
+		NotifieeConst(): Location::NotifieeConst(),
 			lrNext_(0) { }
 	};
 
@@ -654,14 +631,9 @@ public:
 			return m;
 		}
 	protected:
-		Notifiee(): Fwk::NamedInterface::Notifiee() { }
+		Notifiee(): Location::Notifiee() { }
 	};
 
-	typedef Fwk::ListRaw<NotifieeConst> NotifieeList;
-	typedef NotifieeList::IteratorConst NotifieeIteratorConst;
-	NotifieeIteratorConst notifieeIterConst() const { return notifiee_.iterator(); }
-	U32 notifiees() const { return notifiee_.members(); }
-	
 	static TruckLocation::Ptr TruckLocationNew( const string& _name, Fwk::Ptr<Engine> _engine ) {
 		Ptr m = new TruckLocation( _name, _engine );
 		m->referencesDec(1);
@@ -671,7 +643,6 @@ public:
 protected:
 	TruckLocation( const TruckLocation& );
 	TruckLocation( const string& _name, Fwk::Ptr<Engine> _engine ) : Location( _name, type(), _engine ) {};
-	NotifieeList notifiee_;
 };
 
 class BoatLocation : public Location {
@@ -704,7 +675,7 @@ public:
 		BoatLocation::PtrConst notifier_;
 
 		NotifieeConst* lrNext_;
-		NotifieeConst(): Fwk::NamedInterface::NotifieeConst(),
+		NotifieeConst(): Location::NotifieeConst(),
 			lrNext_(0) { }
 	};
 
@@ -721,14 +692,9 @@ public:
 			return m;
 		}
 	protected:
-		Notifiee(): Fwk::NamedInterface::Notifiee() { }
+		Notifiee(): Location::Notifiee() { }
 	};
 
-	typedef Fwk::ListRaw<NotifieeConst> NotifieeList;
-	typedef NotifieeList::IteratorConst NotifieeIteratorConst;
-	NotifieeIteratorConst notifieeIterConst() const { return notifiee_.iterator(); }
-	U32 notifiees() const { return notifiee_.members(); }
-	
 	static BoatLocation::Ptr BoatLocationNew( const string& _name, Fwk::Ptr<Engine> _engine ) {
 		Ptr m = new BoatLocation( _name, _engine );
 		m->referencesDec(1);
@@ -738,7 +704,6 @@ public:
 protected:
 	BoatLocation( const BoatLocation& );
 	BoatLocation( const string& _name, Fwk::Ptr<Engine> _engine ) : Location( _name, type(), _engine ) {};
-	NotifieeList notifiee_;
 };
 
 class PlaneLocation : public Location {
@@ -791,11 +756,6 @@ public:
 		Notifiee(): Fwk::NamedInterface::Notifiee() { }
 	};
 
-	typedef Fwk::ListRaw<NotifieeConst> NotifieeList;
-	typedef NotifieeList::IteratorConst NotifieeIteratorConst;
-	NotifieeIteratorConst notifieeIterConst() const { return notifiee_.iterator(); }
-	U32 notifiees() const { return notifiee_.members(); }
-	
 	static PlaneLocation::Ptr PlaneLocationNew( const string& _name, Fwk::Ptr<Engine> _engine ) {
 		Ptr m = new PlaneLocation( _name, _engine );
 		m->referencesDec(1);
@@ -805,7 +765,6 @@ public:
 protected:
 	PlaneLocation( const PlaneLocation& );
 	PlaneLocation( const string& _name, Fwk::Ptr<Engine> _engine ) : Location( _name, type(), _engine ) {};
-	NotifieeList notifiee_;
 };
 
 class Conn : public Fwk::NamedInterface {
@@ -1084,16 +1043,16 @@ protected:
 	port_(0), truckTerminal_(0), boatTerminal_(0),
 	planeTerminal_(0), boatSegment_(0), truckSegment_(0), 
 	planeSegment_(0), expedite_(0) {};
+	Fwk::Ptr<Engine> engine_;
 	U32 customer_;
 	U32 port_;
 	U32 truckTerminal_;
 	U32 boatTerminal_;
 	U32 planeTerminal_;
-	U32 truckSegment_;
 	U32 boatSegment_;
+	U32 truckSegment_;
 	U32 planeSegment_;
 	U32 expedite_;
-	Fwk::Ptr<Engine> engine_;
 	string name_;
 };
 

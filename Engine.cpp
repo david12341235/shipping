@@ -85,6 +85,17 @@ void Segment::returnSegmentIs( Segment::Ptr _returnSegment )
 	return;
 }
 
+void Segment::expediteIs( ExpVal e )
+{
+	expedite_ = e;
+	retry:
+	U32 ver = notifiee_.version();
+	if(notifiees()) for(NotifieeIterator n=notifieeIter();n.ptr();++n) try {
+	    n->onReturnSegment();
+	    if( ver != notifiee_.version() ) goto retry;
+	 } catch(...) { n->onNotificationException(NotifieeConst::segment__); }
+}
+
 // ------- Location
 
 void Location::segmentDel( Segment::PtrConst _segment )
