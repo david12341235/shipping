@@ -50,7 +50,7 @@ public:
 	virtual void modeIs( Mode v ){ mode_ = v; }
 
 	Fwk::Ptr<Location> source() const { return source_; }
-	virtual void sourceIs( Location* _source );
+	virtual void sourceIs( Fwk::Ptr<Location> _source );
 
 	Mile length() const { return length_; }
 	void lengthIs( const Mile& _length ) { length_ = _length; }
@@ -360,9 +360,9 @@ public:
 	static Type TypeInstance( Fwk::String );
 	Type type() const { return type_; }
 	virtual void typeIs( Type _type ) { type_ = _type; }
-	Segment* segment( Segment::SegmentId _segmentId ) const;
-	virtual void segmentIs( Segment const* _segment ) {};
-	void segmentDel( Segment const* _segment );
+	Fwk::Ptr<Segment> segment( Segment::SegmentId _segmentId ) const;
+	virtual void segmentIs( Fwk::Ptr<Segment const> _segment ) {};
+	void segmentDel( Fwk::Ptr<Segment const> _segment );
 
 	class NotifieeConst : public virtual Fwk::NamedInterface::NotifieeConst {
 	public:
@@ -438,7 +438,7 @@ protected:
    }
 	Type type_;
 	Fwk::Ptr<Engine> engine_;
-	vector< Segment const* > segment_;
+	vector< Fwk::Ptr<Segment const> > segment_;
 	NotifieeList notifiee_;
     void onZeroReferences();
 };
@@ -1041,7 +1041,7 @@ public:
 	}
 
 
-private:
+protected:
 	Stats( const Stats& );
 	Stats( const string& _name, Fwk::Ptr<Engine> _engine);
 	U32 customer_;
@@ -1071,7 +1071,7 @@ public:
 
 	Stats::Ptr stats() const;
 	Fleet::Ptr fleet() const;
-	Conn* conn() const;
+	Conn::Ptr conn() const;
 	
 	Fwk::LinkedList<Location::Ptr> locations() const;
 	Fwk::LinkedList<Segment::Ptr> segments() const;
