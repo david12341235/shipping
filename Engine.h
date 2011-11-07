@@ -47,22 +47,22 @@ public:
 	static Mode ModeInstance( Fwk::String );
 	static ExpVal ExpValInstance( Fwk::String );
 
-	Mode mode() { return mode_; }
+	Mode mode() const { return mode_; }
 	virtual void modeIs( Mode v ){ mode_ = v; }
 
-	Location* source(){ return source_; }
+	Location* source() const{ return source_; }
 	virtual void sourceIs( Location* _source );
 
-	Mile length(){ return length_; }
+	Mile length() const { return length_; }
 	void lengthIs( const Mile& _length ) { length_ = _length; }
 
-	PtrConst returnSegment(){ return returnSegment_; }
+	PtrConst returnSegment() const { return returnSegment_; }
 	void returnSegmentIs( PtrConst& _returnSegment ); 
 
-	Difficulty difficulty(){ return difficulty_; }
+	Difficulty difficulty() const { return difficulty_; }
 	void difficultyIs( const Difficulty& _difficulty ) { difficulty_ = _difficulty; }
 
-	ExpVal expedite() { return expedite_; }
+	ExpVal expedite() const { return expedite_; }
 	void expediteIs( ExpVal e ) { expedite_ = e; }
 
 	class NotifieeConst : public virtual Fwk::NamedInterface::NotifieeConst {
@@ -143,7 +143,7 @@ public:
 	typedef Fwk::Ptr<TruckSegment const> PtrConst;
 	typedef Fwk::Ptr<TruckSegment> Ptr;
 
-	Mode mode() { return Segment::truck(); }
+	Mode mode() const { return Segment::truck(); }
 	virtual void modeIs( Mode v ) {}
 	virtual void sourceIs( Location*& _source );
 
@@ -210,7 +210,7 @@ public:
 	typedef Fwk::Ptr<BoatSegment const> PtrConst;
 	typedef Fwk::Ptr<BoatSegment> Ptr;
 
-	Mode mode() { return Segment::truck(); }
+	Mode mode() const { return Segment::truck(); }
 	virtual void modeIs( Mode v ) {}
 	virtual void sourceIs( Location*& _source );
 
@@ -277,7 +277,7 @@ public:
 	typedef Fwk::Ptr<PlaneSegment const> PtrConst;
 	typedef Fwk::Ptr<PlaneSegment> Ptr;
 
-	Mode mode() { return Segment::truck(); }
+	Mode mode() const { return Segment::truck(); }
 	virtual void modeIs( Mode v ) {}
 	virtual void sourceIs( Location*& _source );
 
@@ -359,9 +359,9 @@ public:
 	static inline Type plane() { return plane_; }
 
 	static Type TypeInstance( Fwk::String );
-	Type type() { return type_; }
+	Type type() const { return type_; }
 	virtual void typeIs( Type _type ) { type_ = _type; }
-	Segment* segment( Segment::SegmentId _segmentId );
+	Segment* segment( Segment::SegmentId _segmentId ) const;
 	virtual void segmentIs( Segment const* _segment );
 	void segmentDel( Segment const* _segment );
 
@@ -430,7 +430,7 @@ public:
 	typedef Fwk::Ptr<Customer const> PtrConst;
 	typedef Fwk::Ptr<Customer> Ptr;
 
-	Type type() { return Location::truck(); }
+	Type type() const { return Location::truck(); }
 	virtual void typeIs( Type v ) {}
 	virtual void segmentIs( Segment const* _segment );
 
@@ -497,7 +497,7 @@ public:
 	typedef Fwk::Ptr<Port const> PtrConst;
 	typedef Fwk::Ptr<Port> Ptr;
 
-	Type type() { return Location::truck(); }
+	Type type() const { return Location::truck(); }
 	virtual void typeIs( Type v ) {}
 	virtual void segmentIs( Segment const* _segment );
 
@@ -564,7 +564,7 @@ public:
 	typedef Fwk::Ptr<TruckLocation const> PtrConst;
 	typedef Fwk::Ptr<TruckLocation> Ptr;
 
-	Type type() { return Location::truck(); }
+	Type type() const { return Location::truck(); }
 	virtual void typeIs( Type v ) {}
 	virtual void segmentIs( Segment const* _segment );
 
@@ -631,7 +631,7 @@ public:
 	typedef Fwk::Ptr<BoatLocation const> PtrConst;
 	typedef Fwk::Ptr<BoatLocation> Ptr;
 
-	Type type() { return Location::truck(); }
+	Type type() const { return Location::truck(); }
 	virtual void typeIs( Type v ) {}
 	virtual void segmentIs( Segment const* _segment );
 
@@ -698,7 +698,7 @@ public:
 	typedef Fwk::Ptr<PlaneLocation const> PtrConst;
 	typedef Fwk::Ptr<PlaneLocation> Ptr;
 
-	Type type() { return Location::truck(); }
+	Type type() const { return Location::truck(); }
 	virtual void typeIs( Type v ) {}
 	virtual void segmentIs( Segment const* _segment );
 
@@ -775,21 +775,21 @@ public:
 
 	static Type TypeInstance( Fwk::String );
 
-	Mile distance() { return distance_; }
+	Mile distance() const { return distance_; }
 	void distanceIs( Mile _distance ) { distance_ = _distance; }
 
-	Dollar cost() { return cost_; }
+	Dollar cost() const { return cost_; }
 	void costIs( Dollar _cost ) { cost_ = _cost; }
 
-	Hour time() { return time_; }
+	Hour time() const { return time_; }
 	void timeIs( Hour _time ) { time_ = _time; }
 
-	Segment::ExpVal expedited() { return expedited_; }
+	Segment::ExpVal expedited() const { return expedited_; }
 	void expeditedIs( Segment::ExpVal _expedited ) { expedited_ = _expedited; }
 
 	string value();
 	
-	EnginePtr engine() { return engine_; };
+	EnginePtr engine() const { return engine_; };
 	void engineIs(EnginePtr e) { engine_ = e; };
 
 	class NotifieeConst : public virtual Fwk::NamedInterface::NotifieeConst {
@@ -883,16 +883,16 @@ public:
 
 	static Mode TypeInstance( Fwk::String );
 
-	Mph speed( Mode m ) { return fleet_[m].speed_; }
+	Mph speed( Mode m ) const;
 	void speedIs( Mode m, Mph _speed ) { fleet_[m].speed_ = _speed; }
 
-	U32 capacity( Mode m ) { return fleet_[m].capacity_; }
+	U32 capacity( Mode m ) const;
 	void capacityIs( Mode m, U32 _capacity ) { fleet_[m].capacity_ = _capacity; }
 
-	Dollar cost( Mode m ) { return fleet_[m].cost_; }
+	Dollar cost( Mode m ) const;
 	void costIs( Mode m, Dollar _cost ) { fleet_[m].cost_ = _cost; }
 	
-	EnginePtr engine() { return engine_; };
+	EnginePtr engine() const { return engine_; };
 	void engineIs(EnginePtr e) { engine_ = e; };
 
 	class NotifieeConst : public virtual Fwk::NamedInterface::NotifieeConst {
@@ -966,39 +966,39 @@ public:
 	typedef Fwk::Ptr<Stats> Ptr;
 	typedef double Percentage; // make Value if needed
 
-	U32 customer() { return customer_; }
+	U32 customer() const { return customer_; }
 	void customerIs(U32 v) {}
 
-	U32 port() { return port_; }
+	U32 port() const { return port_; }
 	void portIs(U32 v) {}
 
-	U32 truckTerminal() { return truckTerminal_; }
+	U32 truckTerminal() const { return truckTerminal_; }
 	void truckTerminalIs(U32 v) {}
 
-	U32 boatTerminal() { return boatTerminal_; }
+	U32 boatTerminal() const { return boatTerminal_; }
 	void boatTerminalIs(U32 v) {}
 
-	U32 planeTerminal() { return planeTerminal_; }
+	U32 planeTerminal() const { return planeTerminal_; }
 	void planeTerminalIs(U32 v) {}
 
-	U32 truckSegment() { return truckSegment_; }
+	U32 truckSegment() const { return truckSegment_; }
 	void truckSegmentIs(U32 v) {}
 
-	U32 boatSegment() { return boatSegment_; }
+	U32 boatSegment() const { return boatSegment_; }
 	void boatSegmentIs(U32 v) {}
 
-	U32 planeSegment() { return planeSegment_; }
+	U32 planeSegment() const { return planeSegment_; }
 	void planeSegmentIs(U32 v) {}
 	
-	Percentage expedite();
+	Percentage expedite() const;
 	void expediteIs(Percentage v) {}
 
-	U32 expediteNum();
+	U32 expediteNum() const;
 	void expediteNumIs(U32 v) {}
 	
-	U32 totalSegments();
+	U32 totalSegments() const;
 
-	EnginePtr engine() { return engine_; };
+	EnginePtr engine() const { return engine_; };
 	void engineIs(EnginePtr e) { engine_ = e; };
 
 /*	typedef Fwk::ListRaw<NotifieeConst> NotifieeList;
@@ -1051,15 +1051,15 @@ public:
 
 	void locationIs(Location s);
 
-	Stats::Ptr stats();
-	Fleet::Ptr fleet();
-	Conn* conn();
+	Stats::Ptr stats() const;
+	Fleet::Ptr fleet() const;
+	Conn* conn() const;
 	
-	Fwk::LinkedList<Location::Ptr> locations();
-	Fwk::LinkedList<Segment::Ptr> segments();
+	Fwk::LinkedList<Location::Ptr> locations() const;
+	Fwk::LinkedList<Segment::Ptr> segments() const;
 
-	Location::Ptr location(const string& name);
-	Segment::Ptr segment(const string& name);
+	Location::Ptr location (const string& name) const;
+	Segment::Ptr segment (const string& name) const;
 
 	class NotifieeConst : public virtual Fwk::NamedInterface::NotifieeConst {
 	public:
