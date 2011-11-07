@@ -40,12 +40,8 @@ private:
 
 class LocationRep : public Instance {
 public:
-
-    LocationRep(const string& name, ManagerImpl* manager) :
-        Instance(name), manager_(manager)
-    {
-        // Nothing else to do.
-    }
+	typedef Fwk::Ptr<LocationRep const> PtrConst;
+	typedef Fwk::Ptr<LocationRep> Ptr;
 
     // Instance method
 	string attribute(const string& name);
@@ -53,65 +49,90 @@ public:
     // Instance method
 	void attributeIs(const string& name, const string& v);
 
-private:
-    Ptr<ManagerImpl> manager_;
+protected:
+    LocationRep(const string& name, ManagerImpl* manager) :
+        Instance(name), manager_(manager)
+    {
+        // Nothing else to do.
+    }
+    Fwk::Ptr<ManagerImpl> manager_;
     Segment::SegmentId segmentNumber(const string& name);
 	Location::Ptr location_;
 };
                                                                                                   
 class CustomerRep : public LocationRep {
 public:
-
+	static LocationRep::Ptr CustomerRepNew( const string& _name, ManagerImpl* manager) {
+		Ptr m = new CustomerRep(_name, manager);
+		m->referencesDec(1);
+		return m;
+	}
+protected:
     CustomerRep(const string& name, ManagerImpl *manager) :
         LocationRep(name, manager)
     {
-		manager->engine()->locationIs(Customer::customerNew(name, manager->engine()));
+		manager->engine()->locationIs(Customer::CustomerNew(name, manager->engine()));
     }
-
 };
 
 class PortRep : public LocationRep {
 public:
-
+	static LocationRep::Ptr PortRepNew( const string& _name, ManagerImpl* manager) {
+		Ptr m = new PortRep(_name, manager);
+		m->referencesDec(1);
+		return m;
+	}
+protected:
     PortRep(const string& name, ManagerImpl *manager) :
         LocationRep(name, manager)
     {
-        // Nothing else to do.
+		manager->engine()->locationIs(Port::PortNew(name, manager->engine()));
     }
-
 };
 
 class TruckTerminalRep : public LocationRep {
 public:
-
+	static LocationRep::Ptr TruckTerminalRepNew( const string& _name, ManagerImpl* manager) {
+		Ptr m = new TruckTerminalRep(_name, manager);
+		m->referencesDec(1);
+		return m;
+	}
+protected:
     TruckTerminalRep(const string& name, ManagerImpl *manager) :
         LocationRep(name, manager)
     {
-        // Nothing else to do.
+		manager->engine()->locationIs(TruckLocation::TruckLocationNew(name, manager->engine()));
     }
-
 };
 
 class BoatTerminalRep : public LocationRep {
 public:
-
+	static LocationRep::Ptr BoatTerminalRepNew( const string& _name, ManagerImpl* manager) {
+		Ptr m = new BoatTerminalRep(_name, manager);
+		m->referencesDec(1);
+		return m;
+	}
+protected:
     BoatTerminalRep(const string& name, ManagerImpl *manager) :
         LocationRep(name, manager)
     {
-        // Nothing else to do.
+		manager->engine()->locationIs(BoatLocation::BoatLocationNew(name, manager->engine()));
     }
-
 };
 
 class PlaneTerminalRep : public LocationRep {
 public:
-
+	static LocationRep::Ptr PlaneTerminalRepNew( const string& _name, ManagerImpl* manager) {
+		Ptr m = new PlaneTerminalRep(_name, manager);
+		m->referencesDec(1);
+		return m;
+	}
+protected:
     PlaneTerminalRep(const string& name, ManagerImpl *manager) :
         LocationRep(name, manager)
     {
-        // Nothing else to do.
+		manager->engine()->locationIs(PlaneLocation::PlaneLocationNew(name, manager->engine()));
     }
-
 };
 
 class SegmentRep : public Instance {
@@ -232,23 +253,23 @@ ManagerImpl::ManagerImpl() {
 
 Ptr<Instance> ManagerImpl::instanceNew(const string& name, const string& type) {
     if (type == "Truck terminal") {
-        Ptr<TruckTerminalRep> t = new TruckTerminalRep(name, this);
+        LocationRep::Ptr t = TruckTerminalRep::TruckTerminalRepNew(name, this);
         instance_[name] = t;
         return t;
     } else if (type == "Boat terminal") {
-        Ptr<BoatTerminalRep> t = new BoatTerminalRep(name, this);
+        LocationRep::Ptr t = BoatTerminalRep::BoatTerminalRepNew(name, this);
         instance_[name] = t;
         return t;
     } else if (type == "Plane terminal") {
-        Ptr<PlaneTerminalRep> t = new PlaneTerminalRep(name, this);
+        LocationRep::Ptr t = PlaneTerminalRep::PlaneTerminalRepNew(name, this);
         instance_[name] = t;
         return t;
     } else if (type == "Customer") {
-        Ptr<CustomerRep> t = new CustomerRep(name, this);
+        LocationRep::Ptr t = CustomerRep::CustomerRepNew(name, this);
         instance_[name] = t;
         return t;
     } else if (type == "Port") {
-        Ptr<PortRep> t = new PortRep(name, this);
+        LocationRep::Ptr t = PortRep::PortRepNew(name, this);
         instance_[name] = t;
         return t;
     } else if (type == "Truck segment") {

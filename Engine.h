@@ -498,7 +498,7 @@ public:
 	NotifieeIteratorConst notifieeIterConst() const { return notifiee_.iterator(); }
 	U32 notifiees() const { return notifiee_.members(); }
 	
-	static Customer::Ptr customerNew( const string& _name, Fwk::Ptr<Engine> _engine ) {
+	static Customer::Ptr CustomerNew( const string& _name, Fwk::Ptr<Engine> _engine ) {
 		Ptr m = new Customer( _name, _engine );
 		m->referencesDec(1);
 		return m;
@@ -517,7 +517,7 @@ public:
 
 	Type type() const { return Location::truck(); }
 	virtual void typeIs( Type v ) {}
-	virtual void segmentIs( Segment const* _segment );
+//	virtual void segmentIs( Segment const* _segment );
 
 	class NotifieeConst : public virtual Location::NotifieeConst {
 	public:
@@ -565,7 +565,7 @@ public:
 	NotifieeIteratorConst notifieeIterConst() const { return notifiee_.iterator(); }
 	U32 notifiees() const { return notifiee_.members(); }
 	
-	static Port::Ptr PortIs( const string& _name, Engine* _engine ) {
+	static Port::Ptr PortNew( const string& _name, Fwk::Ptr<Engine> _engine ) {
 		Ptr m = new Port( _name, _engine );
 		m->referencesDec(1);
 		return m;
@@ -573,7 +573,7 @@ public:
 
 protected:
 	Port( const Port& );
-	Port( const string& _name, Engine* _engine ) : Location( _name, type(), _engine ) {};
+	Port( const string& _name, Fwk::Ptr<Engine> _engine ) : Location( _name, type(), _engine ) {};
 	NotifieeList notifiee_;
 };
 
@@ -584,7 +584,7 @@ public:
 
 	Type type() const { return Location::truck(); }
 	virtual void typeIs( Type v ) {}
-	virtual void segmentIs( Segment const* _segment );
+//	virtual void segmentIs( Segment const* _segment );
 
 	class NotifieeConst : public virtual Location::NotifieeConst {
 	public:
@@ -632,7 +632,7 @@ public:
 	NotifieeIteratorConst notifieeIterConst() const { return notifiee_.iterator(); }
 	U32 notifiees() const { return notifiee_.members(); }
 	
-	static TruckLocation::Ptr TruckLocationIs( const string& _name, Engine* _engine ) {
+	static TruckLocation::Ptr TruckLocationNew( const string& _name, Fwk::Ptr<Engine> _engine ) {
 		Ptr m = new TruckLocation( _name, _engine );
 		m->referencesDec(1);
 		return m;
@@ -640,7 +640,7 @@ public:
 
 protected:
 	TruckLocation( const TruckLocation& );
-	TruckLocation( const string& _name, Engine* _engine ) : Location( _name, type(), _engine ) {};
+	TruckLocation( const string& _name, Fwk::Ptr<Engine> _engine ) : Location( _name, type(), _engine ) {};
 	NotifieeList notifiee_;
 };
 
@@ -651,7 +651,7 @@ public:
 
 	Type type() const { return Location::truck(); }
 	virtual void typeIs( Type v ) {}
-	virtual void segmentIs( Segment const* _segment );
+//	virtual void segmentIs( Segment const* _segment );
 
 	class NotifieeConst : public virtual Location::NotifieeConst {
 	public:
@@ -699,7 +699,7 @@ public:
 	NotifieeIteratorConst notifieeIterConst() const { return notifiee_.iterator(); }
 	U32 notifiees() const { return notifiee_.members(); }
 	
-	static BoatLocation::Ptr BoatLocationIs( const string& _name, Engine* _engine ) {
+	static BoatLocation::Ptr BoatLocationNew( const string& _name, Fwk::Ptr<Engine> _engine ) {
 		Ptr m = new BoatLocation( _name, _engine );
 		m->referencesDec(1);
 		return m;
@@ -707,7 +707,7 @@ public:
 
 protected:
 	BoatLocation( const BoatLocation& );
-	BoatLocation( const string& _name, Engine* _engine ) : Location( _name, type(), _engine ) {};
+	BoatLocation( const string& _name, Fwk::Ptr<Engine> _engine ) : Location( _name, type(), _engine ) {};
 	NotifieeList notifiee_;
 };
 
@@ -718,7 +718,7 @@ public:
 
 	Type type() const { return Location::truck(); }
 	virtual void typeIs( Type v ) {}
-	virtual void segmentIs( Segment const* _segment );
+//	virtual void segmentIs( Segment const* _segment );
 
 	class NotifieeConst : public virtual Location::NotifieeConst {
 	public:
@@ -766,7 +766,7 @@ public:
 	NotifieeIteratorConst notifieeIterConst() const { return notifiee_.iterator(); }
 	U32 notifiees() const { return notifiee_.members(); }
 	
-	static PlaneLocation::Ptr PlaneLocationIs( const string& _name, Engine* _engine ) {
+	static PlaneLocation::Ptr PlaneLocationNew( const string& _name, Fwk::Ptr<Engine> _engine ) {
 		Ptr m = new PlaneLocation( _name, _engine );
 		m->referencesDec(1);
 		return m;
@@ -774,7 +774,7 @@ public:
 
 protected:
 	PlaneLocation( const PlaneLocation& );
-	PlaneLocation( const string& _name, Engine* _engine ) : Location( _name, type(), _engine ) {};
+	PlaneLocation( const string& _name, Fwk::Ptr<Engine> _engine ) : Location( _name, type(), _engine ) {};
 	NotifieeList notifiee_;
 };
 
