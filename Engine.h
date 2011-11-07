@@ -44,8 +44,8 @@ public:
 	static inline ExpVal expNo() { return expNo_; }
 	static inline ExpVal expYes() { return expYes_; }
 	static SegmentId SegmentIdInstance ( int v );
-	static Mode ModeInstance( Fwk::String );
-	static ExpVal ExpValInstance( Fwk::String );
+	static inline Mode ModeInstance( const Fwk::String );
+	static inline ExpVal ExpValInstance( const Fwk::String v ) { return v == "Yes" ? expYes() : expNo(); }
 
 	Mode mode() const { return mode_; }
 	virtual void modeIs( Mode v ){ mode_ = v; }

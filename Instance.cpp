@@ -144,7 +144,7 @@ public:
 	string attribute(const string& name);
 
     // Instance method
-	void attributeIs(const string& name, const string& v) {};
+	void attributeIs(const string& name, const string& v);
 
 protected:
     SegmentRep(const string& name, ManagerImpl* manager) :
@@ -154,7 +154,7 @@ protected:
     Fwk::Ptr<ManagerImpl> manager_;
     string miles( Mile _length);
     string difficulty( Difficulty _difficulty );
-    string expVal( ExpVal _expVal );
+    string expVal( Segment::ExpVal _expVal );
 };
 
 class TruckSegmentRep : public SegmentRep {
@@ -386,11 +386,10 @@ string SegmentRep::attribute(const string& name) {
 	else if( name == "length" )
 	{
 		return miles( segment_->length() );
-		
 	}
 	else if( name == "return segment" )
 	{
-		Segment::PtrConst _returnSeg = _segment->returnSegment();
+		Segment::PtrConst _returnSeg = segment_->returnSegment();
 		if( _returnSeg )
 		{
 			return _returnSeg->name();
@@ -407,19 +406,48 @@ string SegmentRep::attribute(const string& name) {
 	return "";
 }
 
+void SegmentRep::attributeIs(const string& name, const string& v) {
+	if( name == "source" )
+	{
+	}
+	else if( name == "length" )
+	{
+		Mile m( atoi( v.c_str() ) );
+		segment_->lengthIs( m );
+	}
+	else if( name == "return segment" )
+	{
+	}
+	else if( name == "difficulty" )
+	{
+		Difficulty d( atoi( v.c_str() ) );
+		segment_->difficultyIs( d );
+	}
+	else if( name == "expedite support" )
+	{
+		segment_->expediteIs( Segment::ExpValInstance( v ) );
+	}
+}
+
 string SegmentRep::miles( Mile _length )
 {
-	
+	stringstream oss;
+	oss << _length.value();
+	return oss.str();
 }
 
 string SegmentRep::difficulty( Difficulty _difficulty )
 {
-
+	stringstream oss;
+	oss << _difficulty.value();
+	return oss.str();
 }
 
-string SegmentRep::expVal( Difficulty _expVal )
+string SegmentRep::expVal( Segment::ExpVal _expVal )
 {
-
+	stringstream oss;
+	oss << _expVal;
+	return oss.str();
 }
 
 }
