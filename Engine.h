@@ -1079,11 +1079,7 @@ public:
 
 protected:
 	Stats( const Stats& );
-	Stats( const string& _name, Fwk::Ptr<Engine> _engine) :
-	NamedInterface(_name), engine_(_engine), customer_(0), 
-	port_(0), truckTerminal_(0), boatTerminal_(0),
-	planeTerminal_(0), boatSegment_(0), truckSegment_(0), 
-	planeSegment_(0), expedite_(0) {};
+	Stats( const string& _name, Fwk::Ptr<Engine> _engine);
 	U32 customer_;
 	U32 port_;
 	U32 truckTerminal_;
@@ -1120,14 +1116,17 @@ public:
 	LocationIteratorConst locationIterConst() const { return location_.iterator(); }
 	typedef LocationMap::Iterator LocationIterator;
 	LocationIterator locationIter() { return location_.iterator(); }
+	string name() const { return "engine"; }
 
 	void segmentIs(Segment::Ptr s);
-
 	void locationIs(Location::Ptr s);
 
-	Stats::Ptr stats() const;
-	Fleet::Ptr fleet() const;
-	Conn::Ptr conn() const;
+	Stats::Ptr stats() const { return stats_; };
+	void statsIs(Stats::Ptr p) { stats_ = p; };
+	Fleet::Ptr fleet() const { return fleet_; };
+	void fleetIs(Fleet::Ptr p) { fleet_ = p; };
+	Conn::Ptr conn() const { return conn_; };
+	void connIs(Conn::Ptr p) { conn_ = p; };
 
 	Location::Ptr location (const string& name) const { return NULL; };
 	Segment::Ptr segment (const string& name) const { return NULL; };
@@ -1137,7 +1136,7 @@ public:
 		typedef Fwk::Ptr<NotifieeConst const> PtrConst;
 		typedef Fwk::Ptr<NotifieeConst> Ptr;
 		string name() const { return notifier_->name(); }
-		Segment::PtrConst notifier() const { return notifier_; }
+		Engine::PtrConst notifier() const { return notifier_; }
 	    bool isNonReferencing() const { return isNonReferencing_; }
         static const AttributeId segment__ = AttributeId(Fwk::NamedInterface::NotifieeConst::tacNextAttributeId__);
         static const AttributeId location__ = AttributeId(Fwk::NamedInterface::NotifieeConst::tacNextAttributeId__+1);
@@ -1148,7 +1147,7 @@ public:
 		NotifieeConst * lrNext() { return lrNext_; }
 	
 		~NotifieeConst();
-		virtual void notifierIs(const Segment::PtrConst& _notifier);
+		virtual void notifierIs(const Engine::PtrConst& _notifier);
 		void isNonReferencingIs(bool _isNonReferencing);
 		void lrNextIs(NotifieeConst * _lrNext) {
 			lrNext_ = _lrNext;
@@ -1164,7 +1163,7 @@ public:
 	protected:
         Fwk::String tacKeyForSegment_;
 		U8 tacSegmentChanges_;
-		Segment::PtrConst notifier_;
+		Engine::PtrConst notifier_;
 		bool isNonReferencing_;
 
 		NotifieeConst* lrNext_;
@@ -1176,8 +1175,8 @@ public:
 	public:
 		typedef Fwk::Ptr<Notifiee const> PtrConst;
 		typedef Fwk::Ptr<Notifiee> Ptr;
-		Segment::PtrConst notifier() const { return NotifieeConst::notifier(); }
-		Segment::Ptr notifier() { return const_cast<Segment *>(NotifieeConst::notifier().ptr()); }
+		Engine::PtrConst notifier() const { return NotifieeConst::notifier(); }
+		Engine::Ptr notifier() { return const_cast<Engine *>(NotifieeConst::notifier().ptr()); }
 
 		static Notifiee::Ptr NotifieeIs() {
 			Ptr m = new Notifiee();
@@ -1203,15 +1202,24 @@ public:
 
 private:
 	Engine() {}
+	Stats::Ptr stats_;
+	Fleet::Ptr fleet_;
+	Conn::Ptr conn_;
 	NotifieeList notifiee_;
 	SegmentMap segment_;
 	LocationMap location_;
+	void newNotifiee( Engine::NotifieeConst * n ) const {
+		Engine* me = const_cast<Engine*>(this);
+		me->notifiee_.newMember(n);
+	}
+	void deleteNotifiee( Engine::NotifieeConst * n ) const {
+		Engine* me = const_cast<Engine*>(this);
+		me->notifiee_.deleteMember(n);
+	}
 };
 
 class Stats::LocationSegmentReactor : public Engine::Notifiee {
 public:
-	LocationSegmentReactor(Stats* e) : stats_(e) {}
-	
 	virtual void onSegmentIs(Segment::Ptr s) {
 		switch(s->mode()) {
 		case Segment::truck_:
@@ -1247,13 +1255,22 @@ public:
 			break;
 		}
 	}
+	
+   static LocationSegmentReactor * LocationSegmentReactorIs(Engine::Ptr p) {
+      LocationSegmentReactor *m = new LocationSegmentReactor(p);
+      return m;
+   }
+protected:
+	LocationSegmentReactor(Engine::Ptr e) : stats_(e->stats()) {
+		notifierIs(e);
+	}
 private:
 	Stats::Ptr stats_;
 };
 
 class Stats::SegmentExpediteReactor : public Segment::Notifiee {
 public:
-	SegmentExpediteReactor(Stats* e) : stats_(e) {}
+	SegmentExpediteReactor(Engine::Ptr e) : stats_(e->stats()) {}
 	virtual void onExpedite(Segment::Ptr s) {
 		if (s->expedite())
 			stats_->expediteNumIs(stats_->expediteNum() + 1);
