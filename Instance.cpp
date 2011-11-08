@@ -252,11 +252,11 @@ public:
 		string sub;
 		iss >> sub;
 		Segment::Mode m;
-		if (sub.find("Boat")) {
+		if (sub.find("Boat") != string::npos) {
 			m = Segment::boat_;
-		} else if (sub.find("Plane")) {
+		} else if (sub.find("Plane") != string::npos) {
 			m = Segment::plane_;
-		} else if (sub.find("Truck")) {
+		} else if (sub.find("Truck") != string::npos) {
 			m = Segment::truck_;
 		} else {
 			cout << sub << endl;
