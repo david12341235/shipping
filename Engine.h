@@ -24,10 +24,6 @@
 namespace Shipping {
 using namespace std;
 
-class Engine;
-class Location;
-class Conn;
-
 class Engine : public Fwk::PtrInterface<Engine> {
 public:
 	typedef Fwk::Ptr<Engine> Ptr;
