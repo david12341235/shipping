@@ -27,7 +27,11 @@ public:
 
 		Fwk::Ptr<Location const> location_;
 		Fwk::Ptr<Segment const> segment_;
-		PathUnit() : location_(NULL), segment_(NULL) {}
+		Dollar cost_;
+		Mile distance_;
+		Hour time_;
+		Segment::ExpVal expVal_;
+		PathUnit() : location_(NULL), segment_(NULL) , cost_(0), distance_(0), time_(0), expVal_(Segment::expNo()) {}
 	};
 
 	static inline Type explore() { return explore_; }
@@ -126,7 +130,8 @@ protected:
 	Conn( const string& _name);
 	Conn( const string& _name, Fwk::Ptr<Engine> _engine ) :
 	    NamedInterface(_name), engine_(_engine), 
-		distance_(0), cost_(0), time_(0) {};
+		distance_(0), cost_(0), time_(0), startLocation_(NULL),
+		endLocation_(NULL) {};
 	NotifieeList notifiee_;
 	Fwk::Ptr<Engine> engine_;
 	Mile distance_;

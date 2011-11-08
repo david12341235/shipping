@@ -584,6 +584,8 @@ string ConnRep::attribute(const string& name )
 	conn_->costIs( Dollar::max() );
 	conn_->timeIs( Hour::max() );
 	conn_->expeditedIs( Segment::expNo() );
+	conn_->startLocationIs( "" );
+	conn_->endLocationIs( "" );
 
 	if( tok && Conn::exploreString().compare(tok) == 0 )
 	{
@@ -592,7 +594,7 @@ string ConnRep::attribute(const string& name )
 		conn_->startLocationIs( tok );
 		vector<string> used;
 
-		while( ( tok = strtok(NULL, " ") ) )
+		while( ( tok = strtok(NULL, " :") ) )
 		{
 			if( Conn::distanceString().compare(tok) == 0 )
 			{

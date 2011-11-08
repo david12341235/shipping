@@ -38,8 +38,6 @@ int main(int argc, char *argv[]) {
     fleet->attributeIs("Boat, speed", "60");
     fleet->attributeIs("Truck, capacity", "50");
     fleet->attributeIs("Plane, cost", "20");
-    fleet->attributeIs("Boat, cost", "20");
-    fleet->attributeIs("Truck, cost", "20");
     cout << "fleet->attribute('Boat, speed'): " << fleet->attribute("Boat, speed") << endl;
 
     // --- Create instances
