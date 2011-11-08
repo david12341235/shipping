@@ -45,7 +45,7 @@ public:
 	Type type() const { return type_; }
 	virtual void typeIs( Type _type ) { type_ = _type; }
 	Segment::PtrConst segment( Segment::SegmentId _segmentId ) const {
-		return segment_.at(_segmentId);
+		return _segmentId > (int)segment_.size() ? Segment::PtrConst(NULL) : segment_.at(_segmentId-1);
 	};
 	virtual void segmentIs( Segment::PtrConst  _segment ) {
 		segment_.push_back(_segment);

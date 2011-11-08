@@ -1,4 +1,5 @@
 #include "Engine.h"
+#include "Segment.h"
 
 using namespace Shipping;
 

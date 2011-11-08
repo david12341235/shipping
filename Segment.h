@@ -46,7 +46,7 @@ public:
 	static inline Mode plane() { return plane_; }
 	static inline ExpVal expNo() { return expNo_; }
 	static inline ExpVal expYes() { return expYes_; }
-	static inline SegmentId SegmentIdInstance ( int v ) { return (Segment::SegmentId)v; }
+	static inline SegmentId SegmentIdInstance ( int v ) { return v > 0 ? (Segment::SegmentId)v : 0; }
 	static inline Mode ModeInstance( const Fwk::String );
 	static inline ExpVal ExpValInstance( const Fwk::String v ) { return v == "yes" ? expYes() : expNo(); }
 

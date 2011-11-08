@@ -251,13 +251,13 @@ public:
 		istringstream iss(name);
 		string sub;
 		iss >> sub;
-		Fleet::Mode m;
+		Segment::Mode m;
 		if (sub.find("Boat")) {
-			m = Fleet::boat_;
+			m = Segment::boat_;
 		} else if (sub.find("Plane")) {
-			m = Fleet::plane_;
+			m = Segment::plane_;
 		} else if (sub.find("Truck")) {
-			m = Fleet::truck_;
+			m = Segment::truck_;
 		} else {
 			cout << sub << endl;
 			return "";
@@ -279,13 +279,13 @@ public:
 		stringstream ss(name);
 		string sub;
 		ss >> sub;
-		Fleet::Mode m;
-		if (sub.find("Boat")) {
-			m = Fleet::boat_;
-		} else if (sub.find("Plane")) {
-			m = Fleet::plane_;
-		} else if (sub.find("Truck")) {
-			m = Fleet::truck_;
+		Segment::Mode m;
+		if (sub.find("Boat") != string::npos) {
+			m = Segment::boat();
+		} else if (sub.find("Plane") != string::npos) {
+			m = Segment::plane();
+		} else if (sub.find("Truck") != string::npos) {
+			m = Segment::truck();
 		} else {
 			return;
 		}
@@ -308,6 +308,7 @@ protected:
         Instance(name), manager_(manager)
     {
 		fleet_ = Fleet::FleetNew(name, manager_->engine());
+		manager_->engine()->fleetIs( fleet_ );
     }
     Fwk::Ptr<ManagerImpl> manager_;
 	Fleet::Ptr fleet_;
@@ -616,8 +617,11 @@ string ConnRep::attribute(const string& name )
 				used.push_back( Conn::costString() );
 
 				if( !(tok = strtok(NULL, " ") ) ) return "";
+				double num;
+				istringstream s(tok);
+				s >> num;
 
-				Dollar d( atoi(tok) );
+				Dollar d( num );
 				conn_->costIs( d );
 			}
 			else if( Conn::timeString().compare(tok) == 0 )
@@ -629,8 +633,11 @@ string ConnRep::attribute(const string& name )
 				used.push_back( Conn::timeString() );
 
 				if( !(tok = strtok(NULL, " ") ) ) return "";
+				double num;
+				istringstream s(tok);
+				s >> num;
 
-				Hour t( atoi(tok) );
+				Hour t( num );
 				conn_->timeIs( t );
 			}
 			else if( Conn::expeditedString().compare(tok) == 0 )
@@ -647,15 +654,17 @@ string ConnRep::attribute(const string& name )
 			}
 			else return "";
 		}
-		if( !tok ) return "";
-
-
 	}
 
-	else if( tok && strcmp(tok, "connect") == 0 )
+	else if( tok && Conn::connectString().compare(tok) == 0 )
 	{
 		conn_->queryTypeIs( Conn::connect() );
+		if( !(tok = strtok(NULL, " :") ) ) return "";
+		conn_->startLocationIs( tok );
+		if( !(tok = strtok(NULL, " :") ) ) return "";
+		conn_->endLocationIs( tok );
 	}
+	return conn_->value();
 }
 
 void ConnRep::attributeIs(const string& name, const string& v)

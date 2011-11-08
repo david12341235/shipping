@@ -18,12 +18,6 @@ public:
 	typedef Fwk::Ptr<Fleet const> PtrConst;
 	typedef Fwk::Ptr<Fleet> Ptr;
 
-	enum Mode {
-		truck_ = 0,
-		boat_ = 1,
-		plane_ = 2,
-	};
-
 	struct fleetInfo
 	{
 		Mph speed_;
@@ -34,20 +28,16 @@ public:
 			fleetInfo() : speed_(0.0), capacity_(0), cost_(0.0) {}
 	};
 
-	static inline Mode truck() { return truck_; }
-	static inline Mode boat() { return boat_; }
-	static inline Mode plane() { return plane_; }
+	static Segment::Mode TypeInstance( Fwk::String );
 
-	static Mode TypeInstance( Fwk::String );
+	Mph speed( Segment::Mode m ) const { return fleet_.at(m).speed_; };
+	void speedIs( Segment::Mode m, Mph _speed ) { fleet_[m].speed_ = _speed; }
 
-	Mph speed( Mode m ) const { return fleet_.at(m).speed_; };
-	void speedIs( Mode m, Mph _speed ) { fleet_[m].speed_ = _speed; }
+	NumPackages capacity( Segment::Mode m ) const { return fleet_.at(m).capacity_; };
+	void capacityIs( Segment::Mode m, NumPackages _capacity ) { fleet_[m].capacity_ = _capacity; }
 
-	NumPackages capacity( Mode m ) const { return fleet_.at(m).capacity_; };
-	void capacityIs( Mode m, NumPackages _capacity ) { fleet_[m].capacity_ = _capacity; }
-
-	Dollar cost( Mode m ) const { return fleet_.at(m).cost_; };
-	void costIs( Mode m, Dollar _cost ) { fleet_[m].cost_ = _cost; }
+	Dollar cost( Segment::Mode m ) const { return fleet_.at(m).cost_; };
+	void costIs( Segment::Mode m, Dollar _cost ) { fleet_[m].cost_ = _cost; }
 	
 	Fwk::Ptr<Engine> engine() const { return engine_; };
 	void engineIs(Fwk::Ptr<Engine> e) { engine_ = e; };
@@ -66,9 +56,9 @@ public:
 	
 		~NotifieeConst();
 		virtual void notifierIs(const Fleet::PtrConst& _notifier);
-		virtual void onSpeed( Mode _mode ) {}
-		virtual void onCapacity( Mode _mode ) {}
-		virtual void onCost( Mode _mode ) {}
+		virtual void onSpeed( Segment::Mode _mode ) {}
+		virtual void onCapacity( Segment::Mode _mode ) {}
+		virtual void onCost( Segment::Mode _mode ) {}
 
 		static NotifieeConst::Ptr NotifieeConstIs() {
 			Ptr m = new NotifieeConst();
@@ -115,11 +105,11 @@ protected:
 	Fleet( const Fleet& );
 	Fleet( const string& _name, Fwk::Ptr<Engine> _engine ) :
 	NamedInterface(_name), engine_(_engine) {
-		fleet_[boat_];
-		fleet_[truck_];
-		fleet_[plane_];
+		fleet_[Segment::boat()] = fleetInfo();
+		fleet_[Segment::truck()] = fleetInfo();
+		fleet_[Segment::plane()] = fleetInfo();
 	};
-	map<Mode, fleetInfo> fleet_;
+	map<Segment::Mode, fleetInfo> fleet_;
 	NotifieeList notifiee_;
 	Fwk::Ptr<Engine> engine_;
 };

@@ -71,10 +71,3 @@ Stats::Stats( const string& _name, Fwk::Ptr<Engine> _engine) :
 	engine_->statsIs(this);
 }
 
-void Conn::startLocationIs(const Fwk::String& name ) { 
-	startLocation_ = engine_->location(name); 
-}
-
-void Conn::endLocationIs(const Fwk::String& name ) { 
-	endLocation_ = engine_->location(name); 
-}

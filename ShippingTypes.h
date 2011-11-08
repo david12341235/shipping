@@ -38,18 +38,18 @@ public:
 	operator string() const { std::ostringstream oss; oss << value(); return oss.str(); };
 };
 
-class Dollar : public Ordinal<Dollar, unsigned int> {
+class Dollar : public Ordinal<Dollar, double> {
 public:
-	Dollar( unsigned int num ) : Ordinal<Dollar, unsigned int>(num) {}
+	Dollar( double num ) : Ordinal<Dollar, double>(num) {}
 	operator string() const { std::ostringstream oss; oss << value(); return oss.str(); };
-	static Dollar max() { Dollar m( UINT_MAX ); return m; }
+	static Dollar max() { Dollar m( DBL_MAX ); return m; }
 };
 
-class Hour : public Ordinal<Hour, unsigned int > {
+class Hour : public Ordinal<Hour, double > {
 public:
-	Hour( unsigned int num ) : Ordinal<Hour, unsigned int>(num) {}
+	Hour( double num ) : Ordinal<Hour, double>(num) {}
 	operator string() const { std::ostringstream oss; oss << value(); return oss.str(); };
-	static Hour max() { Hour m( UINT_MAX ); return m; }
+	static Hour max() { Hour m( DBL_MAX ); return m; }
 };
 
 } /* end namespace */

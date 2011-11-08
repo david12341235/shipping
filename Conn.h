@@ -21,6 +21,15 @@ public:
 		connect_ = 1
 	};
 
+	struct PathUnit
+	{
+		string output() const;
+
+		Fwk::Ptr<Location const> location_;
+		Fwk::Ptr<Segment const> segment_;
+		PathUnit() : location_(NULL), segment_(NULL) {}
+	};
+
 	static inline Type explore() { return explore_; }
 	static inline Type connect() { return connect_; }
 	static inline string exploreString() { return "explore"; }
@@ -127,6 +136,10 @@ protected:
 	Type queryType_;
 	Fwk::Ptr<Location> startLocation_;
 	Fwk::Ptr<Location> endLocation_;
+
+private:
+	void connectPaths(Fwk::Ptr<Location const> cur, vector< vector<PathUnit*> >& path, vector<PathUnit*>& workingPath );
+	void explorePaths(Fwk::Ptr<Location const> cur, vector< vector<PathUnit*> >& path, vector<PathUnit*>& workingPath );
 
 };
 
