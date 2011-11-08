@@ -98,7 +98,7 @@ public:
 		virtual void onLength() {}
 		virtual void onReturnSegment() {}
 		virtual void onDifficulty() {}
-		virtual void onExpedite(Segment::Ptr s) {}
+		virtual void onExpedite(Segment::Ptr s, ExpVal old) {}
 
 		static NotifieeConst::Ptr NotifieeConstIs() {
 			Ptr m = new NotifieeConst();
@@ -1020,9 +1020,8 @@ public:
 	U32 planeSegment() const { return planeSegment_; }
 	void planeSegmentIs(U32 v) { planeSegment_ = v; }
 	
-	Percentage expedite() const { 
-		double val = 100.0 * (double) expediteNum() / (double) totalSegments(); 
-	return val;};
+	Percentage expedite() const 
+	    { return 100.0 * (double) expediteNum() / (double) totalSegments(); };
 	void expediteIs(Percentage v) {}
 
 	U32 expediteNum() const { return expedite_; };
@@ -1245,7 +1244,9 @@ private:
 
 class Stats::SegmentExpediteReactor : public Segment::Notifiee {
 public:
-	virtual void onExpedite(Segment::Ptr s) {
+	virtual void onExpedite(Segment::Ptr s, Segment::ExpVal old) {
+		if (s->expedite() == old) return;
+
 		if (s->expedite())
 			stats_->expediteNumIs(stats_->expediteNum() + 1);
 		else

@@ -87,11 +87,12 @@ void Segment::returnSegmentIs( Segment::Ptr _returnSegment )
 
 void Segment::expediteIs( ExpVal e )
 {
+	ExpVal old = expedite_;
 	expedite_ = e;
 	retry:
 	U32 ver = notifiee_.version();
 	if(notifiees()) for(NotifieeIterator n=notifieeIter();n.ptr();++n) try {
-		n->onExpedite(this);
+		n->onExpedite(this, old);
 	    if( ver != notifiee_.version() ) goto retry;
 	 } catch(...) { n->onNotificationException(NotifieeConst::segment__); }
 }
