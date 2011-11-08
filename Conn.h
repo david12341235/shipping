@@ -47,6 +47,11 @@ public:
 	Type queryType() const { return queryType_; }
 	void queryTypeIs( Type _queryType ) { queryType_ = _queryType; }
 
+	Fwk::Ptr<Location> startLocation() const { return startLocation_; }
+	void startLocationIs(const Fwk::String& name ) { startLocation_ = engine_->location(name); }
+	Fwk::Ptr<Location> endLocation() const { return endLocation_; }
+	void endLocationIs(const Fwk::String& name ) { endLocation_ = engine_->location(name); }
+
 	string value();
 	
 	Fwk::Ptr<Engine> engine() const { return engine_; };
@@ -120,6 +125,9 @@ protected:
 	Hour time_;
 	Segment::ExpVal expedited_;
 	Type queryType_;
+	Fwk::Ptr<Location> startLocation_;
+	Fwk::Ptr<Location> endLocation_;
+
 };
 
 } // namespace Shipping
