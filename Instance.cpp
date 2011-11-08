@@ -576,7 +576,7 @@ string ConnRep::attribute(const string& name )
 {
 	char* q = new char[name.length()+1];
 	strcpy(q, name.c_str());
-	char* tok = strtok( q, " :");
+	char* tok = strtok( q, " ");
 
 	// default attributes values
 	conn_->distanceIs( Mile::max() );
@@ -587,9 +587,11 @@ string ConnRep::attribute(const string& name )
 	if( tok && Conn::exploreString().compare(tok) == 0 )
 	{
 		conn_->queryTypeIs( Conn::explore() );
+		if( !(tok = strtok(NULL, " :") ) ) return "";
+		conn_->startLocationIs( tok );
 		vector<string> used;
 
-		while( ( tok = strtok(NULL, " :") ) )
+		while( ( tok = strtok(NULL, " ") ) )
 		{
 			if( Conn::distanceString().compare(tok) == 0 )
 			{
@@ -599,7 +601,7 @@ string ConnRep::attribute(const string& name )
 				}
 				used.push_back( Conn::distanceString() );
 
-				if( !(tok = strtok(NULL, " :") ) ) return "";
+				if( !(tok = strtok(NULL, " ") ) ) return "";
 
 				Mile m( atoi(tok) );
 				conn_->distanceIs( m );
@@ -613,7 +615,7 @@ string ConnRep::attribute(const string& name )
 				}
 				used.push_back( Conn::costString() );
 
-				if( !(tok = strtok(NULL, " :") ) ) return "";
+				if( !(tok = strtok(NULL, " ") ) ) return "";
 
 				Dollar d( atoi(tok) );
 				conn_->costIs( d );
@@ -626,7 +628,7 @@ string ConnRep::attribute(const string& name )
 				}
 				used.push_back( Conn::timeString() );
 
-				if( !(tok = strtok(NULL, " :") ) ) return "";
+				if( !(tok = strtok(NULL, " ") ) ) return "";
 
 				Hour t( atoi(tok) );
 				conn_->timeIs( t );
@@ -639,9 +641,11 @@ string ConnRep::attribute(const string& name )
 				}
 				used.push_back( Conn::expeditedString() );
 
-				if( !(tok = strtok(NULL, " :") ) ) return "";
+				if( !(tok = strtok(NULL, " ") ) ) return "";
 
+				conn_->expeditedIs( Segment::ExpValInstance( tok ) );
 			}
+			else return "";
 		}
 		if( !tok ) return "";
 

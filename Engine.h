@@ -138,8 +138,8 @@ private:
 	NotifieeList notifiee_;
 	SegmentMap segment_;
 	LocationMap location_;
-	Stats::LocationSegmentReactor* slreactor_;
 	Stats::SegmentExpediteReactor* expreactor_;
+	Stats::LocationSegmentReactor* slreactor_;
 	void newNotifiee( Engine::NotifieeConst * n ) const {
 		Engine* me = const_cast<Engine*>(this);
 		me->notifiee_.newMember(n);
