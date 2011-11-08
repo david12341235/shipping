@@ -532,7 +532,7 @@ public:
 
 protected:
 	Customer( const Customer& );
-	Customer( const string& _name, Fwk::Ptr<Engine> _engine ) : Location( _name, type(), _engine ) {};
+	Customer( const string& _name, Fwk::Ptr<Engine> _engine ) : Location( _name, customer_, _engine ) {};
 };
 
 class Port : public Location {
@@ -593,7 +593,7 @@ public:
 
 protected:
 	Port( const Port& );
-	Port( const string& _name, Fwk::Ptr<Engine> _engine ) : Location( _name, type(), _engine ) {};
+	Port( const string& _name, Fwk::Ptr<Engine> _engine ) : Location( _name, port_, _engine ) {};
 };
 
 class TruckLocation : public Location {
@@ -654,7 +654,7 @@ public:
 
 protected:
 	TruckLocation( const TruckLocation& );
-	TruckLocation( const string& _name, Fwk::Ptr<Engine> _engine ) : Location( _name, type(), _engine ) {};
+	TruckLocation( const string& _name, Fwk::Ptr<Engine> _engine ) : Location( _name, truck_, _engine ) {};
 };
 
 class BoatLocation : public Location {
@@ -715,7 +715,7 @@ public:
 
 protected:
 	BoatLocation( const BoatLocation& );
-	BoatLocation( const string& _name, Fwk::Ptr<Engine> _engine ) : Location( _name, type(), _engine ) {};
+	BoatLocation( const string& _name, Fwk::Ptr<Engine> _engine ) : Location( _name, boat_, _engine ) {};
 };
 
 class PlaneLocation : public Location {
@@ -776,7 +776,7 @@ public:
 
 protected:
 	PlaneLocation( const PlaneLocation& );
-	PlaneLocation( const string& _name, Fwk::Ptr<Engine> _engine ) : Location( _name, type(), _engine ) {};
+	PlaneLocation( const string& _name, Fwk::Ptr<Engine> _engine ) : Location( _name, plane_, _engine ) {};
 };
 
 class Conn : public Fwk::NamedInterface {

@@ -121,8 +121,11 @@ int main(int argc, char *argv[]) {
     cout << "Expediting %     : " << stats->attribute("expedite percentage") << endl;
     cout << " --- Terminals --- " << endl;
     cout << "# Plane terminals: " << stats->attribute("Plane terminal") << endl;
+    cout << "# Boat terminals: " << stats->attribute("Boat terminal") << endl;
+    cout << "# Truck terminals: " << stats->attribute("Truck terminal") << endl;
     cout << " --- Ports and customers --- " << endl;
     cout << "# Ports          : " << stats->attribute("Port") << endl;
+    cout << "# Customers      : " << stats->attribute("Customer") << endl;
 
     cerr << "Done!" << endl;
 
