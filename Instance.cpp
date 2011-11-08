@@ -297,7 +297,7 @@ public:
 		if (sub == "speed") {
 			fleet_->speedIs(m, val);
 		} else if (sub == "cost") {
-			fleet_->costIs(m, val);
+			fleet_->costIs(m, (int)val);
 		} else if (sub == "capacity") {
 			fleet_->capacityIs(m, val);
 		}
