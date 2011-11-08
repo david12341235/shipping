@@ -48,9 +48,9 @@ public:
 	void queryTypeIs( Type _queryType ) { queryType_ = _queryType; }
 
 	Fwk::Ptr<Location> startLocation() const { return startLocation_; }
-	void startLocationIs(const Fwk::String& name ) { startLocation_ = engine_->location(name); }
+	void startLocationIs(const Fwk::String& name );
 	Fwk::Ptr<Location> endLocation() const { return endLocation_; }
-	void endLocationIs(const Fwk::String& name ) { endLocation_ = engine_->location(name); }
+	void endLocationIs(const Fwk::String& name );
 
 	string value();
 	
