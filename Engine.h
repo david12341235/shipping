@@ -56,7 +56,7 @@ public:
 	static inline ExpVal expYes() { return expYes_; }
 	static inline SegmentId SegmentIdInstance ( int v ) { return (Segment::SegmentId)v; }
 	static inline Mode ModeInstance( const Fwk::String );
-	static inline ExpVal ExpValInstance( const Fwk::String v ) { return v == "Yes" ? expYes() : expNo(); }
+	static inline ExpVal ExpValInstance( const Fwk::String v ) { return v == "yes" ? expYes() : expNo(); }
 
 	Mode mode() const { return mode_; }
 	virtual void modeIs( Mode v ){ mode_ = v; }
@@ -84,6 +84,7 @@ public:
 		Segment::PtrConst notifier() const { return notifier_; }
         static const AttributeId segment__ = AttributeId(Fwk::NamedInterface::NotifieeConst::tacNextAttributeId__);
         static const AttributeId tacNextAttributeId__ = AttributeId(segment__+1);
+	    bool isNonReferencing() const { return isNonReferencing_; }
 		NotifieeConst const * lrNext() const { return lrNext_; }
 		NotifieeConst * lrNext() { return lrNext_; }
 		void lrNextIs(NotifieeConst * _lrNext) {
@@ -92,11 +93,12 @@ public:
 	
 		~NotifieeConst();
 		virtual void notifierIs(const Segment::PtrConst& _notifier);
+		void isNonReferencingIs(bool _isNonReferencing) { isNonReferencing_ = _isNonReferencing; };
 		virtual void onSource() {}
 		virtual void onLength() {}
 		virtual void onReturnSegment() {}
 		virtual void onDifficulty() {}
-		virtual void onExpedite(Segment::Ptr s) {}
+		virtual void onExpedite(Segment::Ptr s, ExpVal old) {}
 
 		static NotifieeConst::Ptr NotifieeConstIs() {
 			Ptr m = new NotifieeConst();
@@ -105,7 +107,8 @@ public:
 		}
 	protected:
 		Segment::PtrConst notifier_;
-
+		
+		bool isNonReferencing_;
 		NotifieeConst* lrNext_;
 		NotifieeConst(): Fwk::NamedInterface::NotifieeConst(),
 			lrNext_(0) { }
@@ -139,6 +142,15 @@ public:
 		Ptr m = new Segment( _name, _mode, _engine );
 		m->referencesDec(1);
 		return m;
+	}
+	
+	void newNotifiee( Segment::NotifieeConst * n ) const {
+		Segment* me = const_cast<Segment*>(this);
+		me->notifiee_.newMember(n);
+	}
+	void deleteNotifiee( Segment::NotifieeConst * n ) const {
+		Segment* me = const_cast<Segment*>(this);
+		me->notifiee_.deleteMember(n);
 	}
 
 protected:
@@ -214,7 +226,7 @@ public:
 protected:
 	TruckSegment( const TruckSegment& );
 	TruckSegment( const string& _name, Fwk::Ptr<Engine> _engine ) : 
-		Segment( _name, mode(), _engine ) {};
+		Segment( _name, truck_, _engine ) {};
 };
 
 class BoatSegment : public Segment {
@@ -275,7 +287,7 @@ public:
 
 protected:
 	BoatSegment( const BoatSegment& );
-	BoatSegment( const string& _name, Fwk::Ptr<Engine> _engine ) : Segment( _name, mode(), _engine ) {}
+	BoatSegment( const string& _name, Fwk::Ptr<Engine> _engine ) : Segment( _name, boat_, _engine ) {}
 };
 
 class PlaneSegment : public Segment {
@@ -336,7 +348,7 @@ public:
 
 protected:
 	PlaneSegment( const PlaneSegment& );
-	PlaneSegment( const string& _name, Fwk::Ptr<Engine> _engine ) : Segment( _name, mode(), _engine ) {}
+	PlaneSegment( const string& _name, Fwk::Ptr<Engine> _engine ) : Segment( _name, plane_, _engine ) {}
 };
 
 
@@ -520,7 +532,7 @@ public:
 
 protected:
 	Customer( const Customer& );
-	Customer( const string& _name, Fwk::Ptr<Engine> _engine ) : Location( _name, type(), _engine ) {};
+	Customer( const string& _name, Fwk::Ptr<Engine> _engine ) : Location( _name, customer_, _engine ) {};
 };
 
 class Port : public Location {
@@ -581,7 +593,7 @@ public:
 
 protected:
 	Port( const Port& );
-	Port( const string& _name, Fwk::Ptr<Engine> _engine ) : Location( _name, type(), _engine ) {};
+	Port( const string& _name, Fwk::Ptr<Engine> _engine ) : Location( _name, port_, _engine ) {};
 };
 
 class TruckLocation : public Location {
@@ -642,7 +654,7 @@ public:
 
 protected:
 	TruckLocation( const TruckLocation& );
-	TruckLocation( const string& _name, Fwk::Ptr<Engine> _engine ) : Location( _name, type(), _engine ) {};
+	TruckLocation( const string& _name, Fwk::Ptr<Engine> _engine ) : Location( _name, truck_, _engine ) {};
 };
 
 class BoatLocation : public Location {
@@ -703,7 +715,7 @@ public:
 
 protected:
 	BoatLocation( const BoatLocation& );
-	BoatLocation( const string& _name, Fwk::Ptr<Engine> _engine ) : Location( _name, type(), _engine ) {};
+	BoatLocation( const string& _name, Fwk::Ptr<Engine> _engine ) : Location( _name, boat_, _engine ) {};
 };
 
 class PlaneLocation : public Location {
@@ -764,7 +776,7 @@ public:
 
 protected:
 	PlaneLocation( const PlaneLocation& );
-	PlaneLocation( const string& _name, Fwk::Ptr<Engine> _engine ) : Location( _name, type(), _engine ) {};
+	PlaneLocation( const string& _name, Fwk::Ptr<Engine> _engine ) : Location( _name, plane_, _engine ) {};
 };
 
 class Conn : public Fwk::NamedInterface {
@@ -995,34 +1007,35 @@ public:
 	typedef Fwk::Ptr<Stats> Ptr;
 
 	U32 customer() const { return customer_; }
-	void customerIs(U32 v) {}
+	void customerIs(U32 v) { customer_ = v; }
 
 	U32 port() const { return port_; }
-	void portIs(U32 v) {}
+	void portIs(U32 v) { port_ = v; }
 
 	U32 truckTerminal() const { return truckTerminal_; }
-	void truckTerminalIs(U32 v) {}
+	void truckTerminalIs(U32 v) { truckTerminal_ = v; }
 
 	U32 boatTerminal() const { return boatTerminal_; }
-	void boatTerminalIs(U32 v) {}
+	void boatTerminalIs(U32 v) { boatTerminal_ = v; }
 
 	U32 planeTerminal() const { return planeTerminal_; }
-	void planeTerminalIs(U32 v) {}
+	void planeTerminalIs(U32 v) { planeTerminal_ = v; }
 
 	U32 truckSegment() const { return truckSegment_; }
-	void truckSegmentIs(U32 v) {}
+	void truckSegmentIs(U32 v) { truckSegment_ = v; }
 
 	U32 boatSegment() const { return boatSegment_; }
-	void boatSegmentIs(U32 v) {}
+	void boatSegmentIs(U32 v) { boatSegment_ = v; }
 
 	U32 planeSegment() const { return planeSegment_; }
-	void planeSegmentIs(U32 v) {}
+	void planeSegmentIs(U32 v) { planeSegment_ = v; }
 	
-	Percentage expedite() const {return (double) expediteNum() / (double) totalSegments(); };
+	Percentage expedite() const 
+	    { return 100.0 * (double) expediteNum() / (double) totalSegments(); };
 	void expediteIs(Percentage v) {}
 
 	U32 expediteNum() const { return expedite_; };
-	void expediteNumIs(U32 v) {}
+	void expediteNumIs(U32 v) { expedite_ = v; }
 	
 	U32 totalSegments() const { return boatSegment_ + truckSegment_ + planeSegment_; };
 
@@ -1091,14 +1104,14 @@ public:
 	void locationIs(Location::Ptr s);
 
 	Stats::Ptr stats() const { return stats_; };
-	void statsIs(Stats::Ptr p) { stats_ = p; };
+	void statsIs(Stats::Ptr p);
 	Fleet::Ptr fleet() const { return fleet_; };
 	void fleetIs(Fleet::Ptr p) { fleet_ = p; };
 	Conn::Ptr conn() const { return conn_; };
 	void connIs(Conn::Ptr p) { conn_ = p; };
 
-	Location::Ptr location (const string& name) const { return NULL; };
-	Segment::Ptr segment (const string& name) const { return NULL; };
+	Location::Ptr location (const string& name) { return location_[name]; };
+	Segment::Ptr segment (const string& name) { return segment_[name]; };
 
 	class NotifieeConst : public virtual Fwk::NamedInterface::NotifieeConst {
 	public:
@@ -1170,13 +1183,15 @@ public:
    NotifieeIterator notifieeIter() { return notifiee_.iterator(); }
 
 private:
-	Engine() {}
+	Engine() : expreactor_(NULL), slreactor_(NULL) {}
 	Stats::Ptr stats_;
 	Fleet::Ptr fleet_;
 	Conn::Ptr conn_;
 	NotifieeList notifiee_;
 	SegmentMap segment_;
 	LocationMap location_;
+	Stats::LocationSegmentReactor* slreactor_;
+	Stats::SegmentExpediteReactor* expreactor_;
 	void newNotifiee( Engine::NotifieeConst * n ) const {
 		Engine* me = const_cast<Engine*>(this);
 		me->notifiee_.newMember(n);
@@ -1239,12 +1254,22 @@ private:
 
 class Stats::SegmentExpediteReactor : public Segment::Notifiee {
 public:
-	SegmentExpediteReactor(Engine::Ptr e) : stats_(e->stats()) {}
-	virtual void onExpedite(Segment::Ptr s) {
+	virtual void onExpedite(Segment::Ptr s, Segment::ExpVal old) {
+		if (s->expedite() == old) return;
+
 		if (s->expedite())
 			stats_->expediteNumIs(stats_->expediteNum() + 1);
 		else
 			stats_->expediteNumIs(stats_->expediteNum() - 1);
+	}
+	
+   static SegmentExpediteReactor * SegmentExpediteReactorIs(Segment::Ptr p, Engine::Ptr e) {
+      SegmentExpediteReactor *m = new SegmentExpediteReactor(p, e);
+      return m;
+   }
+protected:
+	SegmentExpediteReactor(Segment::Ptr s, Engine::Ptr e) : stats_(e->stats()) {
+		notifierIs(s);
 	}
 private:
 	Stats::Ptr stats_;

@@ -94,7 +94,7 @@ int main(int argc, char *argv[]) {
     
     // -- Segment expedite support
     boatSeg1->attributeIs("expedite support", "yes");
-    boatSeg2->attributeIs("expedite support", "yes");
+    boatSeg2->attributeIs("expedite support", "no");
     truckSeg1->attributeIs("expedite support", "yes");
     truckSeg2->attributeIs("expedite support", "yes");
 
@@ -118,11 +118,16 @@ int main(int argc, char *argv[]) {
     cout << "===== Stats attributes =====" << endl;
     cout << " --- Segments --- " << endl;
     cout << "# Truck segments : " << stats->attribute("Truck segment") << endl;
+    cout << "# Plane segments : " << stats->attribute("Plane segment") << endl;
+    cout << "# Boat segments : " << stats->attribute("Boat segment") << endl;
     cout << "Expediting %     : " << stats->attribute("expedite percentage") << endl;
     cout << " --- Terminals --- " << endl;
     cout << "# Plane terminals: " << stats->attribute("Plane terminal") << endl;
+    cout << "# Boat terminals: " << stats->attribute("Boat terminal") << endl;
+    cout << "# Truck terminals: " << stats->attribute("Truck terminal") << endl;
     cout << " --- Ports and customers --- " << endl;
     cout << "# Ports          : " << stats->attribute("Port") << endl;
+    cout << "# Customers      : " << stats->attribute("Customer") << endl;
 
     cerr << "Done!" << endl;
 

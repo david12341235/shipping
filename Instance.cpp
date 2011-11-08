@@ -528,7 +528,8 @@ string SegmentRep::attribute(const string& name) {
 void SegmentRep::attributeIs(const string& name, const string& v) {
 	if( name == "source" )
 	{
-		segment_->sourceIs( manager_->engine()->location( v ) );
+		Location::Ptr l = manager_->engine()->location( v );
+		segment_->sourceIs(l);
 	}
 	else if( name == "length" )
 	{

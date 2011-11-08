@@ -28,7 +28,8 @@ void TruckSegment::sourceIs( Fwk::Ptr<Location> _source )
 {
 	if( _source && _source->type() != Location::boat() && _source->type() != Location::plane()  )
 	{
-		source_->segmentDel( this );
+		if (source_)
+			source_->segmentDel( this );
 		source_ = _source;
 		source_->segmentIs( this );
 	}
@@ -39,7 +40,8 @@ void BoatSegment::sourceIs( Fwk::Ptr<Location> _source )
 {
 	if( _source && _source->type() != Location::truck() && _source->type() != Location::plane()  )
 	{
-		source_->segmentDel( this );
+		if (source_)
+			source_->segmentDel( this );
 		source_ = _source;
 		source_->segmentIs( this );
 	}
@@ -50,7 +52,8 @@ void PlaneSegment::sourceIs( Fwk::Ptr<Location> _source )
 {
 	if( _source && _source->type() != Location::truck() && _source->type() != Location::boat()  )
 	{
-		source_->segmentDel( this );
+		if (source_)
+			source_->segmentDel( this );
 		source_ = _source;
 		source_->segmentIs( this );
 	}
@@ -87,11 +90,12 @@ void Segment::returnSegmentIs( Segment::Ptr _returnSegment )
 
 void Segment::expediteIs( ExpVal e )
 {
+	ExpVal old = expedite_;
 	expedite_ = e;
 	retry:
 	U32 ver = notifiee_.version();
 	if(notifiees()) for(NotifieeIterator n=notifieeIter();n.ptr();++n) try {
-	    n->onReturnSegment();
+		n->onExpedite(this, old);
 	    if( ver != notifiee_.version() ) goto retry;
 	 } catch(...) { n->onNotificationException(NotifieeConst::segment__); }
 }
@@ -134,7 +138,7 @@ Location::onZeroReferences() {
 }
 //----------| NotifieeConst Implementation |------------//
 
-Location::NotifieeConst::~NotifieeConst() {
+Segment::NotifieeConst::~NotifieeConst() {
    if(notifier_) {
       notifier_->deleteNotifiee(this);
    }
@@ -142,8 +146,8 @@ Location::NotifieeConst::~NotifieeConst() {
 }
 
 void
-Location::NotifieeConst::notifierIs(const Location::PtrConst& _notifier) {
-   Location::Ptr notifierSave(const_cast<Location *>(notifier_.ptr()));
+Segment::NotifieeConst::notifierIs(const Segment::PtrConst& _notifier) {
+   Segment::Ptr notifierSave(const_cast<Segment *>(notifier_.ptr()));
    if(_notifier==notifier_) return;
    notifier_ = _notifier;
    if(notifierSave) {
@@ -166,6 +170,9 @@ void Engine::segmentIs(Segment::Ptr s) {
    } else {
      m = s;
      segment_.newMember(m);
+	 if (!expreactor_) 
+		 expreactor_ = Stats::SegmentExpediteReactor::SegmentExpediteReactorIs(s, this);
+	 s->newNotifiee(expreactor_);
    }
    retrycell:
    U32 ver = notifiee_.version();
@@ -201,7 +208,7 @@ Location::NotifieeConst::isNonReferencingIs(bool _isNonReferencing){
       if(_isNonReferencing) notifier_->deleteRef();
       else notifier_->newRef();
    }
-   }
+}
 
 //----------| Notifiee Implementation |------------//
 /*
@@ -224,12 +231,12 @@ Stats::~Stats() {
 }
 
 Stats::Stats( const string& _name, Fwk::Ptr<Engine> _engine) :
-	NamedInterface(_name), engine_(_engine), customer_(0), 
-	port_(0), truckTerminal_(0), boatTerminal_(0),
-	planeTerminal_(0), boatSegment_(0), truckSegment_(0), 
-	planeSegment_(0), expedite_(0) { 
-		engine_->statsIs(this);
-	}
+		NamedInterface(_name), engine_(_engine), customer_(0), 
+		port_(0), truckTerminal_(0), boatTerminal_(0),
+		planeTerminal_(0), boatSegment_(0), truckSegment_(0), 
+		planeSegment_(0), expedite_(0) { 
+	engine_->statsIs(this);
+}
 
 // ======== Engine
 /*void
@@ -288,6 +295,11 @@ Engine::NotifieeConst::isNonReferencingIs(bool _isNonReferencing){
       if(_isNonReferencing) notifier_->deleteRef();
       else notifier_->newRef();
    }
+}
+
+void Engine::statsIs(Stats::Ptr s) { 
+	stats_ = s;
+	slreactor_ = Stats::LocationSegmentReactor::LocationSegmentReactorIs(this);
 }
 
 //----------| Notifiee Implementation |------------//
