@@ -56,7 +56,7 @@ public:
 	static inline ExpVal expYes() { return expYes_; }
 	static inline SegmentId SegmentIdInstance ( int v ) { return (Segment::SegmentId)v; }
 	static inline Mode ModeInstance( const Fwk::String );
-	static inline ExpVal ExpValInstance( const Fwk::String v ) { return v == "Yes" ? expYes() : expNo(); }
+	static inline ExpVal ExpValInstance( const Fwk::String v ) { return v == "yes" ? expYes() : expNo(); }
 
 	Mode mode() const { return mode_; }
 	virtual void modeIs( Mode v ){ mode_ = v; }
@@ -226,7 +226,7 @@ public:
 protected:
 	TruckSegment( const TruckSegment& );
 	TruckSegment( const string& _name, Fwk::Ptr<Engine> _engine ) : 
-		Segment( _name, mode(), _engine ) {};
+		Segment( _name, truck_, _engine ) {};
 };
 
 class BoatSegment : public Segment {
@@ -287,7 +287,7 @@ public:
 
 protected:
 	BoatSegment( const BoatSegment& );
-	BoatSegment( const string& _name, Fwk::Ptr<Engine> _engine ) : Segment( _name, mode(), _engine ) {}
+	BoatSegment( const string& _name, Fwk::Ptr<Engine> _engine ) : Segment( _name, boat_, _engine ) {}
 };
 
 class PlaneSegment : public Segment {
@@ -348,7 +348,7 @@ public:
 
 protected:
 	PlaneSegment( const PlaneSegment& );
-	PlaneSegment( const string& _name, Fwk::Ptr<Engine> _engine ) : Segment( _name, mode(), _engine ) {}
+	PlaneSegment( const string& _name, Fwk::Ptr<Engine> _engine ) : Segment( _name, plane_, _engine ) {}
 };
 
 
@@ -1020,7 +1020,9 @@ public:
 	U32 planeSegment() const { return planeSegment_; }
 	void planeSegmentIs(U32 v) { planeSegment_ = v; }
 	
-	Percentage expedite() const {return (double) expediteNum() / (double) totalSegments(); };
+	Percentage expedite() const { 
+		double val = 100.0 * (double) expediteNum() / (double) totalSegments(); 
+	return val;};
 	void expediteIs(Percentage v) {}
 
 	U32 expediteNum() const { return expedite_; };

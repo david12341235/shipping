@@ -91,7 +91,7 @@ void Segment::expediteIs( ExpVal e )
 	retry:
 	U32 ver = notifiee_.version();
 	if(notifiees()) for(NotifieeIterator n=notifieeIter();n.ptr();++n) try {
-	    n->onReturnSegment();
+		n->onExpedite(this);
 	    if( ver != notifiee_.version() ) goto retry;
 	 } catch(...) { n->onNotificationException(NotifieeConst::segment__); }
 }
