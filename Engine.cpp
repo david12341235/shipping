@@ -28,7 +28,8 @@ void TruckSegment::sourceIs( Fwk::Ptr<Location> _source )
 {
 	if( _source && _source->type() != Location::boat() && _source->type() != Location::plane()  )
 	{
-		source_->segmentDel( this );
+		if (source_)
+			source_->segmentDel( this );
 		source_ = _source;
 		source_->segmentIs( this );
 	}
@@ -39,7 +40,8 @@ void BoatSegment::sourceIs( Fwk::Ptr<Location> _source )
 {
 	if( _source && _source->type() != Location::truck() && _source->type() != Location::plane()  )
 	{
-		source_->segmentDel( this );
+		if (source_)
+			source_->segmentDel( this );
 		source_ = _source;
 		source_->segmentIs( this );
 	}
@@ -50,7 +52,8 @@ void PlaneSegment::sourceIs( Fwk::Ptr<Location> _source )
 {
 	if( _source && _source->type() != Location::truck() && _source->type() != Location::boat()  )
 	{
-		source_->segmentDel( this );
+		if (source_)
+			source_->segmentDel( this );
 		source_ = _source;
 		source_->segmentIs( this );
 	}

@@ -1100,8 +1100,8 @@ public:
 	Conn::Ptr conn() const { return conn_; };
 	void connIs(Conn::Ptr p) { conn_ = p; };
 
-	Location::Ptr location (const string& name) const { return NULL; };
-	Segment::Ptr segment (const string& name) const { return NULL; };
+	Location::Ptr location (const string& name) { return location_[name]; };
+	Segment::Ptr segment (const string& name) { return segment_[name]; };
 
 	class NotifieeConst : public virtual Fwk::NamedInterface::NotifieeConst {
 	public:
