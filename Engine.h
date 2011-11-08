@@ -84,6 +84,7 @@ public:
 		Segment::PtrConst notifier() const { return notifier_; }
         static const AttributeId segment__ = AttributeId(Fwk::NamedInterface::NotifieeConst::tacNextAttributeId__);
         static const AttributeId tacNextAttributeId__ = AttributeId(segment__+1);
+	    bool isNonReferencing() const { return isNonReferencing_; }
 		NotifieeConst const * lrNext() const { return lrNext_; }
 		NotifieeConst * lrNext() { return lrNext_; }
 		void lrNextIs(NotifieeConst * _lrNext) {
@@ -92,6 +93,7 @@ public:
 	
 		~NotifieeConst();
 		virtual void notifierIs(const Segment::PtrConst& _notifier);
+		void isNonReferencingIs(bool _isNonReferencing) { isNonReferencing_ = _isNonReferencing; };
 		virtual void onSource() {}
 		virtual void onLength() {}
 		virtual void onReturnSegment() {}
@@ -105,7 +107,8 @@ public:
 		}
 	protected:
 		Segment::PtrConst notifier_;
-
+		
+		bool isNonReferencing_;
 		NotifieeConst* lrNext_;
 		NotifieeConst(): Fwk::NamedInterface::NotifieeConst(),
 			lrNext_(0) { }
@@ -139,6 +142,15 @@ public:
 		Ptr m = new Segment( _name, _mode, _engine );
 		m->referencesDec(1);
 		return m;
+	}
+	
+	void newNotifiee( Segment::NotifieeConst * n ) const {
+		Segment* me = const_cast<Segment*>(this);
+		me->notifiee_.newMember(n);
+	}
+	void deleteNotifiee( Segment::NotifieeConst * n ) const {
+		Segment* me = const_cast<Segment*>(this);
+		me->notifiee_.deleteMember(n);
 	}
 
 protected:
@@ -1081,7 +1093,7 @@ public:
 	void locationIs(Location::Ptr s);
 
 	Stats::Ptr stats() const { return stats_; };
-	void statsIs(Stats::Ptr p) { stats_ = p; };
+	void statsIs(Stats::Ptr p);
 	Fleet::Ptr fleet() const { return fleet_; };
 	void fleetIs(Fleet::Ptr p) { fleet_ = p; };
 	Conn::Ptr conn() const { return conn_; };
@@ -1160,13 +1172,15 @@ public:
    NotifieeIterator notifieeIter() { return notifiee_.iterator(); }
 
 private:
-	Engine() {}
+	Engine() : expreactor_(NULL), slreactor_(NULL) {}
 	Stats::Ptr stats_;
 	Fleet::Ptr fleet_;
 	Conn::Ptr conn_;
 	NotifieeList notifiee_;
 	SegmentMap segment_;
 	LocationMap location_;
+	Stats::LocationSegmentReactor* slreactor_;
+	Stats::SegmentExpediteReactor* expreactor_;
 	void newNotifiee( Engine::NotifieeConst * n ) const {
 		Engine* me = const_cast<Engine*>(this);
 		me->notifiee_.newMember(n);
@@ -1229,12 +1243,20 @@ private:
 
 class Stats::SegmentExpediteReactor : public Segment::Notifiee {
 public:
-	SegmentExpediteReactor(Engine::Ptr e) : stats_(e->stats()) {}
 	virtual void onExpedite(Segment::Ptr s) {
 		if (s->expedite())
 			stats_->expediteNumIs(stats_->expediteNum() + 1);
 		else
 			stats_->expediteNumIs(stats_->expediteNum() - 1);
+	}
+	
+   static SegmentExpediteReactor * SegmentExpediteReactorIs(Segment::Ptr p, Engine::Ptr e) {
+      SegmentExpediteReactor *m = new SegmentExpediteReactor(p, e);
+      return m;
+   }
+protected:
+	SegmentExpediteReactor(Segment::Ptr s, Engine::Ptr e) : stats_(e->stats()) {
+		notifierIs(s);
 	}
 private:
 	Stats::Ptr stats_;

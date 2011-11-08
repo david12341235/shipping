@@ -134,7 +134,7 @@ Location::onZeroReferences() {
 }
 //----------| NotifieeConst Implementation |------------//
 
-Location::NotifieeConst::~NotifieeConst() {
+Segment::NotifieeConst::~NotifieeConst() {
    if(notifier_) {
       notifier_->deleteNotifiee(this);
    }
@@ -142,8 +142,8 @@ Location::NotifieeConst::~NotifieeConst() {
 }
 
 void
-Location::NotifieeConst::notifierIs(const Location::PtrConst& _notifier) {
-   Location::Ptr notifierSave(const_cast<Location *>(notifier_.ptr()));
+Segment::NotifieeConst::notifierIs(const Segment::PtrConst& _notifier) {
+   Segment::Ptr notifierSave(const_cast<Segment *>(notifier_.ptr()));
    if(_notifier==notifier_) return;
    notifier_ = _notifier;
    if(notifierSave) {
@@ -166,6 +166,9 @@ void Engine::segmentIs(Segment::Ptr s) {
    } else {
      m = s;
      segment_.newMember(m);
+	 if (!expreactor_) 
+		 expreactor_ = Stats::SegmentExpediteReactor::SegmentExpediteReactorIs(s, this);
+	 s->newNotifiee(expreactor_);
    }
    retrycell:
    U32 ver = notifiee_.version();
@@ -201,7 +204,7 @@ Location::NotifieeConst::isNonReferencingIs(bool _isNonReferencing){
       if(_isNonReferencing) notifier_->deleteRef();
       else notifier_->newRef();
    }
-   }
+}
 
 //----------| Notifiee Implementation |------------//
 /*
@@ -224,12 +227,12 @@ Stats::~Stats() {
 }
 
 Stats::Stats( const string& _name, Fwk::Ptr<Engine> _engine) :
-	NamedInterface(_name), engine_(_engine), customer_(0), 
-	port_(0), truckTerminal_(0), boatTerminal_(0),
-	planeTerminal_(0), boatSegment_(0), truckSegment_(0), 
-	planeSegment_(0), expedite_(0) { 
-		engine_->statsIs(this);
-	}
+		NamedInterface(_name), engine_(_engine), customer_(0), 
+		port_(0), truckTerminal_(0), boatTerminal_(0),
+		planeTerminal_(0), boatSegment_(0), truckSegment_(0), 
+		planeSegment_(0), expedite_(0) { 
+	engine_->statsIs(this);
+}
 
 // ======== Engine
 /*void
@@ -288,6 +291,11 @@ Engine::NotifieeConst::isNonReferencingIs(bool _isNonReferencing){
       if(_isNonReferencing) notifier_->deleteRef();
       else notifier_->newRef();
    }
+}
+
+void Engine::statsIs(Stats::Ptr s) { 
+	stats_ = s;
+	slreactor_ = Stats::LocationSegmentReactor::LocationSegmentReactorIs(this);
 }
 
 //----------| Notifiee Implementation |------------//
