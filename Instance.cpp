@@ -6,6 +6,7 @@
 #include <string>
 #include "Instance.h"
 #include "Engine.h"
+#include "Conn.h"
 #include "fwk/ListRaw.h"
 #include "fwk/NamedInterface.h"
 

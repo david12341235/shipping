@@ -111,7 +111,7 @@ int main(int argc, char *argv[]) {
     cout << endl;
 
     cout << "*** connect customer2 : customer1 ****" << endl;
-    cout << conn->attribute("connect customer2 : customer1") << endl;
+//    cout << conn->attribute("connect customer2 : customer1") << endl;
     cout << endl;
 
     // -- Statistics queries
