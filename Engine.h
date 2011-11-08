@@ -997,34 +997,34 @@ public:
 	typedef Fwk::Ptr<Stats> Ptr;
 
 	U32 customer() const { return customer_; }
-	void customerIs(U32 v) {}
+	void customerIs(U32 v) { customer_ = v; }
 
 	U32 port() const { return port_; }
-	void portIs(U32 v) {}
+	void portIs(U32 v) { port_ = v; }
 
 	U32 truckTerminal() const { return truckTerminal_; }
-	void truckTerminalIs(U32 v) {}
+	void truckTerminalIs(U32 v) { truckTerminal_ = v; }
 
 	U32 boatTerminal() const { return boatTerminal_; }
-	void boatTerminalIs(U32 v) {}
+	void boatTerminalIs(U32 v) { boatTerminal_ = v; }
 
 	U32 planeTerminal() const { return planeTerminal_; }
-	void planeTerminalIs(U32 v) {}
+	void planeTerminalIs(U32 v) { planeTerminal_ = v; }
 
 	U32 truckSegment() const { return truckSegment_; }
-	void truckSegmentIs(U32 v) {}
+	void truckSegmentIs(U32 v) { truckSegment_ = v; }
 
 	U32 boatSegment() const { return boatSegment_; }
-	void boatSegmentIs(U32 v) {}
+	void boatSegmentIs(U32 v) { boatSegment_ = v; }
 
 	U32 planeSegment() const { return planeSegment_; }
-	void planeSegmentIs(U32 v) {}
+	void planeSegmentIs(U32 v) { planeSegment_ = v; }
 	
 	Percentage expedite() const {return (double) expediteNum() / (double) totalSegments(); };
 	void expediteIs(Percentage v) {}
 
 	U32 expediteNum() const { return expedite_; };
-	void expediteNumIs(U32 v) {}
+	void expediteNumIs(U32 v) { expedite_ = v; }
 	
 	U32 totalSegments() const { return boatSegment_ + truckSegment_ + planeSegment_; };
 
