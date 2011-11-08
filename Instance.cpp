@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include <limits.h>
 #include <iostream>
 #include <map>
 #include <vector>
@@ -324,10 +325,10 @@ public:
 	}
 
     // Instance method
-	string attribute(const string& name) { return ""; };
+	string attribute(const string& name);
 
     // Instance method
-	void attributeIs(const string& name, const string& v) {};
+	void attributeIs(const string& name, const string& v);
 
 protected:
     ConnRep(const string& name, ManagerImpl* manager) :
@@ -570,7 +571,95 @@ string SegmentRep::expVal( Segment::ExpVal _expVal )
 	return oss.str();
 }
 
+string ConnRep::attribute(const string& name )
+{
+	char* q = new char[name.length()+1];
+	strcpy(q, name.c_str());
+	char* tok = strtok( q, " :");
+
+	// default attributes values
+	conn_->distanceIs( Mile::max() );
+	conn_->costIs( Dollar::max() );
+	conn_->timeIs( Hour::max() );
+	conn_->expeditedIs( Segment::expNo() );
+
+	if( tok && Conn::exploreString().compare(tok) == 0 )
+	{
+		conn_->queryTypeIs( Conn::explore() );
+		vector<string> used;
+
+		while( ( tok = strtok(NULL, " :") ) )
+		{
+			if( Conn::distanceString().compare(tok) == 0 )
+			{
+				for( vector<string>::iterator i = used.begin(); i != used.end(); ++i )
+				{
+					if( Conn::distanceString().compare(*i) == 0 ) return "";
+				}
+				used.push_back( Conn::distanceString() );
+
+				if( !(tok = strtok(NULL, " :") ) ) return "";
+
+				Mile m( atoi(tok) );
+				conn_->distanceIs( m );
+				
+			}
+			else if( Conn::costString().compare(tok) )
+			{
+				for( vector<string>::iterator i = used.begin(); i != used.end(); ++i )
+				{
+					if( Conn::costString().compare(*i) == 0 ) return "";
+				}
+				used.push_back( Conn::costString() );
+
+				if( !(tok = strtok(NULL, " :") ) ) return "";
+
+				Dollar d( atoi(tok) );
+				conn_->costIs( d );
+			}
+			else if( Conn::timeString().compare(tok) == 0 )
+			{
+				for( vector<string>::iterator i = used.begin(); i != used.end(); ++i )
+				{
+					if( Conn::timeString().compare(*i) == 0 ) return "";
+				}
+				used.push_back( Conn::timeString() );
+
+				if( !(tok = strtok(NULL, " :") ) ) return "";
+
+				Hour t( atoi(tok) );
+				conn_->timeIs( t );
+			}
+			else if( Conn::expeditedString().compare(tok) == 0 )
+			{
+				for( vector<string>::iterator i = used.begin(); i != used.end(); ++i )
+				{
+					if( Conn::expeditedString().compare(*i) == 0 ) return "";
+				}
+				used.push_back( Conn::expeditedString() );
+
+				if( !(tok = strtok(NULL, " :") ) ) return "";
+
+			}
+		}
+		if( !tok ) return "";
+
+
+	}
+
+	else if( tok && strcmp(tok, "connect") == 0 )
+	{
+		conn_->queryTypeIs( Conn::connect() );
+	}
 }
+
+void ConnRep::attributeIs(const string& name, const string& v)
+{
+	
+}
+
+}
+
 
 
 /*

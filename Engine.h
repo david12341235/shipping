@@ -779,6 +779,12 @@ public:
 
 	static inline Type explore() { return explore_; }
 	static inline Type connect() { return connect_; }
+	static inline string exploreString() { return "explore"; }
+	static inline string connectString() { return "connect"; }
+	static inline string distanceString() { return "distance"; }
+	static inline string costString() { return "cost"; }
+	static inline string timeString() { return "time"; }
+	static inline string expeditedString() { return "expedited"; }
 
 	static Type TypeInstance( Fwk::String );
 
@@ -793,6 +799,9 @@ public:
 
 	Segment::ExpVal expedited() const { return expedited_; }
 	void expeditedIs( Segment::ExpVal _expedited ) { expedited_ = _expedited; }
+
+	Type queryType() const { return queryType_; }
+	void queryTypeIs( Type _queryType ) { queryType_ = _queryType; }
 
 	string value();
 	
@@ -866,6 +875,7 @@ protected:
 	Dollar cost_;
 	Hour time_;
 	Segment::ExpVal expedited_;
+	Type queryType_;
 };
 
 class Fleet : public Fwk::NamedInterface {

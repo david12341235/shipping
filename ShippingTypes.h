@@ -1,6 +1,8 @@
 #ifndef SHIPPINGTYPES
 #define SHIPPINGTYPES
 
+#include <limits.h>
+#include <float.h>
 #include <sstream>
 
 namespace Shipping {
@@ -9,6 +11,7 @@ class Mile : public Ordinal<Mile, unsigned int> {
 public:
 	Mile( unsigned int num ) : Ordinal<Mile, unsigned int>(num) {}
 	operator string() const { std::ostringstream oss; oss << value(); return oss.str(); };
+	static Mile max() { Mile m( UINT_MAX ); return m; }
 };
 
 class Difficulty : public Ordinal<Difficulty, double> {
@@ -35,16 +38,18 @@ public:
 	operator string() const { std::ostringstream oss; oss << value(); return oss.str(); };
 };
 
-class Dollar : public Ordinal<Dollar, double> {
+class Dollar : public Ordinal<Dollar, unsigned int> {
 public:
-	Dollar( double num ) : Ordinal<Dollar, double>(num) {}
+	Dollar( unsigned int num ) : Ordinal<Dollar, unsigned int>(num) {}
 	operator string() const { std::ostringstream oss; oss << value(); return oss.str(); };
+	static Dollar max() { Dollar m( UINT_MAX ); return m; }
 };
 
-class Hour : public Ordinal<Hour, double> {
+class Hour : public Ordinal<Hour, unsigned int > {
 public:
-	Hour( double num ) : Ordinal<Hour, double>(num) {}
+	Hour( unsigned int num ) : Ordinal<Hour, unsigned int>(num) {}
 	operator string() const { std::ostringstream oss; oss << value(); return oss.str(); };
+	static Hour max() { Hour m( UINT_MAX ); return m; }
 };
 
 } /* end namespace */
