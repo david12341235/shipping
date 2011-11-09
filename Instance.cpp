@@ -423,6 +423,10 @@ Ptr<Instance> ManagerImpl::instanceNew(const string& name, const string& type) {
 		cerr << "Error: name in use: " << name << endl;
 		return NULL;
 	}
+
+	static StatsRep::Ptr stats;
+	static ConnRep::Ptr conn;
+	static FleetRep::Ptr fleet;
 	
     if (type == "Truck terminal") {
         LocationRep::Ptr t = TruckTerminalRep::TruckTerminalRepNew(name, this);
@@ -457,15 +461,24 @@ Ptr<Instance> ManagerImpl::instanceNew(const string& name, const string& type) {
         instance_[name] = t;
         return t;
     } else if (type == "Stats") {
-	   StatsRep::Ptr t = StatsRep::StatsRepNew(name, this);
+		if (stats) return stats;
+	    StatsRep::Ptr t = StatsRep::StatsRepNew(name, this);
+
+		stats = t;
         instance_[name] = t;
         return t;
     } else if (type == "Conn") {
-	   ConnRep::Ptr t = ConnRep::ConnRepNew(name, this);
+		if (conn) return conn;
+		ConnRep::Ptr t = ConnRep::ConnRepNew(name, this);
+
+		conn = t;
         instance_[name] = t;
         return t;
     } else if (type == "Fleet") {
-	   FleetRep::Ptr t = FleetRep::FleetRepNew(name, this);
+		if (fleet) return fleet;
+	    FleetRep::Ptr t = FleetRep::FleetRepNew(name, this);
+
+		fleet = t;
         instance_[name] = t;
         return t;
     } else {
@@ -484,6 +497,18 @@ Ptr<Instance> ManagerImpl::instance(const string& name) {
 }
 
 void ManagerImpl::instanceDel(const string& name) {
+	try {
+		map<string,Ptr<Instance> >::const_iterator t = instance_.find(name);
+
+		if( t != instance_.end() ) {
+			if (dynamic_cast<SegmentRep*>(t->second.ptr()))
+				engine_->segmentDel(name);
+			else if (dynamic_cast<LocationRep*>(t->second.ptr()))
+				engine_->locationDel(name);
+			
+			instance_.erase(name);
+		}
+	} catch (...) {}
 }
 
 

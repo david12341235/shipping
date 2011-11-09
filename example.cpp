@@ -15,7 +15,7 @@ int example1();
 int example2();
 
 int main(int argc, char *argv[]) {
-	return example0();
+	return example2();
 }
 
 int example0() {
@@ -269,7 +269,7 @@ int example1() {
 }
 
 int example2() {
-	    Ptr<Instance::Manager> manager = shippingInstanceManager();
+	Ptr<Instance::Manager> manager = shippingInstanceManager();
 
     if (!manager) {
         cerr << "Unexpected NULL manager." << endl;
@@ -295,13 +295,13 @@ int example2() {
 	
     fleet->attributeIs("Boat, speed", "60");
     fleet->attributeIs("Boat, capacity", "1000");
-    fleet->attributeIs("Boat, cost", "200");
+    fleet->attributeIs("Boat, cost", "1");
     fleet->attributeIs("Truck, speed", "55");
     fleet->attributeIs("Truck, capacity", "100");
-    fleet->attributeIs("Truck, cost", "100");
+    fleet->attributeIs("Truck, cost", "1");
     fleet->attributeIs("Plane, speed", "800");
     fleet->attributeIs("Plane, capacity", "400");
-    fleet->attributeIs("Plane, cost", "150");
+    fleet->attributeIs("Plane, cost", "1");
 
     // --- Create instances
     // -- Locations
@@ -311,6 +311,7 @@ int example2() {
     Ptr<Instance> customer3 = manager->instanceNew("customer3", "Customer");  
     Ptr<Instance> customer4 = manager->instanceNew("customer4", "Customer");  
     Ptr<Instance> customer5 = manager->instanceNew("customer5", "Customer");  
+    Ptr<Instance> customer6 = manager->instanceNew("customer6", "Customer");
     // ports
     Ptr<Instance> port1 = manager->instanceNew("port1", "Port");  
     Ptr<Instance> port2 = manager->instanceNew("port2", "Port");  
@@ -358,8 +359,8 @@ int example2() {
     ts2->attributeIs("source", "port2");
     ts2r->attributeIs("source", "customer5");
     ts2->attributeIs("return segment", "ts2r");
-    ts3->attributeIs("source", "port3");
-    ts3r->attributeIs("source", "tt1");
+    ts3->attributeIs("source", "tt1");
+    ts3r->attributeIs("source", "port3");
     ts3->attributeIs("return segment", "ts3r");
     ts4->attributeIs("source", "port1");
     ts4r->attributeIs("source", "tt1");
@@ -377,9 +378,10 @@ int example2() {
     ps3->attributeIs("source", "pt1");
     ps3r->attributeIs("source", "port2");
     ps3->attributeIs("return segment", "ps3r");
-    ps4->attributeIs("source", "customer4");
-    ps4r->attributeIs("source", "customer5");
+    ps4->attributeIs("source", "customer1");
+    ps4r->attributeIs("source", "customer6");
     ps4->attributeIs("return segment", "ps4r");
+    ps4->attributeIs("source", "customer4");
 	
     bs1->attributeIs("source", "port2");
     bs1r->attributeIs("source", "bt1");
@@ -393,6 +395,7 @@ int example2() {
     bs4->attributeIs("source", "port3");
     bs4r->attributeIs("source", "customer4");
     bs4->attributeIs("return segment", "bs4r");
+    bs4->attributeIs("return segment", "ps4r");
     // -- Segment lengths
     ts1->attributeIs("length", "400");
     ts1r->attributeIs("length", "400");
@@ -453,11 +456,18 @@ int example2() {
     
     // -- Segment expedite support
 	ts1->attributeIs("expedite support", "yes");
-	ts4->attributeIs("expedite support", "yes");
 	ts3->attributeIs("expedite support", "yes");
+	ts4->attributeIs("expedite support", "yes");
 	bs4->attributeIs("expedite support", "yes");
+	ps4->attributeIs("expedite support", "yes");
+	
+	// manager->instanceDel("ts3");
+	// manager->instanceDel("tt1");
 	
     cout << "ts1r->attribute('return segment'): " << ts1r->attribute("return segment") << endl;
+    cout << "bs4->attribute('return segment'): " << bs4->attribute("return segment") << endl;
+    cout << "bs4r->attribute('return segment'): " << bs4r->attribute("return segment") << endl;
+    cout << "ps4r->attribute('return segment'): " << ps4r->attribute("return segment") << endl;
     cout << "ts1->attribute('expedite support'): " << ts1->attribute("expedite support") << endl;
     cout << "ts1r->attribute('expedite support'): " << ts1r->attribute("expedite support") << endl;
 
@@ -473,12 +483,18 @@ int example2() {
     cout << "**** "<< q << " ****" << endl;
     cout << conn->attribute(q) << endl;
     cout << endl;
-
-	q = "connect customer1 : port1";
+	
+	q = "connect customer1 : customer4";
+    cout << "**** "<< q << " ****" << endl;
+    cout << conn->attribute(q) << endl;
+    cout << endl;
+	
+	q = "connect customer1 : customer6";
     cout << "**** "<< q << " ****" << endl;
     cout << conn->attribute(q) << endl;
     cout << endl;
 
+    stats = manager->instanceNew("myOtherStats", "Stats");
 
     // -- Statistics queries
     cout << "===== Stats attributes =====" << endl;

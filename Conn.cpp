@@ -96,6 +96,7 @@ string Conn::value()
 
 void Conn::paths(Fwk::Ptr<Location const> cur, vector< vector<PathUnit> >& path, vector<PathUnit> workingPath, Segment::ExpVal _expVal )
 {
+	if (!cur) return;
 	// check for cycles
 	for( vector<PathUnit>::iterator iter =workingPath.begin(); iter != workingPath.end(); ++iter)
 	{

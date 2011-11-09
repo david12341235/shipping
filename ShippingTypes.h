@@ -17,7 +17,7 @@ public:
 class Difficulty : public Ordinal<Difficulty, double> {
 public:
 	Difficulty( double num ) : Ordinal<Difficulty, double>(num) {
-		if (num < 0.0) throw Fwk::RangeException("Difficulty must be non-negative");
+		if (num < 1.0 || num > 5.0) throw Fwk::RangeException("Difficulty must be between 1 and 5.");
 	}
 	operator string() const { std::ostringstream oss; oss << value(); return oss.str(); };
 };
