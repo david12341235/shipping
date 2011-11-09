@@ -131,7 +131,7 @@ void Conn::paths(Fwk::Ptr<Location const> cur, vector< vector<PathUnit> >& path,
 		}
 	}
 
-	// check for destination reached
+	// check if we exceeded our limits
 	if( u.cost_ > cost() || u.time_ > time() || u.distance_ > distance() )
 	{
 		return;
@@ -156,8 +156,14 @@ void Conn::paths(Fwk::Ptr<Location const> cur, vector< vector<PathUnit> >& path,
 			if( _returnSegment != Segment::PtrConst(NULL) )
 			{
 				Fwk::Ptr<Location> next = _returnSegment->source();
-				workingPath.back().segment_ = _segment;
-				paths( next, path, workingPath, _expVal );
+				// Don't recurse if the next location is a customer location and
+				// not our destination location. Customer locations can only be
+				// start and end point of path
+				if( next->type() != Location::customer() || next == endLocation_ )
+				{
+					workingPath.back().segment_ = _segment;
+					paths( next, path, workingPath, _expVal );
+				}
 			}
 		}
 

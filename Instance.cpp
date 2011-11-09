@@ -624,6 +624,13 @@ string ConnRep::attribute(const string& name )
 	{
 		conn_->queryTypeIs( Conn::explore() );
 		if( !(tok = strtok(NULL, " :") ) ) return "";
+
+		// enforce Customer start location
+		if( !manager_->engine()->location(tok) || manager_->engine()->location(tok)->type() != Location::customer() )
+		{
+			return "";
+		}
+
 		conn_->startLocationIs( tok );
 		vector<string> used;
 
@@ -692,8 +699,21 @@ string ConnRep::attribute(const string& name )
 	{
 		conn_->queryTypeIs( Conn::connect() );
 		if( !(tok = strtok(NULL, " :") ) ) return "";
+
+		// enforce Customer start location
+		if( !manager_->engine()->location(tok) || manager_->engine()->location(tok)->type() != Location::customer() )
+		{
+			return "";
+		}
+
 		conn_->startLocationIs( tok );
 		if( !(tok = strtok(NULL, " :") ) ) return "";
+
+		// enforce Customer end location
+		if( !manager_->engine()->location(tok) || manager_->engine()->location(tok)->type() != Location::customer() )
+		{
+			return "";
+		}
 		conn_->endLocationIs( tok );
 	}
 	return conn_->value();
