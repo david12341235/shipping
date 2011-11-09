@@ -103,7 +103,7 @@ int main(int argc, char *argv[]) {
     
     // -- Segment expedite support
     boatSeg1->attributeIs("expedite support", "yes");
-    boatSeg2->attributeIs("expedite support", "no");
+    boatSeg2->attributeIs("expedite support", "yes");
     truckSeg1->attributeIs("expedite support", "yes");
     truckSeg2->attributeIs("expedite support", "yes");
 

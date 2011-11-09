@@ -421,6 +421,7 @@ Ptr<Instance> ManagerImpl::instanceNew(const string& name, const string& type) {
 	if( instance_.find( name ) != instance_.end() )
 	{
 		cerr << "Error: name in use: " << name << endl;
+		return NULL;
 	}
 	
     if (type == "Truck terminal") {
