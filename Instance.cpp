@@ -649,10 +649,7 @@ string ConnRep::attribute(const string& name )
 					if( Conn::expeditedString().compare(*i) == 0 ) return "";
 				}
 				used.push_back( Conn::expeditedString() );
-
-				if( !(tok = strtok(NULL, " ") ) ) return "";
-
-				conn_->expeditedIs( Segment::ExpValInstance( tok ) );
+				conn_->expeditedIs( Segment::expYes() );
 			}
 			else return "";
 		}
