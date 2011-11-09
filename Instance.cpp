@@ -259,7 +259,7 @@ public:
 		} else if (sub.find("Truck") != string::npos) {
 			m = Segment::truck_;
 		} else {
-			cout << sub << endl;
+			cerr << "Error: unsupported Fleet attribute: " << name << endl;
 			return "";
 		}
 
@@ -270,6 +270,8 @@ public:
 			return fleet_->cost(m);
 		} else if (sub == "capacity") {
 			return fleet_->capacity(m);
+		} else {
+			cerr << "Error: unsupported Fleet attribute: " << name << endl;
 		}
 		return "";
 	};
@@ -287,6 +289,7 @@ public:
 		} else if (sub.find("Truck") != string::npos) {
 			m = Segment::truck();
 		} else {
+			cerr << "Error: unsupported Fleet attribute: " << name << endl;
 			return;
 		}
 
@@ -305,6 +308,9 @@ public:
 				unsigned int val;
 				ss2 >> val;
 				fleet_->capacityIs(m, val);
+			} else {
+				cerr << "Error: unsupported Fleet attribute: " << name << endl;
+				return;
 			}
 		} catch (Fwk::RangeException ex) {
 			cerr << "Error processing \"" << name << " = " 
