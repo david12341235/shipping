@@ -212,6 +212,8 @@ int example2() {
     Ptr<Instance> bs2r = manager->instanceNew("bs2r", "Boat segment");
     Ptr<Instance> bs3 = manager->instanceNew("bs3", "Boat segment");
     Ptr<Instance> bs3r = manager->instanceNew("bs3r", "Boat segment");
+    Ptr<Instance> bs4 = manager->instanceNew("bs4", "Boat segment");
+    Ptr<Instance> bs4r = manager->instanceNew("bs4r", "Boat segment");
     // truck
     Ptr<Instance> ts1 = manager->instanceNew("ts1", "Truck segment");
     Ptr<Instance> ts1r = manager->instanceNew("ts1r", "Truck segment");
@@ -234,11 +236,47 @@ int example2() {
     Ptr<Instance> ps4r = manager->instanceNew("ps4r", "Plane segment");
 
     // connections
-    // customer1 <---> port1
     ts1->attributeIs("source", "customer1");
     ts1r->attributeIs("source", "port1");
     ts1->attributeIs("return segment", "ts1r");
-
+    ts2->attributeIs("source", "port2");
+    ts2r->attributeIs("source", "customer5");
+    ts2->attributeIs("return segment", "ts2r");
+    ts3->attributeIs("source", "port3");
+    ts3r->attributeIs("source", "tt1");
+    ts3->attributeIs("return segment", "ts3r");
+    ts4->attributeIs("source", "port1");
+    ts4r->attributeIs("source", "tt1");
+    ts4->attributeIs("return segment", "ts4r");
+    ts5->attributeIs("source", "tt1");
+    ts5r->attributeIs("source", "customer3");
+    ts5->attributeIs("return segment", "ts5r");
+	
+    ps1->attributeIs("source", "port1");
+    ps1r->attributeIs("source", "pt1");
+    ps1->attributeIs("return segment", "ps1r");
+    ps2->attributeIs("source", "pt1");
+    ps2r->attributeIs("source", "customer2");
+    ps2->attributeIs("return segment", "ps2r");
+    ps3->attributeIs("source", "pt1");
+    ps3r->attributeIs("source", "port2");
+    ps3->attributeIs("return segment", "ps3r");
+    ps4->attributeIs("source", "customer4");
+    ps4r->attributeIs("source", "customer5");
+    ps4->attributeIs("return segment", "ps4r");
+	
+    bs1->attributeIs("source", "port2");
+    bs1r->attributeIs("source", "bt1");
+    bs1->attributeIs("return segment", "bs1r");
+    bs2->attributeIs("source", "bt1");
+    bs2r->attributeIs("source", "customer5");
+    bs2->attributeIs("return segment", "bs2r");
+    bs3->attributeIs("source", "bt1");
+    bs3r->attributeIs("source", "port3");
+    bs3->attributeIs("return segment", "bs3r");
+    bs4->attributeIs("source", "port3");
+    bs4r->attributeIs("source", "customer4");
+    bs4->attributeIs("return segment", "bs4r");
     // -- Segment lengths
     ts1->attributeIs("length", "400");
     ts1r->attributeIs("length", "400");
