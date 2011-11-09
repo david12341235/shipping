@@ -141,6 +141,14 @@ void Conn::paths(Fwk::Ptr<Location const> cur, vector< vector<PathUnit> >& path,
 	workingPath.push_back(u);
 	path.push_back(workingPath);
 
+	// If we're not at a customer location, Go through all the segments
+	// and recurse
+	if( cur->type() == Location::customer() && cur != startLocation_ )
+	{
+		workingPath.pop_back();
+		return;
+	}
+
 	// Go through all the segments
 	Segment::SegmentId _segId = 1;
 	Segment::PtrConst _segment = cur->segment( _segId );
@@ -156,14 +164,8 @@ void Conn::paths(Fwk::Ptr<Location const> cur, vector< vector<PathUnit> >& path,
 			if( _returnSegment != Segment::PtrConst(NULL) )
 			{
 				Fwk::Ptr<Location> next = _returnSegment->source();
-				// Don't recurse if the next location is a customer location and
-				// not our destination location. Customer locations can only be
-				// start and end point of path
-				if( next->type() != Location::customer() || next == endLocation_ )
-				{
 					workingPath.back().segment_ = _segment;
 					paths( next, path, workingPath, _expVal );
-				}
 			}
 		}
 

@@ -123,7 +123,7 @@ int example1() {
     }
 
     cout << "**** explore customer1 : distance 1500 ****" << endl;
-    cout << conn->attribute("explore customer1 : cost 400 distance 1500 expedited time 10") << endl;
+    cout << conn->attribute("explore customer1 : distance 1500") << endl;
     cout << endl;
 
     cout << "*** connect customer2 : customer1 ****" << endl;
@@ -262,7 +262,7 @@ int example2() {
     }
 
     cout << "**** explore customer1 : distance 1500 ****" << endl;
-    cout << conn->attribute("explore customer1 : distance 1500") << endl;
+    cout << conn->attribute("explore customer1 : distance 1500 cost 400 expedited time 10") << endl;
     cout << endl;
 
     cout << "*** connect customer2 : customer1 ****" << endl;
