@@ -389,7 +389,7 @@ public:
 		} else if (name == "expedite percentage") {
 			return stats_->expedite();
 		} else {
-			cerr << "Error: unsupported Fleet attribute: " << name << endl;
+			cerr << "Error: unsupported Stats attribute: " << name << endl;
 			return "unknown";
 		}
 
