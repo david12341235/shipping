@@ -58,7 +58,7 @@ public:
 class Hour : public Ordinal<Hour, double > {
 public:
 	Hour( double num ) : Ordinal<Hour, double>(num) {
-		if (num < 0.0) throw Fwk::RangeException("Hour must be between 0 and 24.");
+		if (num < 0.0) throw Fwk::RangeException("Hour must be non-negative.");
 	}
 	operator string() const { std::ostringstream oss; oss << value(); return oss.str(); };
 	static Hour max() { Hour m( DBL_MAX ); return m; }
