@@ -651,7 +651,7 @@ string ConnRep::attribute(const string& name )
 				conn_->distanceIs( m );
 				
 			}
-			else if( Conn::costString().compare(tok) )
+			else if( Conn::costString().compare(tok) == 0 )
 			{
 				for( vector<string>::iterator i = used.begin(); i != used.end(); ++i )
 				{
