@@ -290,16 +290,25 @@ public:
 			return;
 		}
 
-		ss >> sub;
-		double val;
-		stringstream ss2(v);
-		ss2 >> val;
-		if (sub == "speed") {
-			fleet_->speedIs(m, val);
-		} else if (sub == "cost") {
-			fleet_->costIs(m, (int)val);
-		} else if (sub == "capacity") {
-			fleet_->capacityIs(m, val);
+		try {
+			ss >> sub;
+			stringstream ss2(v);
+			if (sub == "speed") {
+				double val;
+				ss2 >> val;
+				fleet_->speedIs(m, val);
+			} else if (sub == "cost") {
+				double val;
+				ss2 >> val;
+				fleet_->costIs(m, val);
+			} else if (sub == "capacity") {
+				unsigned int val;
+				ss2 >> val;
+				fleet_->capacityIs(m, val);
+			}
+		} catch (Fwk::RangeException ex) {
+			cerr << "Error processing \"" << name << " = " 
+				<< v << "\": " << ex.what() << endl;
 		}
 	};
 
