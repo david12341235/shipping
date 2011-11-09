@@ -34,10 +34,14 @@ int main(int argc, char *argv[]) {
         getchar();
         return 1;
     }
+	
+    Ptr<Instance> fleet2 = manager->instanceNew("myFleet", "Fleet");
+    Ptr<Instance> borg = manager->instanceNew("myBorg", "Borg");
 
     fleet->attributeIs("Boat, speed", "60");
     fleet->attributeIs("Truck, capacity", "50");
     fleet->attributeIs("Plane, cost", "20");
+    fleet->attributeIs("Hippogryph, cost", "50");
     fleet->attributeIs("Boat, speed", "-1");
     cout << "fleet->attribute('Boat, speed'): " << fleet->attribute("Boat, speed") << endl;
 
@@ -61,7 +65,7 @@ int main(int argc, char *argv[]) {
     Ptr<Instance> boatSeg2 = manager->instanceNew("boatSeg2", "Boat segment");  
     // truck
     Ptr<Instance> truckSeg1 = manager->instanceNew("truckSeg1", "Truck segment");  
-    Ptr<Instance> truckSeg2 = manager->instanceNew("truckSeg2", "Truck segment");  
+    Ptr<Instance> truckSeg2 = manager->instanceNew("truckSeg2", "Truck segment");
 
     if (!(boatSeg1 && boatSeg2 && truckSeg1 && truckSeg2)) {
         cerr << "Unexpected NULL segment." << endl;
@@ -80,6 +84,10 @@ int main(int argc, char *argv[]) {
     boatSeg2->attributeIs("source", "port1");
     boatSeg1->attributeIs("return segment", "boatSeg2");
     cout << "boatSeg1->attribute('return segment'): " << boatSeg1->attribute("return segment") << endl;
+	
+    cout << "port1->attribute('segment1'): " << port1->attribute("segment1") << endl;
+    cout << "port1->attribute('segment2'): " << port1->attribute("segment2") << endl;
+    cout << "port1->attribute('segment3'): " << port1->attribute("segment3") << endl;
 
     // -- Segment lengths
     boatSeg1->attributeIs("length", "400");
