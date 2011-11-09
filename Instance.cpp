@@ -252,14 +252,14 @@ public:
 		string sub;
 		iss >> sub;
 		Segment::Mode m;
-		if (sub.find("Boat")) {
+		if (sub.find("Boat") != string::npos) {
 			m = Segment::boat_;
-		} else if (sub.find("Plane")) {
+		} else if (sub.find("Plane") != string::npos) {
 			m = Segment::plane_;
-		} else if (sub.find("Truck")) {
+		} else if (sub.find("Truck") != string::npos) {
 			m = Segment::truck_;
 		} else {
-			cout << sub << endl;
+			cerr << "Error: unsupported Fleet attribute: " << name << endl;
 			return "";
 		}
 
@@ -270,6 +270,8 @@ public:
 			return fleet_->cost(m);
 		} else if (sub == "capacity") {
 			return fleet_->capacity(m);
+		} else {
+			cerr << "Error: unsupported Fleet attribute: " << name << endl;	
 		}
 		return "";
 	};
@@ -287,19 +289,32 @@ public:
 		} else if (sub.find("Truck") != string::npos) {
 			m = Segment::truck();
 		} else {
+			cerr << "Error: unsupported Fleet attribute: " << name << endl;
 			return;
 		}
 
-		ss >> sub;
-		double val;
-		stringstream ss2(v);
-		ss2 >> val;
-		if (sub == "speed") {
-			fleet_->speedIs(m, val);
-		} else if (sub == "cost") {
-			fleet_->costIs(m, (int)val);
-		} else if (sub == "capacity") {
-			fleet_->capacityIs(m, val);
+		try {
+			ss >> sub;
+			stringstream ss2(v);
+			if (sub == "speed") {
+				double val;
+				ss2 >> val;
+				fleet_->speedIs(m, val);
+			} else if (sub == "cost") {
+				double val;
+				ss2 >> val;
+				fleet_->costIs(m, val);
+			} else if (sub == "capacity") {
+				unsigned int val;
+				ss2 >> val;
+				fleet_->capacityIs(m, val);
+			} else {
+				cerr << "Error: unsupported Fleet attribute: " << name << endl;
+				return;
+			}
+		} catch (Fwk::RangeException ex) {
+			cerr << "Error processing \"" << name << " = " 
+				<< v << "\": " << ex.what() << endl;
 		}
 	};
 
@@ -374,6 +389,7 @@ public:
 		} else if (name == "expedite percentage") {
 			return stats_->expedite();
 		} else {
+			cerr << "Error: unsupported Stats attribute: " << name << endl;
 			return "unknown";
 		}
 
@@ -404,7 +420,7 @@ Ptr<Instance> ManagerImpl::instanceNew(const string& name, const string& type) {
 	
 	if( instance_.find( name ) != instance_.end() )
 	{
-		return NULL;
+		cerr << "Error: name in use: " << name << endl;
 	}
 	
     if (type == "Truck terminal") {
@@ -451,7 +467,9 @@ Ptr<Instance> ManagerImpl::instanceNew(const string& name, const string& type) {
 	   FleetRep::Ptr t = FleetRep::FleetRepNew(name, this);
         instance_[name] = t;
         return t;
-    }
+    } else {
+		cerr << "Error: unsupported Shipping object: " << type << endl;
+	}
 
     return NULL;
 }
@@ -471,9 +489,20 @@ void ManagerImpl::instanceDel(const string& name) {
 string LocationRep::attribute(const string& name) {
     int i = segmentNumber(name);
     if (i != 0) {
-		return location_->segment(i)->name();
-    }
-    return "";
+		try {
+			Segment::PtrConst p = location_->segment(i);
+			if (p)
+				return p->name();
+			else
+				cerr << "Error: Location has no segment # " << name << endl;
+		} catch (...) {
+			cerr << "Error: Location has no segment # " << name << endl;
+		}
+		return "";
+    } else {
+		cerr << "Error: unsupported Location attribute: " << name << endl;
+		return "";
+	}
 }
 
 
@@ -522,6 +551,8 @@ string SegmentRep::attribute(const string& name) {
 	else if( name == "expedite support" )
 	{
 		return expVal( segment_->expedite() );
+	} else {
+		cerr << "Error: unsupported segment attribute: " << name << endl;
 	}
 	return "";
 }
@@ -549,6 +580,8 @@ void SegmentRep::attributeIs(const string& name, const string& v) {
 	else if( name == "expedite support" )
 	{
 		segment_->expediteIs( Segment::ExpValInstance( v ) );
+	} else {
+		cerr << "Error: unsupported segment attribute: " << name << endl;
 	}
 }
 
