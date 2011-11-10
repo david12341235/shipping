@@ -9,7 +9,8 @@ using std::cerr;
 using std::endl;
 using std::string;
 
-int main(int argc, char *argv[]) {
+int main(int argc, char *argv[])
+{
     Ptr<Instance::Manager> manager = shippingInstanceManager();
 
     if (manager == NULL) {
@@ -39,23 +40,23 @@ int main(int argc, char *argv[]) {
     // --- Create instances
     // -- Locations
     // customers
-    Ptr<Instance> customer1 = manager->instanceNew("customer1", "Customer");  
-    Ptr<Instance> customer2 = manager->instanceNew("customer2", "Customer");  
+    Ptr<Instance> customer1 = manager->instanceNew("customer1", "Customer");
+    Ptr<Instance> customer2 = manager->instanceNew("customer2", "Customer");
     // ports
-    Ptr<Instance> port1 = manager->instanceNew("port1", "Port");  
+    Ptr<Instance> port1 = manager->instanceNew("port1", "Port");
 
     if (customer1 == NULL || customer2 == NULL || port1 == NULL) {
         cerr << "Unexpected NULL customer or port." << endl;
-	return 1;
+        return 1;
     }
 
     // -- Segments
     // boat
-    Ptr<Instance> boatSeg1 = manager->instanceNew("boatSeg1", "Boat segment");  
-    Ptr<Instance> boatSeg2 = manager->instanceNew("boatSeg2", "Boat segment");  
+    Ptr<Instance> boatSeg1 = manager->instanceNew("boatSeg1", "Boat segment");
+    Ptr<Instance> boatSeg2 = manager->instanceNew("boatSeg2", "Boat segment");
     // truck
-    Ptr<Instance> truckSeg1 = manager->instanceNew("truckSeg1", "Truck segment");  
-    Ptr<Instance> truckSeg2 = manager->instanceNew("truckSeg2", "Truck segment");  
+    Ptr<Instance> truckSeg1 = manager->instanceNew("truckSeg1", "Truck segment");
+    Ptr<Instance> truckSeg2 = manager->instanceNew("truckSeg2", "Truck segment");
 
     if (boatSeg1 == NULL || boatSeg2 == NULL || truckSeg1 == NULL || truckSeg2 == NULL) {
         cerr << "Unexpected NULL segment." << endl;
@@ -68,7 +69,7 @@ int main(int argc, char *argv[]) {
     truckSeg2->attributeIs("source", "port1");
     truckSeg1->attributeIs("return segment", "truckSeg2");
     cout << "truckSeg1->attribute('source'): " << truckSeg1->attribute("source") << endl;
-    
+
     // customer2 <---> port1
     boatSeg1->attributeIs("source", "customer2");
     boatSeg2->attributeIs("source", "port1");
@@ -86,7 +87,7 @@ int main(int argc, char *argv[]) {
     boatSeg2->attributeIs("difficulty", "1");
     truckSeg1->attributeIs("difficulty", "1");
     truckSeg2->attributeIs("difficulty", "1");
-    
+
     // -- Segment expedite support
     boatSeg1->attributeIs("expedite support", "yes");
     boatSeg2->attributeIs("expedite support", "yes");

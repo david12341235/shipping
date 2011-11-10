@@ -14,7 +14,8 @@ using Fwk::Ptr;
 /// in future extensions, clients always refer to instances and
 /// their attributes by name and attribute values are strings.
 ///
-class Instance : public Fwk::PtrInterface<Instance> {
+class Instance : public Fwk::PtrInterface<Instance>
+{
 public:
 
     ///
@@ -58,7 +59,8 @@ private:
 /// Instance::Manager provides the interface to create and destroy
 /// instances.
 ///
-class Instance::Manager : public Fwk::PtrInterface<Instance::Manager> {
+class Instance::Manager : public Fwk::PtrInterface<Instance::Manager>
+{
 public:
     ///
     /// Returns a newly-created instance with the specified name.
@@ -116,7 +118,7 @@ public:
 
 /// The segmentN attributes should always begin at 1 and should be
 /// read-only. This means that by setting a segment's location by:
-/// 
+///
 /// segmentRep->attributeIs("source", "loc");
 ///
 /// should implicitly set the segmentN attribute of the location to the

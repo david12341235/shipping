@@ -10,7 +10,8 @@ using std::endl;
 static void badInstanceManager();
 static void badTruckTerminal();
 static void badTruckSegment();
-int main(int argc, char *argv[]) {
+int main(int argc, char *argv[])
+{
     Ptr<Instance::Manager> manager = shippingInstanceManager();
 
     if (manager == NULL) {
@@ -30,7 +31,7 @@ int main(int argc, char *argv[]) {
 
     if (b == NULL || c == NULL) {
         badTruckSegment();
-	return 1;
+        return 1;
     }
 
     b->attributeIs("source", "terminal1");
@@ -44,16 +45,19 @@ int main(int argc, char *argv[]) {
     return 0;
 }
 
-static void badInstanceManager() {
+static void badInstanceManager()
+{
     cerr << "Unexpected Null pointer from shippingInstanceManager" << endl;
 }
 
-static void badTruckTerminal() {
+static void badTruckTerminal()
+{
     cerr << "Unable to create terminal1" << endl;
 }
 
-static void badTruckSegment() {
+static void badTruckSegment()
+{
     cerr << "You need to update the "
-        "instanceNew() function to create all types " << endl <<
-        "of nodes and interfaces." << endl;
+         "instanceNew() function to create all types " << endl <<
+         "of nodes and interfaces." << endl;
 }
