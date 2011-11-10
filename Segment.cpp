@@ -28,30 +28,42 @@ void TruckSegment::sourceIs( Fwk::Ptr<Location> _source )
 			source_->segmentDel( this );
 		source_ = _source;
 		source_->segmentIs( this );
+	} else {
+		cerr << "Truck segment " << name() << " can't be connected to a plane or boat terminal." << endl;
 	}
 	return;
 }
 
 void BoatSegment::sourceIs( Fwk::Ptr<Location> _source )
 {
-	if( _source && _source->type() != Location::truck() && _source->type() != Location::plane()  )
-	{
+	if (!_source) {
+		if (source_)
+			source_->segmentDel( this );
+		source_ = NULL;
+	} else if( _source && _source->type() != Location::truck() && _source->type() != Location::plane()  ) {
 		if (source_)
 			source_->segmentDel( this );
 		source_ = _source;
 		source_->segmentIs( this );
+	} else {
+		cerr << "Boat segment " << name() << " can't be connected to a truck or plane terminal." << endl;
 	}
 	return;
 }
 
 void PlaneSegment::sourceIs( Fwk::Ptr<Location> _source )
 {
-	if( _source && _source->type() != Location::truck() && _source->type() != Location::boat()  )
-	{
+	if (!_source) {
+		if (source_)
+			source_->segmentDel( this );
+		source_ = NULL;
+	} else if( _source && _source->type() != Location::truck() && _source->type() != Location::boat()  ) {
 		if (source_)
 			source_->segmentDel( this );
 		source_ = _source;
 		source_->segmentIs( this );
+	} else {
+		cerr << "Plane segment " << name() << " can't be connected to a truck or boat terminal." << endl;
 	}
 	return;
 }

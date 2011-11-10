@@ -361,9 +361,11 @@ int example2() {
     ts2->attributeIs("return segment", "ts2r");
     ts3->attributeIs("source", "tt1");
     ts3r->attributeIs("source", "port3");
+    ts3r->attributeIs("source", "bt1");
     ts3->attributeIs("return segment", "ts3r");
     ts4->attributeIs("source", "port1");
     ts4r->attributeIs("source", "tt1");
+//    ts4r->attributeIs("source", "bt1");
     ts4->attributeIs("return segment", "ts4r");
     ts5->attributeIs("source", "tt1");
     ts5r->attributeIs("source", "customer3");
@@ -479,7 +481,7 @@ int example2() {
         return 1;
     }
 
-	string q = "explore customer1 : distance 500";
+	string q = "explore customer1 : distance 5000 cost 5000 time 30 expedited";
     cout << "**** "<< q << " ****" << endl;
     cout << conn->attribute(q) << endl;
     cout << endl;
