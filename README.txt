@@ -12,3 +12,7 @@ There are two Reactor types in Engine.h, LocationSegmentReactor and SegmentExped
 We have notifiees in other base classes, though they aren't currently used. This is for future extensibility.
 
 The Engine is created upon creation of the Manager, and Stats/Conn/Fleet objects are restricted to one instance. Attempting to create one of these objects with a different name will return the pre-existing Stats/Conn/Fleet object.
+
+The Conn object does no caching; that is, an explore or connect query will take the same amount of time each time they are called. Furthermore, explore and connect queries both do the same underlying search: a recursive depth-first search whose base case is either when a cycle is detected or when the cost/time/distance limits are violated (connect queries are set up with infinite limits). The queries only differ in which paths to output after retrieving them. This design decision was due to the commonality of the two queries. However, this is all hidden from the client. Also, we enforce that customer locations may only be found at the end points of a path, and the end points of a path must be customer locations.
+
+In general, when a query or input is invalid, the default value returned is the empty string.
