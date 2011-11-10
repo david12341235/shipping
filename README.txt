@@ -11,4 +11,4 @@ There are two Reactor types in Engine.h, LocationSegmentReactor and SegmentExped
 
 We have notifiees in other base classes, though they aren't currently used. This is for future extensibility.
 
-The Engine is created upon creation of the Manager, and Stats/Conn/Fleet objects are restricted to one instance. Attempting to create a Stats object with a different name will return the pre-existing Stats object.
+The Engine is created upon creation of the Manager, and Stats/Conn/Fleet objects are restricted to one instance. Attempting to create one of these objects with a different name will return the pre-existing Stats/Conn/Fleet object.
