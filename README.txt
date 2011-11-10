@@ -5,8 +5,10 @@ user: bhh1988
 = Shipping API README =
 =======================
 
-Our interface consists of Rep classes (SegmentRep, LocationRep, StatsRep, FleetRep, ConnRep) and Engine classes (Segment, Location, Stats, Fleet, Conn). The rep classes were added to Instance.cpp. These classes are responsible for parsing the client-specified attributes and setting the corresponding attributes in the respective engine classes (a pointer is held by each Rep instance to its engine class analogue). This was done to separate the task of parsing from the actual entities. The engine classes are managed by the Engine, which keeps track of them. The Engine also registers the correct notifiees when a new instance is added to it. There are two Reactor types in Engine.h, LocationSegmentReactor and SegmentExpediteReactor. LocationSegmentReactor is responsible for updating the stats object when a new segment 
+Our interface consists of Rep classes (SegmentRep, LocationRep, StatsRep, FleetRep, and ConnRep, which are created and managed by the Manager class) and Engine classes (Segment, Location, Stats, Fleet, Conn). The rep classes were added to Instance.cpp. These classes are responsible for parsing the client-specified attributes and setting the corresponding attributes in the respective engine classes (each Rep instance points to its engine class analogue). This was done to separate the task of parsing from the actual entities. The engine classes are managed by the Engine, which keeps track of them and registers the correct notifiees when a new instance is added to it. 
 
-Currently, we use notifications only to have Stats respond to whenever a Location or Segment is created (the Engine notifies the Stats class of this, since newly created Locations and Segments are added to the engine with the LocationIs and SegmentIs methods) and for when a Segment's expedited attribute changes.
+There are two Reactor types in Engine.h, LocationSegmentReactor and SegmentExpediteReactor. LocationSegmentReactor is responsible for updating the stats object when a new segment is added or deleted, and SegmentExpediteReactor changes the count of expedited segments when the expedite() attribute of a segment is changed.
 
-Also, we have notifiees in basically all of the base classes, but that doesn't necessarily mean we will use all of them.
+We have notifiees in other base classes, though they aren't currently used. This is for future extensibility.
+
+The Engine is created upon creation of the Manager, and Stats/Conn/Fleet objects are restricted to one instance. Attempting to create a Stats object with a different name will return the pre-existing Stats object.
