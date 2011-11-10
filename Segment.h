@@ -59,7 +59,7 @@ public:
 	Mile length() const { return length_; }
 	void lengthIs( const Mile& _length ) { length_ = _length; }
 
-	PtrConst returnSegment() const { return returnSegment_; }
+	Ptr returnSegment() const { return returnSegment_; }
 	void returnSegmentIs( Segment::Ptr _returnSegment ); 
 
 	Difficulty difficulty() const { return difficulty_; }

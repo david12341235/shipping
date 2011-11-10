@@ -46,26 +46,6 @@ Location::onZeroReferences() {
 }
 //----------| NotifieeConst Implementation |------------//
 
-void Engine::segmentIs(Segment::Ptr s) {
-  string name = s->name();
-  Segment::Ptr m = segment_[name];
-   if(m) {
-      throw Fwk::NameInUseException(name);
-   } else {
-     m = s;
-     segment_.newMember(m);
-	 if (!expreactor_) 
-		 expreactor_ = Stats::SegmentExpediteReactor::SegmentExpediteReactorIs(s, this);
-	 s->newNotifiee(expreactor_);
-   }
-   retrycell:
-   U32 ver = notifiee_.version();
-   if(notifiees()) for(NotifieeIterator n=notifieeIter();n.ptr();++n) try {
-	   n->onSegmentIs(s);
-      if( ver != notifiee_.version() ) goto retrycell;
-   } catch(...) { n->onNotificationException(NotifieeConst::segment__); }
-}
-
 void
 Location::NotifieeConst::isNonReferencingIs(bool _isNonReferencing){
    if(_isNonReferencing==isNonReferencing_) return;

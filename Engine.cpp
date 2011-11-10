@@ -2,21 +2,62 @@
 
 using namespace Shipping;	
 
-void Engine::locationIs(Location::Ptr s) {
-  string name = s->name();
+void Engine::locationIs(Location::Ptr l) {
+  string name = l->name();
   Location::Ptr m = location_[name];
    if(m) {
       throw Fwk::NameInUseException(name);
    } else {
-     m = s;
+     m = l;
      location_.newMember(m);
    }
    retrycell:
    U32 ver = notifiee_.version();
    if(notifiees()) for(NotifieeIterator n=notifieeIter();n.ptr();++n) try {
-	   n->onLocationIs(s);
-      if( ver != notifiee_.version() ) goto retrycell;
+	   n->onLocationIs(l);
+       if( ver != notifiee_.version() ) goto retrycell;
    } catch(...) { n->onNotificationException(NotifieeConst::location__); }
+}
+
+void Engine::locationDel(const string& l) {
+  try {
+	  Location::Ptr p = location_[l];
+	  int i = 1;
+	  Segment::PtrConst s = p->segment(i); 
+	  while(s) {
+		  segment_[s->name()]->sourceIs(NULL);
+		  s = p->segment(++i); 
+	  }
+	  location_.memberDel(l);
+  } catch (...) {}
+}
+
+void Engine::segmentIs(Segment::Ptr s) {
+  string name = s->name();
+  Segment::Ptr m = segment_[name];
+   if(m) {
+      throw Fwk::NameInUseException(name);
+   } else {
+     m = s;
+     segment_.newMember(m);
+	 if (!expreactor_) 
+		 expreactor_ = Stats::SegmentExpediteReactor::SegmentExpediteReactorIs(s, this);
+	 s->newNotifiee(expreactor_);
+   }
+   retrycell:
+   U32 ver = notifiee_.version();
+   if(notifiees()) for(NotifieeIterator n=notifieeIter();n.ptr();++n) try {
+	   n->onSegmentIs(s);
+      if( ver != notifiee_.version() ) goto retrycell;
+   } catch(...) { n->onNotificationException(NotifieeConst::segment__); }
+}
+
+void Engine::segmentDel(const string& s) {
+  try {
+	  Segment::Ptr p = segment_[s];
+	  p->returnSegment()->returnSegmentIs(NULL);
+	  segment_.memberDel(s);
+  } catch (...) {}
 }
 
 Engine::NotifieeConst::~NotifieeConst() {

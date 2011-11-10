@@ -47,9 +47,11 @@ public:
 	typedef LocationMap::Iterator LocationIterator;
 	LocationIterator locationIter() { return location_.iterator(); }
 	string name() const { return "engine"; }
-
+	
 	void segmentIs(Segment::Ptr s);
-	void locationIs(Location::Ptr s);
+	void segmentDel(const string& s);
+	void locationIs(Location::Ptr l);
+	void locationDel(const string& l);
 
 	Stats::Ptr stats() const { return stats_; };
 	void statsIs(Stats::Ptr p);
