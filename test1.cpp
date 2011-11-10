@@ -10,7 +10,6 @@ using std::endl;
 static void badInstanceManager();
 static void badTruckTerminal();
 static void badTruckSegment();
-/*
 int main(int argc, char *argv[]) {
     Ptr<Instance::Manager> manager = shippingInstanceManager();
 
@@ -58,4 +57,3 @@ static void badTruckSegment() {
         "instanceNew() function to create all types " << endl <<
         "of nodes and interfaces." << endl;
 }
-*/
