@@ -15,7 +15,7 @@ int example1();
 int example2();
 
 int main(int argc, char *argv[]) {
-	return example0();
+	return example1();
 }
 
 int example0() {

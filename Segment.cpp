@@ -18,7 +18,7 @@ NamedInterface(_name), mode_(_mode), engine_(_engine),
 
 void TruckSegment::sourceIs( Fwk::Ptr<Location> _source )
 {
-	if (_source != NULL) {
+	if (_source == NULL) {
 		if (source_ != NULL)
 			source_->segmentDel( this );
 		source_ = NULL;
