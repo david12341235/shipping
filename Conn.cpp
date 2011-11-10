@@ -42,6 +42,7 @@ string Conn::value()
 	paths(startLocation_, path, workingPath, Segment::expYes());
 
 	ostringstream result;
+	bool appendNewline = false;
 	if( queryType() == explore_ )
 	{
 		// for all paths, format the output
@@ -65,11 +66,22 @@ string Conn::value()
 			{
 				continue;
 			}
+			// Tag on a new line to result only after we've processed at least one path
+			if( appendNewline )
+			{
+				result << '\n';
+			}
+
+			bool appendSpace = false;
 			for(vector<PathUnit>::iterator i = iter->begin(); i != iter->end();++i)
 			{
-				result << i->output() << ' ';
+				if( appendSpace )
+				{
+					result << ' ';
+				}
+				result << i->output();
+				appendNewline = appendSpace = true;
 			}
-			result << '\n';
 		}
 	}
 	else // connect
@@ -79,6 +91,12 @@ string Conn::value()
 		{
 			if( iter->back().location_ == endLocation_ )
 			{
+				// Tag on a new line to result only after we've processed at least one path
+				if( appendNewline )
+				{
+					result << '\n';
+				}
+
 				result << iter->back().cost_ << ' ' << iter->back().time_ << ' ';
 				if( iter->back().expVal_ == Segment::expYes() ) result << "yes;";
 				else result << "no;";
@@ -86,8 +104,8 @@ string Conn::value()
 				for(vector<PathUnit>::iterator i = iter->begin(); i != iter->end();++i)
 				{
 					result << ' ' << i->output();
+					appendNewline = true;
 				}
-				result << '\n';
 			}
 		}
 	}
