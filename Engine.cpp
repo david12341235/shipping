@@ -47,9 +47,11 @@ void Engine::segmentIs(Segment::Ptr s) {
    } else {
      m = s;
      segment_.newMember(m);
-	 if (!expreactor_) 
-		 expreactor_ = Stats::SegmentExpediteReactor::SegmentExpediteReactorIs(s, this);
-	 s->newNotifiee(expreactor_);
+	 if (stats_ != NULL) {
+		 if (!expreactor_) 
+			 expreactor_ = Stats::SegmentExpediteReactor::SegmentExpediteReactorIs(s, this);
+		 s->newNotifiee(expreactor_);
+	 }
    }
    retrycell:
    U32 ver = notifiee_.version();
@@ -108,9 +110,10 @@ Engine::NotifieeConst::isNonReferencingIs(bool _isNonReferencing){
    }
 }
 
-void Engine::statsIs(Stats::Ptr s) { 
+void Engine::statsIs(Stats::Ptr s) {
 	stats_ = s;
-	slreactor_ = Stats::LocationSegmentReactor::LocationSegmentReactorIs(this);
+	if (stats_ != NULL)
+		slreactor_ = Stats::LocationSegmentReactor::LocationSegmentReactorIs(this);
 }
 
 Fwk::String valueToStrep(string s) { return s; }
