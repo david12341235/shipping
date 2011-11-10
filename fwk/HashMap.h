@@ -834,8 +834,8 @@ class HashMap : public BaseRefCollection<T> {
       for( Ptr<T> * cbp = bucket_; cbp < pbp; ++cbp ) {
          Ptr<T> c = *cbp;
          *cbp = 0;
-         if( c ) {
-            for( Ptr<T> nextC = c->fwkHmNext(); c; c = nextC ) {
+         if( c  != NULL ) {
+            for( Ptr<T> nextC = c->fwkHmNext(); c != NULL ; c = nextC ) {
                nextC = c->fwkHmNext();
                c->fwkHmNextIs( 0 ); // Deference next member
             }

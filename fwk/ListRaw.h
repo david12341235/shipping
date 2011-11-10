@@ -272,8 +272,8 @@ public:
     void deleteAll() {
         Ptr<T> c = head_;
         head_ = 0;
-        if( c ) {
-           for( Fwk::Ptr<T> nextC = c->lrNext(); nextC; c = nextC ) {
+        if( c  != NULL ) {
+           for( Fwk::Ptr<T> nextC = c->lrNext(); nextC != NULL ; c = nextC ) {
 	       nextC = c->lrNext();
 	       c->lrNextIs( 0 ); // Deference next member
 	   }

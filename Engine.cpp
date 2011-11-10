@@ -5,7 +5,7 @@ using namespace Shipping;
 void Engine::locationIs(Location::Ptr l) {
   string name = l->name();
   Location::Ptr m = location_[name];
-   if(m) {
+   if(m != NULL ) {
       throw Fwk::NameInUseException(name);
    } else {
      m = l;
@@ -24,7 +24,7 @@ void Engine::locationDel(const string& l) {
 	  Location::Ptr p = location_[l];
 	  int i = 1;
 	  Segment::PtrConst s = p->segment(i); 
-	  while(s) {
+	  while(s != NULL ) {
 		  segment_[s->name()]->sourceIs(NULL);
 		  s = p->segment(++i); 
 	  }
@@ -35,7 +35,7 @@ void Engine::locationDel(const string& l) {
 void Engine::segmentIs(Segment::Ptr s) {
   string name = s->name();
   Segment::Ptr m = segment_[name];
-   if(m) {
+   if(m != NULL ) {
       throw Fwk::NameInUseException(name);
    } else {
      m = s;
@@ -61,10 +61,10 @@ void Engine::segmentDel(const string& s) {
 }
 
 Engine::NotifieeConst::~NotifieeConst() {
-   if(notifier_) {
+   if(notifier_ != NULL ) {
       notifier_->deleteNotifiee(this);
    }
-   if(notifier_&&isNonReferencing()) notifier_->newRef();
+   if(notifier_ != NULL &&isNonReferencing()) notifier_->newRef();
 }
 
 void
@@ -72,15 +72,15 @@ Engine::NotifieeConst::notifierIs(const Engine::PtrConst& _notifier) {
    Engine::Ptr notifierSave(const_cast<Engine *>(notifier_.ptr()));
    if(_notifier==notifier_) return;
    notifier_ = _notifier;
-   if(notifierSave) {
+   if(notifierSave != NULL ) {
       notifierSave->deleteNotifiee(this);
    }
-   if(_notifier) {
+   if(_notifier != NULL ) {
       _notifier->newNotifiee(this);
    }
    if(isNonReferencing_) {
-      if(notifierSave) notifierSave->newRef();
-      if(notifier_) notifier_->deleteRef();
+      if(notifierSave != NULL ) notifierSave->newRef();
+      if(notifier_ != NULL ) notifier_->deleteRef();
    }
 }
 
@@ -88,7 +88,7 @@ void
 Engine::NotifieeConst::isNonReferencingIs(bool _isNonReferencing){
    if(_isNonReferencing==isNonReferencing_) return;
    isNonReferencing_ = _isNonReferencing;
-   if(notifier_) {
+   if(notifier_ != NULL ) {
       if(_isNonReferencing) notifier_->deleteRef();
       else notifier_->newRef();
    }

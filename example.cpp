@@ -15,27 +15,27 @@ int example1();
 int example2();
 
 int main(int argc, char *argv[]) {
-	return example2();
+	return example0();
 }
 
 int example0() {
     Ptr<Instance::Manager> manager = shippingInstanceManager();
 
-    if (!manager) {
+    if (manager == NULL) {
         cerr << "Unexpected NULL manager." << endl;
         return 1;
     }
 
     Ptr<Instance> stats = manager->instanceNew("myStats", "Stats");
 
-    if (!stats) {
+    if (stats == NULL) {
         cerr << "Unexpected NULL stats." << endl;
         return 1;
     }
 
     Ptr<Instance> fleet = manager->instanceNew("myFleet", "Fleet");
 
-    if (!fleet) {
+    if (fleet == NULL) {
         cerr << "Unexpected NULL." << endl;
         return 1;
     }
@@ -53,7 +53,7 @@ int example0() {
     // ports
     Ptr<Instance> port1 = manager->instanceNew("port1", "Port");  
 
-    if (!customer1 || !customer2 || !port1) {
+    if (customer1 == NULL || customer2 == NULL || port1 == NULL) {
         cerr << "Unexpected NULL customer or port." << endl;
 	return 1;
     }
@@ -66,7 +66,7 @@ int example0() {
     Ptr<Instance> truckSeg1 = manager->instanceNew("truckSeg1", "Truck segment");  
     Ptr<Instance> truckSeg2 = manager->instanceNew("truckSeg2", "Truck segment");  
 
-    if (!boatSeg1 || !boatSeg2 || !truckSeg1 || !truckSeg2 ) {
+    if (boatSeg1 == NULL || boatSeg2 == NULL || truckSeg1 == NULL || truckSeg2 == NULL) {
         cerr << "Unexpected NULL segment." << endl;
         return 1;
     }
@@ -105,7 +105,7 @@ int example0() {
     // -- Connectivity queries
     Ptr<Instance> conn = manager->instanceNew("myConn", "Conn");
 
-    if (!conn) {
+    if (conn == NULL) {
         cerr << "Unexpected NULL conn." << endl;
         return 1;
     }
@@ -136,7 +136,7 @@ int example0() {
 int example1() {
 	    Ptr<Instance::Manager> manager = shippingInstanceManager();
 
-    if (!manager) {
+    if (manager == NULL) {
         cerr << "Unexpected NULL manager." << endl;
         getchar();
         return 1;
@@ -144,7 +144,7 @@ int example1() {
 
     Ptr<Instance> stats = manager->instanceNew("myStats", "Stats");
 
-    if (!stats) {
+    if (stats == NULL) {
         cerr << "Unexpected NULL stats." << endl;
         getchar();
         return 1;
@@ -152,7 +152,7 @@ int example1() {
 
     Ptr<Instance> fleet = manager->instanceNew("myFleet", "Fleet");
 
-    if (!fleet) {
+    if (fleet == NULL) {
         cerr << "Unexpected NULL." << endl;
         getchar();
         return 1;
@@ -176,12 +176,6 @@ int example1() {
     // ports
     Ptr<Instance> port1 = manager->instanceNew("port1", "Port");  
 
-    if (!(customer1 && customer2 && port1)) {
-        cerr << "Unexpected NULL customer or port." << endl;
-        getchar();
-        return 1;
-    }
-
     // -- Segments
     // boat
     Ptr<Instance> boatSeg1 = manager->instanceNew("boatSeg1", "Boat segment");  
@@ -189,11 +183,6 @@ int example1() {
     // truck
     Ptr<Instance> truckSeg1 = manager->instanceNew("truckSeg1", "Truck segment");  
     Ptr<Instance> truckSeg2 = manager->instanceNew("truckSeg2", "Truck segment");
-
-    if (!(boatSeg1 && boatSeg2 && truckSeg1 && truckSeg2)) {
-        cerr << "Unexpected NULL segment." << endl;
-        return 1;
-    }
 
     // connections
     // customer1 <---> port1
@@ -233,7 +222,7 @@ int example1() {
     // -- Connectivity queries
     Ptr<Instance> conn = manager->instanceNew("myConn", "Conn");
 
-    if (!conn) {
+    if (conn == NULL) {
         cerr << "Unexpected NULL conn." << endl;
         return 1;
     }
@@ -271,7 +260,7 @@ int example1() {
 int example2() {
 	Ptr<Instance::Manager> manager = shippingInstanceManager();
 
-    if (!manager) {
+    if (manager == NULL) {
         cerr << "Unexpected NULL manager." << endl;
         getchar();
         return 1;
@@ -279,7 +268,7 @@ int example2() {
 
     Ptr<Instance> stats = manager->instanceNew("myStats", "Stats");
 
-    if (!stats) {
+    if (stats == NULL) {
         cerr << "Unexpected NULL stats." << endl;
         getchar();
         return 1;
@@ -287,7 +276,7 @@ int example2() {
 
     Ptr<Instance> fleet = manager->instanceNew("myFleet", "Fleet");
 
-    if (!fleet) {
+    if (fleet == NULL) {
         cerr << "Unexpected NULL." << endl;
         getchar();
         return 1;
@@ -476,7 +465,7 @@ int example2() {
     // -- Connectivity queries
     Ptr<Instance> conn = manager->instanceNew("myConn", "Conn");
 
-    if (!conn) {
+    if (conn == NULL) {
         cerr << "Unexpected NULL conn." << endl;
         return 1;
     }
