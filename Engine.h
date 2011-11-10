@@ -86,6 +86,8 @@ public:
 		}
 		virtual void onSegmentIs(Segment::Ptr s) {}
 		virtual void onLocationIs(Location::Ptr l) {}
+		virtual void onSegmentDel(Segment::Ptr s) {}
+		virtual void onLocationDel(Location::Ptr l) {}
 
 		static NotifieeConst::Ptr NotifieeConstIs() {
 			Ptr m = new NotifieeConst();
@@ -186,6 +188,42 @@ public:
 			break;
 		case Location::plane_:
 			stats_->planeTerminalIs(stats_->planeTerminal() + 1);
+			break;
+		}
+	}
+
+	virtual void onSegmentDel(Segment::Ptr s) {
+		switch(s->mode()) {
+		case Segment::truck_:
+			stats_->truckSegmentIs(stats_->truckSegment() - 1);
+			break;
+		case Segment::boat_:
+			stats_->boatSegmentIs(stats_->boatSegment() - 1);
+			break;
+		case Segment::plane_:
+			stats_->planeSegmentIs(stats_->planeSegment() - 1);
+			break;
+		}
+
+		if (s->expedite()) stats_->expediteNumIs(stats_->expediteNum() - 1);
+	}
+
+	virtual void onLocationDel(Location::Ptr l) {
+		switch(l->type()) {
+		case Location::customer_:
+			stats_->customerIs(stats_->customer() - 1);
+			break;
+		case Location::port_:
+			stats_->portIs(stats_->port() - 1);
+			break;
+		case Location::truck_:
+			stats_->truckTerminalIs(stats_->truckTerminal() - 1);
+			break;
+		case Location::boat_:
+			stats_->boatTerminalIs(stats_->boatTerminal() - 1);
+			break;
+		case Location::plane_:
+			stats_->planeTerminalIs(stats_->planeTerminal() - 1);
 			break;
 		}
 	}

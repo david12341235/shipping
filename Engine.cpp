@@ -21,14 +21,21 @@ void Engine::locationIs(Location::Ptr l) {
 
 void Engine::locationDel(const string& l) {
   try {
-	  Location::Ptr p = location_[l];
-	  int i = 1;
-	  Segment::PtrConst s = p->segment(i); 
-	  while(s != NULL ) {
-		  segment_[s->name()]->sourceIs(NULL);
-		  s = p->segment(++i); 
-	  }
-	  location_.memberDel(l);
+		Location::Ptr p = location_[l];
+		int i = 1;
+		Segment::PtrConst s = p->segment(i); 
+		while(s != NULL ) {
+			segment_[s->name()]->sourceIs(NULL);
+			s = p->segment(++i); 
+		}
+		location_.memberDel(l);
+	  
+		retrycell:
+		U32 ver = notifiee_.version();
+		if(notifiees()) for(NotifieeIterator n=notifieeIter();n.ptr();++n) try {
+			n->onLocationDel(p);
+			if( ver != notifiee_.version() ) goto retrycell;
+		} catch(...) { n->onNotificationException(NotifieeConst::location__); }
   } catch (...) {}
 }
 
@@ -54,9 +61,16 @@ void Engine::segmentIs(Segment::Ptr s) {
 
 void Engine::segmentDel(const string& s) {
   try {
-	  Segment::Ptr p = segment_[s];
-	  p->returnSegment()->returnSegmentIs(NULL);
-	  segment_.memberDel(s);
+		Segment::Ptr p = segment_[s];
+		p->returnSegment()->returnSegmentIs(NULL);
+		segment_.memberDel(s);
+	  
+		retrycell:
+		U32 ver = notifiee_.version();
+		if(notifiees()) for(NotifieeIterator n=notifieeIter();n.ptr();++n) try {
+			n->onSegmentDel(p);
+			if( ver != notifiee_.version() ) goto retrycell;
+		} catch(...) { n->onNotificationException(NotifieeConst::location__); }
   } catch (...) {}
 }
 
