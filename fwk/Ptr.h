@@ -23,7 +23,7 @@ class Ptr {
     const T * operator->() const { return value_; }
     T * operator->() { return (T *) value_; }
     T * ptr() const { return (T *) value_; }
-    operator bool() const { return value_ ? 1 : 0; }
+//    operator bool() const { return value_ ? 1 : 0; }
 
     template <class OtherType>
     operator Ptr<OtherType>() const {

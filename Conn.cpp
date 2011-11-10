@@ -21,7 +21,7 @@ string Conn::PathUnit::output() const
 {
 	ostringstream s;
 	s << location_->name();
-	if( segment_ )
+	if( segment_  != NULL )
 	{
 		s << "(" << segment_->name() << ":" << segment_->length() << ":" << segment_->returnSegment()->name() << ")";
 	}
@@ -96,7 +96,7 @@ string Conn::value()
 
 void Conn::paths(Fwk::Ptr<Location const> cur, vector< vector<PathUnit> >& path, vector<PathUnit> workingPath, Segment::ExpVal _expVal )
 {
-	if (!cur) return;
+	if (cur == NULL) return;
 	// check for cycles
 	for( vector<PathUnit>::iterator iter =workingPath.begin(); iter != workingPath.end(); ++iter)
 	{

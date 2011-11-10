@@ -461,21 +461,21 @@ Ptr<Instance> ManagerImpl::instanceNew(const string& name, const string& type) {
         instance_[name] = t;
         return t;
     } else if (type == "Stats") {
-		if (stats) return stats;
+		if (stats != NULL ) return stats;
 	    StatsRep::Ptr t = StatsRep::StatsRepNew(name, this);
 
 		stats = t;
         instance_[name] = t;
         return t;
     } else if (type == "Conn") {
-		if (conn) return conn;
+		if (conn != NULL ) return conn;
 		ConnRep::Ptr t = ConnRep::ConnRepNew(name, this);
 
 		conn = t;
         instance_[name] = t;
         return t;
     } else if (type == "Fleet") {
-		if (fleet) return fleet;
+		if (fleet != NULL ) return fleet;
 	    FleetRep::Ptr t = FleetRep::FleetRepNew(name, this);
 
 		fleet = t;
@@ -517,7 +517,7 @@ string LocationRep::attribute(const string& name) {
     if (i != 0) {
 		try {
 			Segment::PtrConst p = location_->segment(i);
-			if (p)
+			if (p != NULL )
 				return p->name();
 			else
 				cerr << "Error: Location has no segment # " << name << endl;
@@ -551,7 +551,7 @@ string SegmentRep::attribute(const string& name) {
 	if( name == "source" )
 	{
 		Location::Ptr src = segment_->source();
-		if( src )
+		if( src  != NULL )
 		{
 			return src->name();
 		}
@@ -564,7 +564,7 @@ string SegmentRep::attribute(const string& name) {
 	{
 	
 		Segment::PtrConst _returnSeg = segment_->returnSegment();
-		if( _returnSeg )
+		if( _returnSeg  != NULL )
 		{
 			return _returnSeg->name();
 		}
@@ -652,7 +652,7 @@ string ConnRep::attribute(const string& name )
 		if( !(tok = strtok(NULL, " :") ) ) return "";
 
 		// enforce Customer start location
-		if( !manager_->engine()->location(tok) || manager_->engine()->location(tok)->type() != Location::customer() )
+		if( manager_->engine()->location(tok) == NULL || manager_->engine()->location(tok)->type() != Location::customer() )
 		{
 			return "";
 		}
@@ -727,7 +727,7 @@ string ConnRep::attribute(const string& name )
 		if( !(tok = strtok(NULL, " :") ) ) return "";
 
 		// enforce Customer start location
-		if( !manager_->engine()->location(tok) || manager_->engine()->location(tok)->type() != Location::customer() )
+		if( manager_->engine()->location(tok) == NULL || manager_->engine()->location(tok)->type() != Location::customer() )
 		{
 			return "";
 		}
@@ -736,7 +736,7 @@ string ConnRep::attribute(const string& name )
 		if( !(tok = strtok(NULL, " :") ) ) return "";
 
 		// enforce Customer end location
-		if( !manager_->engine()->location(tok) || manager_->engine()->location(tok)->type() != Location::customer() )
+		if( manager_->engine()->location(tok) == NULL || manager_->engine()->location(tok)->type() != Location::customer() )
 		{
 			return "";
 		}

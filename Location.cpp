@@ -50,7 +50,7 @@ void
 Location::NotifieeConst::isNonReferencingIs(bool _isNonReferencing){
    if(_isNonReferencing==isNonReferencing_) return;
    isNonReferencing_ = _isNonReferencing;
-   if(notifier_) {
+   if(notifier_ != NULL ) {
       if(_isNonReferencing) notifier_->deleteRef();
       else notifier_->newRef();
    }

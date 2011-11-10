@@ -5,7 +5,7 @@ using namespace Shipping;
 
 void Segment::sourceIs( Fwk::Ptr<Location> _source )
 {
-	if (source_) source_->segmentDel( this );
+	if (source_ != NULL) source_->segmentDel( this );
 	source_ = _source;
 	source_->segmentIs( this );
 }
@@ -18,13 +18,13 @@ NamedInterface(_name), mode_(_mode), engine_(_engine),
 
 void TruckSegment::sourceIs( Fwk::Ptr<Location> _source )
 {
-	if (!_source) {
-		if (source_)
+	if (_source != NULL) {
+		if (source_ != NULL)
 			source_->segmentDel( this );
 		source_ = NULL;
 	} else if( _source->type() != Location::boat() && _source->type() != Location::plane()  )
 	{
-		if (source_)
+		if (source_ != NULL)
 			source_->segmentDel( this );
 		source_ = _source;
 		source_->segmentIs( this );
@@ -36,12 +36,12 @@ void TruckSegment::sourceIs( Fwk::Ptr<Location> _source )
 
 void BoatSegment::sourceIs( Fwk::Ptr<Location> _source )
 {
-	if (!_source) {
-		if (source_)
+	if (_source == NULL) {
+		if (source_ != NULL)
 			source_->segmentDel( this );
 		source_ = NULL;
-	} else if( _source && _source->type() != Location::truck() && _source->type() != Location::plane()  ) {
-		if (source_)
+	} else if( _source != NULL && _source->type() != Location::truck() && _source->type() != Location::plane()  ) {
+		if (source_ != NULL)
 			source_->segmentDel( this );
 		source_ = _source;
 		source_->segmentIs( this );
@@ -53,12 +53,12 @@ void BoatSegment::sourceIs( Fwk::Ptr<Location> _source )
 
 void PlaneSegment::sourceIs( Fwk::Ptr<Location> _source )
 {
-	if (!_source) {
-		if (source_)
+	if (_source == NULL) {
+		if (source_ != NULL)
 			source_->segmentDel( this );
 		source_ = NULL;
-	} else if( _source && _source->type() != Location::truck() && _source->type() != Location::boat()  ) {
-		if (source_)
+	} else if( _source != NULL && _source->type() != Location::truck() && _source->type() != Location::boat()  ) {
+		if (source_ != NULL)
 			source_->segmentDel( this );
 		source_ = _source;
 		source_->segmentIs( this );
@@ -70,17 +70,17 @@ void PlaneSegment::sourceIs( Fwk::Ptr<Location> _source )
 
 void Segment::returnSegmentIs( Segment::Ptr _returnSegment )
 {
-	if( returnSegment_ == _returnSegment ||  (_returnSegment && (mode() != _returnSegment->mode())) )
+	if( returnSegment_ == _returnSegment ||  (_returnSegment != NULL && (mode() != _returnSegment->mode())) )
 	{
 		return;
 	}
 	
-	if( returnSegment_ )
+	if( returnSegment_  != NULL )
 	{
 		returnSegment_->returnSegment_ = NULL;
 	}
 
-	if( _returnSegment )
+	if( _returnSegment != NULL )
 	{
 		returnSegment_ = _returnSegment;
 		if( returnSegment_->returnSegment() != this )
@@ -109,10 +109,10 @@ void Segment::expediteIs( ExpVal e )
 }
 
 Segment::NotifieeConst::~NotifieeConst() {
-   if(notifier_) {
+   if(notifier_ != NULL ) {
       notifier_->deleteNotifiee(this);
    }
-   if(notifier_&&isNonReferencing()) notifier_->newRef();
+   if(notifier_ != NULL &&isNonReferencing()) notifier_->newRef();
 }
 
 void
@@ -120,15 +120,15 @@ Segment::NotifieeConst::notifierIs(const Segment::PtrConst& _notifier) {
    Segment::Ptr notifierSave(const_cast<Segment *>(notifier_.ptr()));
    if(_notifier==notifier_) return;
    notifier_ = _notifier;
-   if(notifierSave) {
+   if(notifierSave != NULL ) {
       notifierSave->deleteNotifiee(this);
    }
-   if(_notifier) {
+   if(_notifier != NULL ) {
       _notifier->newNotifiee(this);
    }
    if(isNonReferencing_) {
-      if(notifierSave) notifierSave->newRef();
-      if(notifier_) notifier_->deleteRef();
+      if(notifierSave != NULL ) notifierSave->newRef();
+      if(notifier_ != NULL ) notifier_->deleteRef();
    }
 }
 
