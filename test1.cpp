@@ -6,7 +6,7 @@
 using std::cout;
 using std::cerr;
 using std::endl;
-
+/*
 static void badInstanceManager();
 static void badTruckTerminal();
 static void badTruckSegment();
@@ -61,3 +61,4 @@ static void badTruckSegment()
          "instanceNew() function to create all types " << endl <<
          "of nodes and interfaces." << endl;
 }
+*/

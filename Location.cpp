@@ -74,3 +74,65 @@ Location::attributeString( Fwk::RootNotifiee::AttributeId a ) const {
 >>>>>>> d246abdc59a33bca662561918e0790d9051d3027
 }
 */
+
+void Customer::transferRateIs(ShipmentsPerDay _transferRate) {
+	if (_transferRate != transferRate_) {
+		transferRate_ = _transferRate;
+		if (transferRate_ == 0)
+			sendingShipmentsIs(false);
+		else
+			sendingShipmentsIs(true);
+	}
+}
+
+void Customer::shipmentSizeIs(NumPackages _shipmentSize) {
+	if (_shipmentSize != shipmentSize_) {
+		shipmentSize_ = _shipmentSize;
+		if (shipmentSize_ == 0)
+			sendingShipmentsIs(false);
+		else
+			sendingShipmentsIs(true);
+	}
+}
+
+void Customer::destinationIs(string _destination) {
+	if (_destination != destination_) {
+		destination_ = _destination;
+		if (destination_ == "")
+			sendingShipmentsIs(false);
+		else
+			sendingShipmentsIs(true);
+	}
+}
+	
+void Customer::sendingShipmentsIs(bool _sendingShipments) {
+	if (sendingShipments_ == _sendingShipments) return;
+    sendingShipments_ = sendingShipments_;
+retry:
+    U32 ver = notifiee_.version();
+    if(notifiees()) for(NotifieeIterator n=notifieeIter(); n.ptr(); ++n) try {
+                n->onSendingShipmentsIs(this);
+                if( ver != notifiee_.version() ) goto retry;
+            } catch(...) {
+                n->onNotificationException(NotifieeConst::customer__);
+            }
+}
+
+void
+Customer::NotifieeConst::notifierIs(const Customer::PtrConst& _notifier)
+{
+    Customer::Ptr notifierSave(const_cast<Customer *>(notifier_.ptr()));
+    if(_notifier==notifier_) return;
+    notifier_ = _notifier;
+    if(notifierSave != NULL ) {
+        notifierSave->deleteNotifiee(this);
+    }
+    if(_notifier != NULL ) {
+        _notifier->newNotifiee(this);
+    }
+    if(isNonReferencing_) {
+        if(notifierSave != NULL ) notifierSave->newRef();
+        if(notifier_ != NULL ) notifier_->deleteRef();
+    }
+}
+

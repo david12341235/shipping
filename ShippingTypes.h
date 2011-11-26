@@ -107,6 +107,22 @@ public:
     }
 };
 
+class ShipmentsPerDay : public Ordinal<ShipmentsPerDay, unsigned int>
+{
+public:
+    ShipmentsPerDay( unsigned int num ) : Ordinal<ShipmentsPerDay, unsigned int>(num) {}
+    operator string() const {
+        std::ostringstream oss;
+        oss << value();
+        return oss.str();
+    }
+
+    friend std::ostream& operator<< (std::ostream& out, ShipmentsPerDay val) {
+        out << string(val);
+        return out;
+    }
+};
+
 class Dollar : public Ordinal<Dollar, double>
 {
 public:

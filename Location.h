@@ -193,12 +193,23 @@ public:
     typedef Fwk::Ptr<Customer> Ptr;
 
     Type type() const {
-        return Location::truck();
+        return Location::customer();
     }
     virtual void typeIs( Type v ) {}
-//	virtual void segmentIs( Segment const* _segment );
+	
+	virtual ShipmentsPerDay transferRate() const { return transferRate_; }
+	virtual void transferRateIs(ShipmentsPerDay _transferRate);
 
-    class NotifieeConst : public virtual Location::NotifieeConst
+	virtual NumPackages shipmentSize() const { return shipmentSize_; }
+	virtual void shipmentSizeIs(NumPackages _shipmentSize);
+
+	virtual string destination() const { return destination_; }
+	virtual void destinationIs(string _destination);
+	
+	virtual bool sendingShipments() const { return sendingShipments_; }
+	virtual void sendingShipmentsIs(bool _sendingShipments);
+
+    class NotifieeConst : public virtual Fwk::NamedInterface::NotifieeConst
     {
     public:
         typedef Fwk::Ptr<NotifieeConst const> PtrConst;
@@ -207,7 +218,12 @@ public:
             return notifier_->name();
         }
         Customer::PtrConst notifier() const {
-            return dynamic_cast<Customer const *>(Location::NotifieeConst::notifier().ptr());
+            return notifier_;
+        }
+        static const AttributeId customer__ = AttributeId(Fwk::NamedInterface::NotifieeConst::tacNextAttributeId__);
+        static const AttributeId tacNextAttributeId__ = AttributeId(customer__+1);
+        bool isNonReferencing() const {
+            return isNonReferencing_;
         }
         NotifieeConst const * lrNext() const {
             return lrNext_;
@@ -219,6 +235,13 @@ public:
             lrNext_ = _lrNext;
         }
 
+        ~NotifieeConst();
+        virtual void notifierIs(const Customer::PtrConst& _notifier);
+        void isNonReferencingIs(bool _isNonReferencing) {
+            isNonReferencing_ = _isNonReferencing;
+        };
+        virtual void onSendingShipmentsIs(Customer::Ptr p) {}
+
         static NotifieeConst::Ptr NotifieeConstIs() {
             Ptr m = new NotifieeConst();
             m->referencesDec(1);
@@ -227,21 +250,22 @@ public:
     protected:
         Customer::PtrConst notifier_;
 
+        bool isNonReferencing_;
         NotifieeConst* lrNext_;
-        NotifieeConst(): Location::NotifieeConst(),
+        NotifieeConst(): Fwk::NamedInterface::NotifieeConst(),
             lrNext_(0) { }
     };
-
-    class Notifiee : public virtual NotifieeConst, public virtual Location::Notifiee
+	
+    class Notifiee : public virtual NotifieeConst, public virtual Fwk::NamedInterface::Notifiee
     {
     public:
         typedef Fwk::Ptr<Notifiee const> PtrConst;
         typedef Fwk::Ptr<Notifiee> Ptr;
         Customer::PtrConst notifier() const {
-            return dynamic_cast<Customer const *>(Location::NotifieeConst::notifier().ptr());
+            return NotifieeConst::notifier();
         }
         Customer::Ptr notifier() {
-            return dynamic_cast<Customer * >(const_cast<Location *>(Location::NotifieeConst::notifier().ptr()));
+            return const_cast<Customer*>(NotifieeConst::notifier().ptr());
         }
 
         static Notifiee::Ptr NotifieeIs() {
@@ -250,9 +274,30 @@ public:
             return m;
         }
     protected:
-        Notifiee(): Location::Notifiee() { }
+        Notifiee(): Fwk::NamedInterface::Notifiee() { }
     };
 
+    typedef Fwk::ListRaw<NotifieeConst> NotifieeList;
+    typedef NotifieeList::IteratorConst NotifieeIteratorConst;
+    typedef NotifieeList::Iterator NotifieeIterator;
+    NotifieeIteratorConst notifieeIterConst() const {
+        return notifiee_.iterator();
+    }
+    NotifieeIterator notifieeIter() {
+        return notifiee_.iterator();
+    }
+    U32 notifiees() const {
+        return notifiee_.members();
+    }
+
+    void newNotifiee( Customer::NotifieeConst * n ) const {
+        Customer* me = const_cast<Customer*>(this);
+        me->notifiee_.newMember(n);
+    }
+    void deleteNotifiee( Customer::NotifieeConst * n ) const {
+        Customer* me = const_cast<Customer*>(this);
+        me->notifiee_.deleteMember(n);
+    }
 
     static Customer::Ptr CustomerNew( const string& _name, Fwk::Ptr<Engine> _engine ) {
         Ptr m = new Customer( _name, _engine );
@@ -262,7 +307,13 @@ public:
 
 protected:
     Customer( const Customer& );
-    Customer( const string& _name, Fwk::Ptr<Engine> _engine ) : Location( _name, customer_, _engine ) {};
+    Customer( const string& _name, Fwk::Ptr<Engine> _engine ) : 
+		Location( _name, customer_, _engine ), transferRate_(0), shipmentSize_(0) {};
+	ShipmentsPerDay transferRate_;
+	NumPackages shipmentSize_;
+	string destination_;
+	bool sendingShipments_;
+    NotifieeList notifiee_;
 };
 
 class Port : public Location
@@ -272,7 +323,7 @@ public:
     typedef Fwk::Ptr<Port> Ptr;
 
     Type type() const {
-        return Location::truck();
+        return Location::port();
     }
     virtual void typeIs( Type v ) {}
 //	virtual void segmentIs( Segment const* _segment );
@@ -428,7 +479,7 @@ public:
     typedef Fwk::Ptr<BoatLocation> Ptr;
 
     Type type() const {
-        return Location::truck();
+        return Location::boat();
     }
     virtual void typeIs( Type v ) {}
 //	virtual void segmentIs( Segment const* _segment );
@@ -506,7 +557,7 @@ public:
     typedef Fwk::Ptr<PlaneLocation> Ptr;
 
     Type type() const {
-        return Location::truck();
+        return Location::plane();
     }
     virtual void typeIs( Type v ) {}
 //	virtual void segmentIs( Segment const* _segment );
