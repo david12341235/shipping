@@ -211,7 +211,7 @@ public:
     
 	virtual NumPackages shipmentsReceived() const { return shipmentsReceived_; }
 	virtual Hour averageLatency() const { return totalLatency_.value() / (1.0) * shipmentsReceived().value(); }
-	virtual Dollar totalCost_() const { return totalCost_; }
+	virtual Dollar totalCost() const { return totalCost_; }
 
 	virtual void shipmentIs(Shipment _newShipment);
 
