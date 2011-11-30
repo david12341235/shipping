@@ -8,7 +8,7 @@ using std::cout;
 using std::cerr;
 using std::endl;
 using std::string;
-
+/*
 int main(int argc, char *argv[])
 {
     Ptr<Instance::Manager> manager = shippingInstanceManager();
@@ -124,3 +124,4 @@ int main(int argc, char *argv[])
 
     return 0;
 }
+*/

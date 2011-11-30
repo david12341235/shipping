@@ -213,7 +213,7 @@ public:
 	virtual Hour averageLatency() const { return totalLatency_.value() / (1.0) * shipmentsReceived().value(); }
 	virtual Dollar totalCost() const { return totalCost_; }
 
-	virtual void shipmentIs(Shipment _newShipment);
+	virtual void shipmentIs(Shipment::Ptr _newShipment);
 
     class NotifieeConst : public virtual Fwk::NamedInterface::NotifieeConst
     {

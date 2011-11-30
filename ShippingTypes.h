@@ -172,9 +172,14 @@ public:
 class Shipment : public Fwk::NamedInterface
 {
 public:
-    Shipment(const string& name, string sourceName, string destinationName, NumPackages load) :
-            Fwk::NamedInterface(name), load_(load), source_(sourceName), 
-            destination_(destinationName), cost_(0), time_(0) {}
+    typedef Fwk::Ptr<Shipment const> PtrConst;
+    typedef Fwk::Ptr<Shipment> Ptr;
+    
+    static Shipment::Ptr ShipmentNew(const string& name, string sourceName, string destinationName, NumPackages load) {
+        Ptr m = new Shipment(name, sourceName, destinationName, load);
+        m->referencesDec(1);
+        return m;
+    }
             
     string source() { return source_; }
     void sourceIs(const string& source) { source_ = source; }
@@ -192,6 +197,11 @@ public:
     void timeTakenIs(Hour time) { time_ = time; }
 
 protected:
+    Shipment(const string& name, string sourceName, string destinationName, NumPackages load) :
+            Fwk::NamedInterface(name), load_(load), source_(sourceName), 
+            destination_(destinationName), cost_(0), time_(0) {}
+    Shipment(const Shipment&);
+
     string source_;
     string destination_;
     NumPackages load_;
