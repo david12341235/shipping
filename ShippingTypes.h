@@ -169,6 +169,36 @@ public:
     }
 };
 
+class Shipment : public Fwk::NamedInterface
+{
+public:
+    Shipment(const string& name, string sourceName, string destinationName, NumPackages load) :
+            Fwk::NamedInterface(name), load_(load), source_(sourceName), 
+            destination_(destinationName), cost_(0), time_(0) {}
+            
+    string source() { return source_; }
+    void sourceIs(const string& source) { source_ = source; }
+
+    string destination() { return destination_; }
+    void destinationIs(const string& destination) { destination_ = destination; }
+
+    NumPackages load() { return load_; }
+    void loadIs(NumPackages load) { load_ = load; }
+    
+    Dollar cost() { return cost_; }
+    void costIs(Dollar cost) { cost_ = cost; }
+
+    Hour timeTaken() { return time_; }
+    void timeTakenIs(Hour time) { time_ = time; }
+
+protected:
+    string source_;
+    string destination_;
+    NumPackages load_;
+    Dollar cost_;
+    Hour time_;
+};
+
 } /* end namespace */
 
 #endif

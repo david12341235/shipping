@@ -136,3 +136,8 @@ Customer::NotifieeConst::notifierIs(const Customer::PtrConst& _notifier)
     }
 }
 
+void Customer::shipmentIs(Shipment _newShipment) {
+    shipmentsReceived_++;
+    totalLatency_ = totalLatency_.value() + _newShipment.timeTaken().value();
+    totalCost_ = totalCost_.value() + _newShipment.cost().value();
+}

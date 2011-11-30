@@ -208,6 +208,12 @@ public:
 	
 	virtual bool sendingShipments() const { return sendingShipments_; }
 	virtual void sendingShipmentsIs(bool _sendingShipments);
+    
+	virtual NumPackages shipmentsReceived() const { return shipmentsReceived_; }
+	virtual Hour averageLatency() const { return totalLatency_.value() / (1.0) * shipmentsReceived().value(); }
+	virtual Dollar totalCost_() const { return totalCost_; }
+
+	virtual void shipmentIs(Shipment _newShipment);
 
     class NotifieeConst : public virtual Fwk::NamedInterface::NotifieeConst
     {
@@ -308,11 +314,15 @@ public:
 protected:
     Customer( const Customer& );
     Customer( const string& _name, Fwk::Ptr<Engine> _engine ) : 
-		Location( _name, customer_, _engine ), transferRate_(0), shipmentSize_(0) {};
+		Location( _name, customer_, _engine ), transferRate_(0), shipmentSize_(0), 
+        shipmentsReceived_(0), totalLatency_(0), totalCost_(0) {};
 	ShipmentsPerDay transferRate_;
 	NumPackages shipmentSize_;
+	NumPackages shipmentsReceived_;
 	string destination_;
 	bool sendingShipments_;
+    Hour totalLatency_;
+    Dollar totalCost_;
     NotifieeList notifiee_;
 };
 
