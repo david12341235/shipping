@@ -202,9 +202,9 @@ protected:
             destination_(destinationName), cost_(0), time_(0) {}
     Shipment(const Shipment&);
 
+    NumPackages load_;
     string source_;
     string destination_;
-    NumPackages load_;
     Dollar cost_;
     Hour time_;
 };

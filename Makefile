@@ -1,7 +1,7 @@
 CPPFLAGS = -I.
 CXXFLAGS = -Wall -g
 
-OBJECTS = Instance.o Engine.o Segment.o Location.o Conn.o
+OBJECTS = Instance.o Engine.o Segment.o Location.o Conn.o ActivityImpl.o ActivityReactor.o ShippingException.o
 LIBS = fwk/BaseCollection.o fwk/BaseNotifiee.o fwk/Exception.o
 
 default:	test1 example
@@ -22,4 +22,6 @@ Engine.o: Engine.cpp Engine.h Instance.h fwk/PtrInterface.h fwk/Ptr.h fwk/NamedI
 Segment.o: Segment.cpp Segment.h Instance.h fwk/PtrInterface.h fwk/Ptr.h fwk/NamedInterface.h
 Location.o: Location.cpp Location.h Instance.h fwk/PtrInterface.h fwk/Ptr.h fwk/NamedInterface.h
 Conn.o: Conn.cpp Conn.h Instance.h fwk/PtrInterface.h fwk/Ptr.h fwk/NamedInterface.h
-
+ActivityImpl.o: ActivityImpl.cpp ActivityImpl.h Instance.h fwk/PtrInterface.h fwk/Ptr.h fwk/NamedInterface.h
+ActivityReactor.o: ActivityReactor.cpp ActivityReactor.h Activity.h Instance.h fwk/PtrInterface.h fwk/Ptr.h fwk/NamedInterface.h
+ShippingException.o: ShippingException.cpp ShippingException.h fwk/Types.h
