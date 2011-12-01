@@ -6,12 +6,15 @@
 using std::cout;
 using std::cerr;
 using std::endl;
+
 /*
 static void badInstanceManager();
 static void badTruckTerminal();
 static void badTruckSegment();
+*/
 int main(int argc, char *argv[])
 {
+/*
     Ptr<Instance::Manager> manager = shippingInstanceManager();
 
     if (manager == NULL) {
@@ -60,5 +63,6 @@ static void badTruckSegment()
     cerr << "You need to update the "
          "instanceNew() function to create all types " << endl <<
          "of nodes and interfaces." << endl;
-}
 */
+return 0;
+}

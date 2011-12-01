@@ -8,9 +8,9 @@ using std::cout;
 using std::cerr;
 using std::endl;
 using std::string;
-/*
 int main(int argc, char *argv[])
 {
+/*
     Ptr<Instance::Manager> manager = shippingInstanceManager();
 
     if (manager == NULL) {
@@ -122,6 +122,7 @@ int main(int argc, char *argv[])
 
     cerr << "Done!" << endl;
 
-    return 0;
-}
 */
+    return 0;
+
+}

@@ -3,11 +3,11 @@
 
 #include <string>
 
-#include "PtrInterface.h"
-#include "Ptr.h"
+#include "fwk/PtrInterface.h"
+#include "fwk/Ptr.h"
 
 #include "Nominal.h"
-#include "Notifiee.h"
+#include "fwk/Notifiee.h"
 
 using std::string;
 
