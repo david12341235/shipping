@@ -2,6 +2,10 @@
 
 #ifndef FWK_PTR_H
 #define FWK_PTR_H
+#ifdef _MSC_VER // Visual Studio pointlessly warns about multiple assignment operators, even though they both work fine
+    #pragma warning(disable: 4522)
+    #pragma warning (disable:4250)	  	
+#endif
 
 namespace Fwk {
 
