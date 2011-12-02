@@ -2,7 +2,12 @@
 #include <time.h>
 
 #include "ActivityImpl.h"
-
+#ifdef WIN32
+#include <Windows.h>
+	void sleep(long s) { Sleep(s); }
+#else
+	void sleep(long s) { usleep(s); }
+#endif
 
 Fwk::Ptr<Activity::Manager> activityManagerInstance() {
     return ActivityImpl::ManagerImpl::activityManagerInstance();
@@ -71,8 +76,8 @@ namespace ActivityImpl {
 	    //calculate amount of time to sleep
 	    Time diff = Time(nextToRun->nextTime().value() - now_.value());
 	    
-	    //sleep 100ms (100,000 microseconds) for every unit of time
-	    usleep(( ((int)diff.value()) * 100000));
+	    //sleep 100ms
+	    sleep(( ((int)diff.value()) * 100));
 	    
 	    now_ = nextToRun->nextTime();
 
