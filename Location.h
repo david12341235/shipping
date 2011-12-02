@@ -2,6 +2,7 @@
 #define LOCATION_H
 
 #include <string>
+#include <queue>
 #include "fwk/Ptr.h"
 #include "fwk/NamedInterface.h"
 #include "ShippingTypes.h"
@@ -81,6 +82,9 @@ public:
         segment_.push_back(_segment);
     };
     void segmentDel( Segment::PtrConst _segment );
+	virtual void shipmentIs(Shipment::Ptr _newShipment);
+	//Segment::Ptr nextSegment( string _destination );
+
 
     class NotifieeConst : public virtual Fwk::NamedInterface::NotifieeConst
     {
@@ -168,6 +172,8 @@ public:
 
 protected:
     typedef vector<Segment::PtrConst > SegmentList;
+    typedef map<string, queue<Shipment::Ptr> > ShipmentQueue;
+    typedef map<string, Segment::Ptr > routeTable;
     mutable Location::Ptr fwkHmNext_;
     Location( const Location& );
     Location( const string& _name, Type _type, Fwk::Ptr<Engine> _engine );
@@ -184,6 +190,9 @@ protected:
     SegmentList segment_;
     NotifieeList notifiee_;
     void onZeroReferences();
+    ShipmentQueue shipmentQ_;
+    routeTable nextSegment_;
+
 };
 
 class Customer : public Location

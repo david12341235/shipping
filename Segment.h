@@ -115,6 +115,13 @@ public:
         return expedite_;
     }
     void expediteIs( ExpVal e );
+    NumPackages shipmentsReceived() { return shipmentsReceived_; }
+    NumPackages shipmentsRefused() { return shipmentsRefused_; }
+    NumPackages shipmentsPending() { return shipmentsPending_; }
+    NumPackages capacity() { return capacity_; }
+    void capacityIs( NumPackages _capacity ) { capacity_ = _capacity; }
+
+    virtual void shipmentIs( Shipment::Ptr _newShipment );
 
     class NotifieeConst : public virtual Fwk::NamedInterface::NotifieeConst
     {
@@ -229,6 +236,10 @@ protected:
     ExpVal expedite_;
     Ptr returnSegment_;
     NotifieeList notifiee_;
+    NumPackages shipmentsReceived_;
+    NumPackages shipmentsRefused_;
+    NumPackages shipmentsPending_;
+    NumPackages capacity_;
 };
 
 class TruckSegment : public Segment

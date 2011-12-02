@@ -21,6 +21,30 @@ void Location::segmentDel( Segment::PtrConst _segment )
     }
 }
 
+void Location::shipmentIs( Shipment::Ptr _newShipment )
+{
+	// must determine which segment to send it too, and should
+	// either queue it onto that segment by calling shipmentIs
+	// or put it in its own queue for that segment if that segment
+	// is at capacity.
+	Segment::Ptr _segment = nextSegment_[ _newShipment->destination()];
+	if( _segment->capacity() < _segment->shipmentsPending() + _newShipment->load() )
+	{
+		shipmentQ_[ _segment->name() ].push( _newShipment );
+	}
+	else
+	{
+		_segment->shipmentIs( _newShipment );
+	}
+}
+
+/*
+Segment::Ptr nextSegment( string _destination )
+{
+	// will return a pointer to the next segment
+	return nextSegment_[_destination];
+}
+*/
 void
 Location::onZeroReferences()
 {
