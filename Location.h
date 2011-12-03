@@ -83,7 +83,8 @@ public:
     };
     void segmentDel( Segment::PtrConst _segment );
 	virtual void shipmentIs(Shipment::Ptr _newShipment);
-	//Segment::Ptr nextSegment( string _destination );
+
+    void nextSegmentIs( string _destination, Segment::Ptr _nextSeg ) { nextSegment_[_destination] = _nextSeg; }
 
 
     class NotifieeConst : public virtual Fwk::NamedInterface::NotifieeConst

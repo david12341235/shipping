@@ -723,12 +723,17 @@ string ConnRep::attribute(const string& name )
 
 void ConnRep::attributeIs(const string& name, const string& v)
 {
+	if(name == "routing algorithm")
+	{
+		if( v == "Dijkstra" )
+		{
+			conn_->algorithmIs( Conn::dijkstra() );
+		}
+	}
 
 }
 
 }
-
-
 
 /*
  * This is the entry point for your library.

@@ -10,7 +10,6 @@ using std::endl;
 using std::string;
 int main(int argc, char *argv[])
 {
-/*
     Ptr<Instance::Manager> manager = shippingInstanceManager();
 
     if (manager == NULL) {
@@ -110,6 +109,9 @@ int main(int argc, char *argv[])
     cout << conn->attribute("connect customer2 : customer1") << endl;
     cout << endl;
 
+
+    //conn->attributeIs("routing algorithm", "Dijkstra"); 
+
     // -- Statistics queries
     cout << "===== Stats attributes =====" << endl;
     cout << " --- Segments --- " << endl;
@@ -122,7 +124,6 @@ int main(int argc, char *argv[])
 
     cerr << "Done!" << endl;
 
-*/
     return 0;
 
 }

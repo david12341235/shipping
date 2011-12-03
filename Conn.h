@@ -22,6 +22,10 @@ public:
         explore_ = 0,
         connect_ = 1
     };
+    
+    enum Algorithm {
+    		dijkstra_ = 0
+    };
 
     struct PathUnit {
         string output() const;
@@ -40,6 +44,9 @@ public:
     }
     static inline Type connect() {
         return connect_;
+    }
+    static inline Algorithm dijkstra() {
+    		return dijkstra_;
     }
     static inline string exploreString() {
         return "explore";
@@ -105,6 +112,9 @@ public:
         return endLocation_;
     }
     void endLocationIs(const Fwk::String& name );
+
+    Algorithm algorithm() const { return algorithm_; }
+    void algorithmIs( Algorithm _algorithm );
 
     string value();
 
@@ -194,7 +204,7 @@ protected:
     Conn( const string& _name, Fwk::Ptr<Engine> _engine ) :
         NamedInterface(_name), engine_(_engine),
         distance_(0), cost_(0), time_(0), startLocation_(NULL),
-        endLocation_(NULL) {};
+        endLocation_(NULL), algorithm_(dijkstra_) {};
     NotifieeList notifiee_;
     Fwk::Ptr<Engine> engine_;
     Mile distance_;
@@ -207,6 +217,7 @@ protected:
 
 private:
     void paths(Fwk::Ptr<Location const> cur, vector< vector<PathUnit> >& path, vector<PathUnit> workingPath, Segment::ExpVal _expVal);
+    Algorithm algorithm_;
 
 };
 

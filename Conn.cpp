@@ -29,6 +29,98 @@ string Conn::PathUnit::output() const
     return s.str();
 }
 
+void Conn::algorithmIs( Algorithm _algorithm )
+{
+	if( _algorithm == dijkstra() )
+	{
+
+		vector<Location::Ptr> nodeVector;
+		for( Engine::LocationIterator iter = engine_->locationIter(); iter; ++iter )
+		{
+			nodeVector.push_back(*iter);
+		}
+
+		for( vector<Location::Ptr>::iterator iter = nodeVector.begin(); iter != nodeVector.end(); ++iter )
+		{
+			// initialization
+			Location::Ptr start = *iter;
+			vector<Location::Ptr> unvisited;
+			map<string, Mile> tentativeDistance;
+			map<string, Segment::PtrConst> nextSegment;
+			for( Engine::LocationIterator i = engine_->locationIter(); i; ++i )
+			{
+				string const & name = (*i)->name();
+				if( name == start->name() )
+				{
+					tentativeDistance.insert( pair<string, Mile>(name, Mile(0) ) );
+				}
+				else
+				{
+					tentativeDistance.insert( pair<string, Mile>(name, Mile::max() ) );
+					unvisited.push_back(*i);
+				}
+				nextSegment[ name ] = NULL;
+			}
+
+			// initialize nextSegment for neighbors of initial starting node
+		    Segment::SegmentId segId = 1;
+		    Segment::PtrConst segment = start->segment( segId );
+		    while( segment != Segment::PtrConst(NULL) )
+		    {
+				string neighborName = segment->returnSegment()->source()->name();
+		   		nextSegment[ neighborName ] = segment;
+				tentativeDistance.find( neighborName )->second = segment->length();
+				segment = start->segment( ++segId );
+		    }
+
+			// This loop enters with initial state of all nodes except the start node
+			// being unvisited, the distance to the start node and all its neighbors being
+			// set to their appropriate values, and the next segment to take to get to these
+			// neighbors are all set
+
+			while( !unvisited.empty() )
+			{
+				// find the minimum tentative distance so far
+				Mile min( Mile::max() );
+				vector<Location::Ptr>::iterator visitingIter;
+				for( vector<Location::Ptr>::iterator i = unvisited.begin(); i != unvisited.end(); ++i )
+				{
+					map< string, Mile >::iterator found = tentativeDistance.find( (*i)->name() );
+					if( found->second < min )
+					{
+						min = found->second;
+						visitingIter = i;
+					}
+				}
+
+				Location::Ptr visiting = *visitingIter;
+				unvisited.erase( visitingIter );
+				Mile distanceSoFar( tentativeDistance.find( visiting->name() )->second );
+			    segId = 1;
+			    segment = visiting->segment( segId );
+			    while( segment != Segment::PtrConst(NULL) )
+			    {
+			    		Mile neighborDistance( distanceSoFar.value() + segment->length().value() );
+			    		string neighborName = segment->returnSegment()->source()->name();
+					map< string, Mile >::iterator neighborIter = tentativeDistance.find(neighborName);
+					if( neighborIter->second > neighborDistance )
+					{
+						neighborIter->second = neighborDistance;
+						nextSegment[ neighborName ] = nextSegment[ visiting->name() ];
+					}
+
+					segment = visiting->segment( ++segId );
+			    }
+			}
+
+			for( map<string, Segment::PtrConst>::iterator i = nextSegment.begin(); i != nextSegment.end(); ++i )
+			{
+				start->nextSegmentIs( i->first, const_cast<Segment*>(i->second.ptr()) );
+			}
+		}
+	}
+}
+
 string Conn::value()
 {
     if( startLocation() == endLocation() ) {
