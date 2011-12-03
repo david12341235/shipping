@@ -25,6 +25,8 @@ namespace Shipping
 {
 using namespace std;
 
+class SendingShipmentsReactor;
+
 class Engine : public Fwk::PtrInterface<Engine>
 {
 public:
@@ -195,7 +197,7 @@ public:
     }
 
 private:
-    Engine() : expreactor_(NULL), slreactor_(NULL) {}
+    Engine() : expreactor_(NULL), slreactor_(NULL), sshipreactor_(NULL) {}
     Stats::Ptr stats_;
     Fleet::Ptr fleet_;
     Conn* conn_;
@@ -204,6 +206,7 @@ private:
     LocationMap location_;
     Stats::SegmentExpediteReactor* expreactor_;
     Stats::LocationSegmentReactor* slreactor_;
+    SendingShipmentsReactor* sshipreactor_;
     void newNotifiee( Engine::NotifieeConst * n ) const {
         Engine* me = const_cast<Engine*>(this);
         me->notifiee_.newMember(n);
@@ -323,6 +326,24 @@ protected:
     }
 private:
     Stats::Ptr stats_;
+};
+
+class SendingShipmentsReactor : public Customer::NotifieeConst
+{
+public:
+    virtual void onSendingShipmentsIs(Customer::Ptr c) {
+		cout << "called" << endl;
+    }
+
+    static SendingShipmentsReactor * SendingShipmentsReactorIs(Engine::Ptr e) {
+        SendingShipmentsReactor *m = new SendingShipmentsReactor(e);
+        return m;
+    }
+protected:
+    SendingShipmentsReactor(Engine::Ptr e) : engine_(e) {
+    }
+private:
+    Engine::Ptr engine_;
 };
 
 } /* end namespace */

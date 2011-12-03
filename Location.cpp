@@ -8,6 +8,11 @@ Location::Location( const string& _name, Type _type, Fwk::Ptr<Engine> _engine ) 
     engine_->locationIs(this);
 }
 
+Location::Location( const string& _name, Type _type) :
+    NamedInterface(_name), type_(_type), engine_(NULL)
+{
+}
+
 
 // ------- Location
 
@@ -131,6 +136,8 @@ void Customer::destinationIs(string _destination) {
 	
 void Customer::sendingShipmentsIs(bool _sendingShipments) {
 	if (sendingShipments_ == _sendingShipments) return;
+	 if (_sendingShipments && (destination_ == "" || transferRate_ == 0 || shipmentSize_ == 0)) return;
+
     sendingShipments_ = sendingShipments_;
 retry:
     U32 ver = notifiee_.version();
@@ -165,3 +172,44 @@ void Customer::shipmentIs(Shipment::Ptr _newShipment) {
     totalLatency_ = totalLatency_.value() + _newShipment->timeTaken().value();
     totalCost_ = totalCost_.value() + _newShipment->cost().value();
 }
+
+Customer::NotifieeConst::~NotifieeConst()
+{
+    if(notifier_ != NULL ) {
+        notifier_->deleteNotifiee(this);
+    }
+    if(notifier_ != NULL &&isNonReferencing()) notifier_->newRef();
+}
+
+Location::NotifieeConst::~NotifieeConst()
+{
+    if(notifier_ != NULL ) {
+        notifier_->deleteNotifiee(this);
+    }
+    if(notifier_ != NULL &&isNonReferencing()) notifier_->newRef();
+}
+
+void
+Location::NotifieeConst::notifierIs(const Location::PtrConst& _notifier)
+{
+    Location::Ptr notifierSave(const_cast<Location*>(notifier_.ptr()));
+    if(_notifier==notifier_) return;
+    notifier_ = _notifier;
+    if(notifierSave != NULL ) {
+        notifierSave->deleteNotifiee(this);
+    }
+    if(_notifier != NULL ) {
+        _notifier->newNotifiee(this);
+    }
+    if(isNonReferencing_) {
+        if(notifierSave != NULL ) notifierSave->newRef();
+        if(notifier_ != NULL ) notifier_->deleteRef();
+    }
+}
+
+Customer::Customer( const string& _name, Fwk::Ptr<Engine> _engine ) : 
+	Location( _name, customer_), transferRate_(0), shipmentSize_(0), 
+    shipmentsReceived_(0), totalLatency_(0), totalCost_(0) {
+	engine_ = _engine;
+	engine_->locationIs(this);
+};

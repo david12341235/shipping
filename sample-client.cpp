@@ -120,8 +120,14 @@ int main(int argc, char *argv[]) {
 	 * batch size is determined by the client's settings of the real/virtual 
 	 * times at difference places.
 	 */
-//    Activity::Manager::Ptr activityManager = activityManagerInstance();
-//    activityManager->nowIs(6.0);
+
+	
+    loc[0]->attributeIs("Transfer Rate", "1");
+    loc[0]->attributeIs("Shipment Size", "1");
+    loc[0]->attributeIs("Destination", "customer2");
+
+    Activity::Manager::Ptr activityManager = activityManagerInstance();
+    activityManager->nowIs(6.0);
 //    RealTimeManager::Ptr realTimeManager = realTimeManagerInstance();
 //  realTimeManager->realTimePassedIs(6.0);
 
@@ -129,7 +135,7 @@ int main(int argc, char *argv[]) {
     loc[0]->attributeIs("Transfer Rate", "0");
     loc[1]->attributeIs("Transfer Rate", "0");
 
-//    activityManager->nowIs(24.0);
+    activityManager->nowIs(24.0);
 //  realTimeManager->realTimePassedIs(18.0);
 
 	/* Print simulation statistics for analysis 

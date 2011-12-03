@@ -20,6 +20,7 @@ class Location : public Fwk::NamedInterface
 public:
     typedef Fwk::Ptr<Location const> PtrConst;
     typedef Fwk::Ptr<Location> Ptr;
+
     Fwk::String fwkKey() const {
         return this->name();
     }
@@ -135,9 +136,6 @@ public:
     public:
         typedef Fwk::Ptr<Notifiee const> PtrConst;
         typedef Fwk::Ptr<Notifiee> Ptr;
-        Location::PtrConst notifier() const {
-            return NotifieeConst::notifier();
-        }
         Location::Ptr notifier() {
             return const_cast<Location *>(NotifieeConst::notifier().ptr());
         }
@@ -170,6 +168,14 @@ public:
     NotifieeIterator notifieeIter() {
         return notifiee_.iterator();
     }
+    virtual void newNotifiee( Location::NotifieeConst * n ) const {
+        Location* me = const_cast<Location*>(this);
+        me->notifiee_.newMember(n);
+    }
+    virtual void deleteNotifiee( Location::NotifieeConst * n ) const {
+        Location* me = const_cast<Location*>(this);
+        me->notifiee_.deleteMember(n);
+    }
 
 protected:
     typedef vector<Segment::PtrConst > SegmentList;
@@ -178,14 +184,7 @@ protected:
     mutable Location::Ptr fwkHmNext_;
     Location( const Location& );
     Location( const string& _name, Type _type, Fwk::Ptr<Engine> _engine );
-    void newNotifiee( Location::NotifieeConst * n ) const {
-        Location* me = const_cast<Location*>(this);
-        me->notifiee_.newMember(n);
-    }
-    void deleteNotifiee( Location::NotifieeConst * n ) const {
-        Location* me = const_cast<Location*>(this);
-        me->notifiee_.deleteMember(n);
-    }
+    Location( const string& _name, Type _type);
     Type type_;
     Fwk::Ptr<Engine> engine_;
     SegmentList segment_;
@@ -225,7 +224,7 @@ public:
 
 	virtual void shipmentIs(Shipment::Ptr _newShipment);
 
-    class NotifieeConst : public virtual Fwk::NamedInterface::NotifieeConst
+    class NotifieeConst : public Location::NotifieeConst, public virtual Fwk::NamedInterface::NotifieeConst
     {
     public:
         typedef Fwk::Ptr<NotifieeConst const> PtrConst;
@@ -256,7 +255,7 @@ public:
         void isNonReferencingIs(bool _isNonReferencing) {
             isNonReferencing_ = _isNonReferencing;
         };
-        virtual void onSendingShipmentsIs(Customer::Ptr p) {}
+        virtual void onSendingShipmentsIs(Customer::Ptr c) {}
 
         static NotifieeConst::Ptr NotifieeConstIs() {
             Ptr m = new NotifieeConst();
@@ -272,16 +271,13 @@ public:
             lrNext_(0) { }
     };
 	
-    class Notifiee : public virtual NotifieeConst, public virtual Fwk::NamedInterface::Notifiee
+    class Notifiee : public virtual Location::NotifieeConst, public virtual Fwk::NamedInterface::Notifiee
     {
     public:
         typedef Fwk::Ptr<Notifiee const> PtrConst;
         typedef Fwk::Ptr<Notifiee> Ptr;
-        Customer::PtrConst notifier() const {
-            return NotifieeConst::notifier();
-        }
         Customer::Ptr notifier() {
-            return const_cast<Customer*>(NotifieeConst::notifier().ptr());
+            return const_cast<Customer*>(Notifiee::notifier().ptr());
         }
 
         static Notifiee::Ptr NotifieeIs() {
@@ -306,11 +302,11 @@ public:
         return notifiee_.members();
     }
 
-    void newNotifiee( Customer::NotifieeConst * n ) const {
+    virtual void newNotifiee( Customer::NotifieeConst * n ) const {
         Customer* me = const_cast<Customer*>(this);
         me->notifiee_.newMember(n);
     }
-    void deleteNotifiee( Customer::NotifieeConst * n ) const {
+    virtual void deleteNotifiee( Customer::NotifieeConst * n ) const {
         Customer* me = const_cast<Customer*>(this);
         me->notifiee_.deleteMember(n);
     }
@@ -323,9 +319,7 @@ public:
 
 protected:
     Customer( const Customer& );
-    Customer( const string& _name, Fwk::Ptr<Engine> _engine ) : 
-		Location( _name, customer_, _engine ), transferRate_(0), shipmentSize_(0), 
-        shipmentsReceived_(0), totalLatency_(0), totalCost_(0) {};
+    Customer( const string& _name, Fwk::Ptr<Engine> _engine );
 	ShipmentsPerDay transferRate_;
 	NumPackages shipmentSize_;
 	NumPackages shipmentsReceived_;

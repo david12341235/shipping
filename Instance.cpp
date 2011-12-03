@@ -48,10 +48,10 @@ public:
     typedef Fwk::Ptr<LocationRep> Ptr;
 
     // Instance method
-    string attribute(const string& name);
+    virtual string attribute(const string& name);
 
     // Instance method
-    void attributeIs(const string& name, const string& v);
+    virtual void attributeIs(const string& name, const string& v);
 
 protected:
     LocationRep(const string& name, ManagerImpl* manager) :
@@ -66,6 +66,9 @@ protected:
 class CustomerRep : public LocationRep
 {
 public:
+    virtual string attribute(const string& name);
+    virtual void attributeIs(const string& name, const string& v);
+
     static LocationRep::Ptr CustomerRepNew( const string& _name, ManagerImpl* manager) {
         Ptr m = new CustomerRep(_name, manager);
         m->referencesDec(1);
@@ -545,6 +548,55 @@ string LocationRep::attribute(const string& name)
 void LocationRep::attributeIs(const string& name, const string& v)
 {
     //nothing to do
+}
+
+string CustomerRep::attribute(const string& name)
+{
+    if (name == "Transfer Rate") {
+		Shipping::Customer* c = dynamic_cast<Shipping::Customer*>(this->location_.ptr());
+		if (c != NULL)
+			return string(c->transferRate());
+	} else if (name == "Shipment Size") {
+		Shipping::Customer* c = dynamic_cast<Shipping::Customer*>(this->location_.ptr());
+		if (c != NULL)
+			return string(c->shipmentSize());
+	} else if (name == "Destination") {
+		Shipping::Customer* c = dynamic_cast<Shipping::Customer*>(this->location_.ptr());
+		if (c != NULL)
+			return c->destination();
+	} else {
+		return LocationRep::attribute(name);
+	}
+
+	return "";
+}
+
+
+void CustomerRep::attributeIs(const string& name, const string& v)
+{
+    if (name == "Transfer Rate") {
+		Shipping::Customer* c = dynamic_cast<Shipping::Customer*>(this->location_.ptr());
+		if (c != NULL) {
+			istringstream iss(v);
+			ShipmentsPerDay spd(0);
+			iss >> spd;
+			c->transferRateIs(spd);
+		}
+	} else if (name == "Shipment Size") {
+		Shipping::Customer* c = dynamic_cast<Shipping::Customer*>(this->location_.ptr());
+		if (c != NULL) {
+			istringstream iss(v);
+			NumPackages np(0);
+			iss >> np;
+			c->shipmentSizeIs(np);
+		}
+	} else if (name == "Destination") {
+		Shipping::Customer* c = dynamic_cast<Shipping::Customer*>(this->location_.ptr());
+		if (c != NULL)
+			c->destinationIs(v);
+	} else {
+		LocationRep::attributeIs(name, v);
+	}
 }
 
 static const string segmentStr = "segment";

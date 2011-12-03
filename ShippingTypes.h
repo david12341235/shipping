@@ -26,6 +26,12 @@ public:
         out << string(val);
         return out;
     }
+    friend std::istream& operator>> (std::istream& in, Mile& val) {
+		double d;
+        in >> d;
+		val.value_ = d;
+        return in;
+    }
     static Mile max() {
         Mile m( DBL_MAX );
         return m;
@@ -49,6 +55,12 @@ public:
         out << string(val);
         return out;
     }
+    friend std::istream& operator>> (std::istream& in, Difficulty& val) {
+		double d;
+        in >> d;
+		val.value_ = d;
+        return in;
+    }
 };
 
 class NumPackages : public Ordinal<NumPackages, unsigned int>
@@ -66,6 +78,13 @@ public:
     friend std::ostream& operator<< (std::ostream& out, NumPackages val) {
         out << string(val);
         return out;
+    }
+
+    friend std::istream& operator>> (std::istream& in, NumPackages& val) {
+		unsigned int ui;
+        in >> ui;
+		val.value_ = ui;
+        return in;
     }
 };
 
@@ -86,6 +105,12 @@ public:
         out << string(val);
         return out;
     }
+    friend std::istream& operator>> (std::istream& in, Percentage& val) {
+		double d;
+        in >> d;
+		val.value_ = d;
+        return in;
+    }
 };
 
 class Mph : public Ordinal<Mph, double>
@@ -105,6 +130,12 @@ public:
         out << string(val);
         return out;
     }
+    friend std::istream& operator>> (std::istream& in, Mph& val) {
+		double d;
+        in >> d;
+		val.value_ = d;
+        return in;
+    }
 };
 
 class ShipmentsPerDay : public Ordinal<ShipmentsPerDay, unsigned int>
@@ -120,6 +151,13 @@ public:
     friend std::ostream& operator<< (std::ostream& out, ShipmentsPerDay val) {
         out << string(val);
         return out;
+    }
+
+    friend std::istream& operator>> (std::istream& in, ShipmentsPerDay& val) {
+		unsigned int ui;
+        in >> ui;
+		val.value_ = ui;
+        return in;
     }
 };
 
@@ -139,6 +177,12 @@ public:
     friend std::ostream& operator<< (std::ostream& out, Dollar val) {
         out << string(val);
         return out;
+    }
+    friend std::istream& operator>> (std::istream& in, Dollar& val) {
+		double d;
+        in >> d;
+		val.value_ = d;
+        return in;
     }
     static Dollar max() {
         Dollar m( DBL_MAX );
@@ -162,6 +206,12 @@ public:
     friend std::ostream& operator<< (std::ostream& out, Hour val) {
         out << string(val);
         return out;
+    }
+    friend std::istream& operator>> (std::istream& in, Hour& val) {
+		double d;
+        in >> d;
+		val.value_ = d;
+        return in;
     }
     static Hour max() {
         Hour m( DBL_MAX );
