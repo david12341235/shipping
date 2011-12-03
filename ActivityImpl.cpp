@@ -6,7 +6,8 @@
 #include <Windows.h>
 	void sleep(long s) { Sleep(s); }
 #else
-	void sleep(long s) { usleep(s); }
+#include <unistd.h>
+//	void sleep(long s) { usleep(s); }
 #endif
 
 Fwk::Ptr<Activity::Manager> activityManagerInstance() {

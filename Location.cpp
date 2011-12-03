@@ -43,13 +43,6 @@ void Location::shipmentIs( Shipment::Ptr _newShipment )
 	}
 }
 
-/*
-Segment::Ptr nextSegment( string _destination )
-{
-	// will return a pointer to the next segment
-	return nextSegment_[_destination];
-}
-*/
 void
 Location::onZeroReferences()
 {

@@ -8,6 +8,7 @@ using std::cout;
 using std::cerr;
 using std::endl;
 using std::string;
+
 int main(int argc, char *argv[])
 {
     Ptr<Instance::Manager> manager = shippingInstanceManager();
@@ -110,7 +111,11 @@ int main(int argc, char *argv[])
     cout << endl;
 
 
-    //conn->attributeIs("routing algorithm", "Dijkstra"); 
+    conn->attributeIs("routing algorithm", "Dijkstra"); 
+
+    // print the routing tables of each location
+    manager->printTables();
+    
 
     // -- Statistics queries
     cout << "===== Stats attributes =====" << endl;

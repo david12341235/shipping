@@ -33,6 +33,8 @@ public:
     // Manager method
     void instanceDel(const string& name);
 
+    void printTables();
+
     Engine::Ptr engine();
 
 private:
@@ -523,6 +525,21 @@ void ManagerImpl::instanceDel(const string& name)
     } catch (...) {}
 }
 
+void ManagerImpl::printTables()
+{
+	for( Engine::LocationIterator iter = engine_->locationIter(); iter; ++iter )
+	{
+		cout << (*iter)->name() << "'s routing table:" << endl;
+		for( Engine::LocationIterator i = engine_->locationIter(); i; ++i )
+		{
+			if( (*i)->name() != (*iter)->name() )
+			{
+				cout << (*i)->name() << ": " << (*iter)->nextSegment( (*i)->name() )->name() << endl;
+			}
+		}
+		cout  << endl;
+	}
+}
 
 string LocationRep::attribute(const string& name)
 {
@@ -549,6 +566,7 @@ void LocationRep::attributeIs(const string& name, const string& v)
 {
     //nothing to do
 }
+
 
 string CustomerRep::attribute(const string& name)
 {

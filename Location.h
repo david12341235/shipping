@@ -87,6 +87,11 @@ public:
 
     void nextSegmentIs( string _destination, Segment::Ptr _nextSeg ) { nextSegment_[_destination] = _nextSeg; }
 
+	Segment::Ptr nextSegment( string _destination )
+	{
+		// will return a pointer to the next segment
+		return nextSegment_[_destination];
+	}
 
     class NotifieeConst : public virtual Fwk::NamedInterface::NotifieeConst
     {
