@@ -31,9 +31,9 @@ string Conn::PathUnit::output() const
 
 void Conn::algorithmIs( Algorithm _algorithm )
 {
-	if( _algorithm == dijkstra() )
+	algorithm_ = _algorithm;
+	if( _algorithm == dijkstra_ )
 	{
-
 		vector<Location::Ptr> nodeVector;
 		for( Engine::LocationIterator iter = engine_->locationIter(); iter; ++iter )
 		{
@@ -67,19 +67,14 @@ void Conn::algorithmIs( Algorithm _algorithm )
 		    Segment::PtrConst segment = start->segment( segId );
 		    while( segment != Segment::PtrConst(NULL) )
 		    {
-		    		if( segment->returnSegment() && segment->returnSegment()->source() )
+				if( segment->returnSegment() && segment->returnSegment()->source() )
 				{
 					string neighborName = segment->returnSegment()->source()->name();
 					nextSegment[ neighborName ] = segment;
-					tentativeDistance.find( neighborName )->second = segment->length();
+					tentativeDistance.find( neighborName )->second =  segment->length();
 				}
 				segment = start->segment( ++segId );
 		    }
-
-			// This loop enters with initial state of all nodes except the start node
-			// being unvisited, the distance to the start node and all its neighbors being
-			// set to their appropriate values, and the next segment to take to get to these
-			// neighbors are all set
 
 			while( !unvisited.empty() )
 			{
@@ -97,11 +92,9 @@ void Conn::algorithmIs( Algorithm _algorithm )
 				}
 				if( min == Mile::max() )
 				{
-					// the remaining unvisited nodes are not connected to this one
+					// the remaining unvisited nodes are not connected to are start node
 					break;
 				}
-
-
 
 				Location::Ptr visiting = *visitingIter;
 				unvisited.erase( visitingIter );
@@ -112,7 +105,7 @@ void Conn::algorithmIs( Algorithm _algorithm )
 			    {
 					if( segment->returnSegment() && segment->returnSegment()->source() )
 					{
-						Mile neighborDistance( distanceSoFar.value() + segment->length().value() );
+						Mile neighborDistance( distanceSoFar.value() + segment->length().value() ) ;
 						string neighborName = segment->returnSegment()->source()->name();
 						map< string, Mile >::iterator neighborIter = tentativeDistance.find(neighborName);
 						if( neighborIter->second > neighborDistance )
@@ -125,6 +118,60 @@ void Conn::algorithmIs( Algorithm _algorithm )
 					segment = visiting->segment( ++segId );
 			    }
 			}
+
+			for( map<string, Segment::PtrConst>::iterator i = nextSegment.begin(); i != nextSegment.end(); ++i )
+			{
+				start->nextSegmentIs( i->first, const_cast<Segment*>(i->second.ptr()) );
+			}
+		}
+	}
+	else if( _algorithm == bfs_ )
+	{
+		vector<Location::Ptr> nodeVector;
+		for( Engine::LocationIterator iter = engine_->locationIter(); iter; ++iter )
+		{
+			nodeVector.push_back(*iter);
+		}
+
+		for( vector<Location::Ptr>::iterator iter = nodeVector.begin(); iter != nodeVector.end(); ++iter )
+		{
+			Location::Ptr start = *iter;
+			map<string, Segment::PtrConst> nextSegment;
+			queue< Location::Ptr > q;
+			map<string, bool> visited;
+
+		    Segment::SegmentId segId = 1;
+		    Segment::PtrConst segment = start->segment( segId );
+		    while( segment != Segment::PtrConst(NULL) )
+		    {
+				if( segment->returnSegment() && segment->returnSegment()->source() )
+				{
+					q.push( segment->returnSegment()->source() );
+					nextSegment[ segment->returnSegment()->source()->name() ] = segment;
+					visited[ segment->returnSegment()->source()->name() ] = true;
+				}
+				segment = start->segment( ++segId );
+			}
+			visited[start->name()] = true;
+
+			while( !q.empty() )
+			{
+			    Location::Ptr cur = q.front();
+			    q.pop();
+			    segId = 1;
+			    segment = cur->segment( segId );
+			    while( segment != Segment::PtrConst(NULL) )
+			    {
+					if( segment->returnSegment() && segment->returnSegment()->source() && !visited[ segment->returnSegment()->source()->name() ] )
+					{
+						q.push( segment->returnSegment()->source() );
+						nextSegment[ segment->returnSegment()->source()->name() ] = nextSegment[ cur->name() ];
+						visited[ segment->returnSegment()->source()->name() ] = true;
+					}
+					segment = cur->segment( ++segId );
+			    }
+			}
+			
 
 			for( map<string, Segment::PtrConst>::iterator i = nextSegment.begin(); i != nextSegment.end(); ++i )
 			{

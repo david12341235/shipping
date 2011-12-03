@@ -24,7 +24,8 @@ public:
     };
     
     enum Algorithm {
-    		dijkstra_ = 0
+    		dijkstra_ = 0,
+		bfs_ = 1
     };
 
     struct PathUnit {
@@ -47,6 +48,9 @@ public:
     }
     static inline Algorithm dijkstra() {
     		return dijkstra_;
+    }
+    static inline Algorithm bfs() {
+    		return bfs_;
     }
     static inline string exploreString() {
         return "explore";

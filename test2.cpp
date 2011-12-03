@@ -124,7 +124,8 @@ int main(int argc, char *argv[])
     boatSegCD->attributeIs("return segment", "boatSegDC");
 
     Ptr<Instance> conn = manager->instanceNew("myConn", "Conn");
-    conn->attributeIs("routing algorithm", "Dijkstra"); 
+    //conn->attributeIs("routing algorithm", "Dijkstra"); 
+    conn->attributeIs("routing algorithm", "BFS"); 
 
     // print the routing tables of each location
     manager->printTables();

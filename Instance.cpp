@@ -803,6 +803,10 @@ void ConnRep::attributeIs(const string& name, const string& v)
 		{
 			conn_->algorithmIs( Conn::dijkstra() );
 		}
+		else if( v == "BFS" )
+		{
+			conn_->algorithmIs( Conn::bfs() );
+		}
 	}
 }
 
