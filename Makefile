@@ -4,12 +4,15 @@ CXXFLAGS = -Wall -g
 OBJECTS = Instance.o Engine.o Segment.o Location.o Conn.o ActivityImpl.o ActivityReactor.o ShippingException.o
 LIBS = fwk/BaseCollection.o fwk/BaseNotifiee.o fwk/Exception.o
 
-default:	test1 example sample-client
+default:	test1 test2 example sample-client
 
 example:	example.o $(OBJECTS) $(LIBS)
 	$(CXX) $(CXXFLAGS) -o $@ $^
 
 test1:	test1.o $(OBJECTS) $(LIBS)
+	$(CXX) $(CXXFLAGS) -o $@ $^
+
+test2:	test2.o $(OBJECTS) $(LIBS)
 	$(CXX) $(CXXFLAGS) -o $@ $^
 
 sample-client:	sample-client.o $(OBJECTS) $(LIBS)
