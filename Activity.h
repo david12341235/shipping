@@ -23,11 +23,11 @@ class Activity : public Fwk::PtrInterface<Activity> {
     typedef Fwk::Ptr<Activity> Ptr;
     
     /* Notifiee class for Activities */
- class Notifiee : public Fwk::BaseNotifiee<Activity> {
+ class Notifiee : public ActFwk::BaseNotifiee<Activity> {
     public:
 	typedef Fwk::Ptr<Notifiee> Ptr;
 
-        Notifiee(Activity* act) : Fwk::BaseNotifiee<Activity>(act) {}
+        Notifiee(Activity* act) : ActFwk::BaseNotifiee<Activity>(act) {}
 
         virtual void onNextTime() {}
 	virtual void onStatus() {}

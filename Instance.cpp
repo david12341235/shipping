@@ -527,10 +527,10 @@ void ManagerImpl::instanceDel(const string& name)
 
 void ManagerImpl::printTables()
 {
-	for( Engine::LocationIterator iter = engine_->locationIter(); iter; ++iter )
+	for( Engine::LocationIterator iter = engine_->locationIter(); iter.ptr(); ++iter )
 	{
 		cout << (*iter)->name() << "'s routing table:" << endl;
-		for( Engine::LocationIterator i = engine_->locationIter(); i; ++i )
+		for( Engine::LocationIterator i = engine_->locationIter(); i.ptr(); ++i )
 		{
 			if( (*i)->name() != (*iter)->name() )
 			{

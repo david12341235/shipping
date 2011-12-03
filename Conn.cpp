@@ -35,7 +35,7 @@ void Conn::algorithmIs( Algorithm _algorithm )
 	if( _algorithm == dijkstra_ )
 	{
 		vector<Location::Ptr> nodeVector;
-		for( Engine::LocationIterator iter = engine_->locationIter(); iter; ++iter )
+		for( Engine::LocationIterator iter = engine_->locationIter(); iter.ptr(); ++iter )
 		{
 			nodeVector.push_back(*iter);
 		}
@@ -47,7 +47,7 @@ void Conn::algorithmIs( Algorithm _algorithm )
 			vector<Location::Ptr> unvisited;
 			map<string, Mile> tentativeDistance;
 			map<string, Segment::PtrConst> nextSegment;
-			for( Engine::LocationIterator i = engine_->locationIter(); i; ++i )
+			for( Engine::LocationIterator i = engine_->locationIter(); i.ptr(); ++i )
 			{
 				string const & name = (*i)->name();
 				if( name == start->name() )
@@ -128,7 +128,7 @@ void Conn::algorithmIs( Algorithm _algorithm )
 	else if( _algorithm == bfs_ )
 	{
 		vector<Location::Ptr> nodeVector;
-		for( Engine::LocationIterator iter = engine_->locationIter(); iter; ++iter )
+		for( Engine::LocationIterator iter = engine_->locationIter(); iter.ptr(); ++iter )
 		{
 			nodeVector.push_back(*iter);
 		}
