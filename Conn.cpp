@@ -62,14 +62,17 @@ void Conn::algorithmIs( Algorithm _algorithm )
 				nextSegment[ name ] = NULL;
 			}
 
-			// initialize nextSegment for neighbors of initial starting node
+		    // initialize nextSegment for neighbors of initial starting node
 		    Segment::SegmentId segId = 1;
 		    Segment::PtrConst segment = start->segment( segId );
 		    while( segment != Segment::PtrConst(NULL) )
 		    {
-				string neighborName = segment->returnSegment()->source()->name();
-		   		nextSegment[ neighborName ] = segment;
-				tentativeDistance.find( neighborName )->second = segment->length();
+		    		if( segment->returnSegment() && segment->returnSegment()->source() )
+				{
+					string neighborName = segment->returnSegment()->source()->name();
+					nextSegment[ neighborName ] = segment;
+					tentativeDistance.find( neighborName )->second = segment->length();
+				}
 				segment = start->segment( ++segId );
 		    }
 
@@ -92,6 +95,13 @@ void Conn::algorithmIs( Algorithm _algorithm )
 						visitingIter = i;
 					}
 				}
+				if( min == Mile::max() )
+				{
+					// the remaining unvisited nodes are not connected to this one
+					break;
+				}
+
+
 
 				Location::Ptr visiting = *visitingIter;
 				unvisited.erase( visitingIter );
@@ -100,13 +110,16 @@ void Conn::algorithmIs( Algorithm _algorithm )
 			    segment = visiting->segment( segId );
 			    while( segment != Segment::PtrConst(NULL) )
 			    {
-			    		Mile neighborDistance( distanceSoFar.value() + segment->length().value() );
-			    		string neighborName = segment->returnSegment()->source()->name();
-					map< string, Mile >::iterator neighborIter = tentativeDistance.find(neighborName);
-					if( neighborIter->second > neighborDistance )
+					if( segment->returnSegment() && segment->returnSegment()->source() )
 					{
-						neighborIter->second = neighborDistance;
-						nextSegment[ neighborName ] = nextSegment[ visiting->name() ];
+						Mile neighborDistance( distanceSoFar.value() + segment->length().value() );
+						string neighborName = segment->returnSegment()->source()->name();
+						map< string, Mile >::iterator neighborIter = tentativeDistance.find(neighborName);
+						if( neighborIter->second > neighborDistance )
+						{
+							neighborIter->second = neighborDistance;
+							nextSegment[ neighborName ] = nextSegment[ visiting->name() ];
+						}
 					}
 
 					segment = visiting->segment( ++segId );

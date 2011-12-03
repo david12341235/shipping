@@ -534,7 +534,11 @@ void ManagerImpl::printTables()
 		{
 			if( (*i)->name() != (*iter)->name() )
 			{
-				cout << (*i)->name() << ": " << (*iter)->nextSegment( (*i)->name() )->name() << endl;
+				Segment::Ptr nextSeg = (*iter)->nextSegment( (*i)->name() );
+				if( nextSeg != NULL )
+				{
+					cout << (*i)->name() << ": " << nextSeg->name() << endl;
+				}
 			}
 		}
 		cout  << endl;
@@ -800,7 +804,6 @@ void ConnRep::attributeIs(const string& name, const string& v)
 			conn_->algorithmIs( Conn::dijkstra() );
 		}
 	}
-
 }
 
 }

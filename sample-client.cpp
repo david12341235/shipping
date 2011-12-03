@@ -79,8 +79,8 @@ int main(int argc, char *argv[]) {
     fleet->attributeIs("Truck capacity", "1");
 
 	// Set some segment (shipment) capacities
-	seg[4]->attributeIs("Capacity", "1");
-	seg[6]->attributeIs("Capacity", "1");
+	//seg[4]->attributeIs("Capacity", "1");
+	//seg[6]->attributeIs("Capacity", "1");
 
 	/* For groups, you could set routing algorithm here
 	 * Note that we are not advocating any particular design
@@ -90,6 +90,7 @@ int main(int argc, char *argv[]) {
 	 */
 	Ptr<Instance> conn = manager->instanceNew("myConn", "Conn");
 	conn->attributeIs("routing algorithm", "Dijkstra"); 
+	manager->printTables();
 	// conn->attributeIs("routing algorithm", "Some very cool algorithm worthy of a Turing award");
 
 	/* Switching between real-time and virtual-time managers
