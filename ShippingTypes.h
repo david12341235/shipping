@@ -239,6 +239,8 @@ public:
 
     NumPackages load() { return load_; }
     void loadIs(NumPackages load) { load_ = load; }
+
+    NumPackages origSize() { return origSize_; }
     
     Dollar cost() { return cost_; }
     void costIs(Dollar cost) { cost_ = cost; }
@@ -247,11 +249,12 @@ public:
     void timeTakenIs(Hour time) { time_ = time; }
 
 protected:
-    Shipment(const string& name, string sourceName, string destinationName, NumPackages load) :
-            Fwk::NamedInterface(name), load_(load), source_(sourceName), 
+    Shipment(const string& name, string sourceName, string destinationName, NumPackages origSize) :
+            Fwk::NamedInterface(name), origSize_(origSize), load_(origSize), source_(sourceName), 
             destination_(destinationName), cost_(0), time_(0) {}
     Shipment(const Shipment&);
 
+    NumPackages origSize_;
     NumPackages load_;
     string source_;
     string destination_;

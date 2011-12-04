@@ -330,6 +330,7 @@ protected:
 	bool sendingShipments_;
     Hour totalLatency_;
     Dollar totalCost_;
+    map< string, NumPackages > shipmentsPending_;
     NotifieeList notifiee_;
 };
 
