@@ -5,6 +5,7 @@
 #include <float.h>
 #include <sstream>
 #include <iomanip>
+#include <queue>
 
 namespace Shipping
 {
@@ -81,6 +82,31 @@ public:
     }
 
     friend std::istream& operator>> (std::istream& in, NumPackages& val) {
+		unsigned int ui;
+        in >> ui;
+		val.value_ = ui;
+        return in;
+    }
+};
+
+class NumVehicles : public Ordinal<NumVehicles, unsigned int>
+{
+public:
+    NumVehicles( unsigned int num ) : Ordinal<NumVehicles, unsigned int>(num) {
+        if (num < 0.0) throw Fwk::RangeException("NumPackages must be non-negative");
+    }
+    operator string() const {
+        std::ostringstream oss;
+        oss << value();
+        return oss.str();
+    }
+
+    friend std::ostream& operator<< (std::ostream& out, NumVehicles val) {
+        out << string(val);
+        return out;
+    }
+
+    friend std::istream& operator>> (std::istream& in, NumVehicles& val) {
 		unsigned int ui;
         in >> ui;
 		val.value_ = ui;
@@ -258,6 +284,8 @@ protected:
     Dollar cost_;
     Hour time_;
 };
+
+typedef std::queue<Shipment::Ptr> ShipmentQueue;
 
 } /* end namespace */
 

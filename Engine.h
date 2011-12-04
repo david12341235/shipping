@@ -307,7 +307,8 @@ private:
 class Stats::SegmentExpediteReactor : public Segment::Notifiee
 {
 public:
-    virtual void onExpedite(Segment::Ptr s, Segment::ExpVal old) {
+    virtual void onExpedite(Segment::ExpVal old) {
+		Segment::Ptr s = notifier();
         if (s->expedite() == old) return;
 
         if (s->expedite())

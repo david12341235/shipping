@@ -1,4 +1,5 @@
 #include "ActivityReactor.h"
+#include "ShippingTypes.h"
 
 using namespace Shipping;
 static int num = 0;
@@ -40,7 +41,10 @@ void ForwardShipmentReactor::onStatus() {
 	
     case Activity::executing:
 	//I am executing now
-		segment_->readyForShipmentIs(true);
+		for (Shipment::Ptr p = shipments_.front(); shipments_.size() > 0; shipments_.pop())
+			segment_->returnSegment()->source()->shipmentIs(p);
+
+		segment_->capacityIs(segment_->capacity().value() + numVehicles_.value());
 	break;
 	
     case Activity::free:

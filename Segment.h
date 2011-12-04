@@ -119,8 +119,8 @@ public:
     NumPackages shipmentsReceived() { return shipmentsReceived_; }
     NumPackages shipmentsRefused() { return shipmentsRefused_; }
     NumPackages shipmentsPending() { return shipmentsPending_; }
-    NumPackages capacity() { return capacity_; }
-    void capacityIs( NumPackages _capacity ) { capacity_ = _capacity; }
+    NumVehicles capacity() { return capacity_; }
+    void capacityIs( NumVehicles _capacity );
 	
     virtual void shipmentIs( Shipment::Ptr _newShipment );
 
@@ -162,6 +162,8 @@ public:
         virtual void onReturnSegment() {}
         virtual void onDifficulty() {}
         virtual void onExpedite(Segment::Ptr s, ExpVal old) {}
+        virtual void onShipmentsRefused(Segment::Ptr s) {}
+        virtual void onCapacity(Segment::Ptr s) {}
 
         static NotifieeConst::Ptr NotifieeConstIs() {
             Ptr m = new NotifieeConst();
@@ -230,11 +232,11 @@ public:
 protected:
     Segment( const Segment& );
     Segment( const string& _name, Mode _mode, Fwk::Ptr<Engine> _engine );
+	void readyForShipmentsIs(bool b);
     mutable Segment::Ptr fwkHmNext_;
     Mode mode_;
     Fwk::Ptr<Engine> engine_;
     Fwk::Ptr<Location> source_;
-    typedef queue<Shipment::Ptr> ShipmentQueue;
     ShipmentQueue shipmentQ_;
     Mile length_;
     Difficulty difficulty_;
@@ -244,7 +246,7 @@ protected:
     NumPackages shipmentsReceived_;
     NumPackages shipmentsRefused_;
     NumPackages shipmentsPending_;
-    NumPackages capacity_;
+    NumVehicles capacity_;
 };
 
 class TruckSegment : public Segment

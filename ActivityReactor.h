@@ -27,9 +27,10 @@ class InjectShipmentReactor : public Activity::Notifiee {
 class ForwardShipmentReactor : public Activity::Notifiee {
  public:
  ForwardShipmentReactor(Fwk::Ptr<Activity::Manager> manager, Activity*
-			 activity, double rate, Segment::Ptr segment) 
+			 activity, double rate, Segment::Ptr segment, 
+			 ShipmentQueue shipments, NumVehicles numVehicles) 
      : Notifiee(activity), rate_(rate), activity_(activity), 
-	 manager_(manager), segment_(segment) {}
+	 manager_(manager), segment_(segment), numVehicles_(numVehicles), shipments_(shipments) {}
 
     void onStatus();
 
@@ -38,6 +39,8 @@ class ForwardShipmentReactor : public Activity::Notifiee {
     Activity::Ptr activity_;
     Fwk::Ptr<Activity::Manager> manager_;
 	Segment::Ptr segment_;
+	NumVehicles numVehicles_;
+	ShipmentQueue shipments_;
 };      
 
 } // namespace

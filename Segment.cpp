@@ -1,5 +1,7 @@
 #include "Engine.h"
 #include "Segment.h"
+#include "Activity.h"
+#include "ActivityReactor.h"
 
 using namespace Shipping;
 
@@ -13,13 +15,19 @@ void Segment::sourceIs( Fwk::Ptr<Location> _source )
 Segment::Segment( const string& _name, Mode _mode, Fwk::Ptr<Engine> _engine ) :
     NamedInterface(_name), mode_(_mode), engine_(_engine),
     length_(0), difficulty_(1), expedite_(expNo_), shipmentsReceived_(0), shipmentsRefused_(0),
-    shipmentsPending_(0), capacity_(0)
+    shipmentsPending_(0), capacity_(10)
 {
     engine_->segmentIs(this);
 }
 
 void Segment::shipmentIs( Shipment::Ptr _newShipment )
 {
+	if (capacity_ == 0) {
+		shipmentQ_.push(_newShipment);
+		++shipmentsRefused_;
+	}
+
+
 	// must schedule a forwarding activity. Should be scheduled for a time
 	// based on segment length, speed, and number of carriers it has, per
 	// the assignment example. Shipment may consist of many packages
@@ -117,15 +125,63 @@ retry:
             }
 }
 
+void Segment::capacityIs(NumVehicles v) {
+	if (v == capacity_) return;
+	NumVehicles old(capacity_);
+	capacity_ = v;
+
+	if (capacity_ > 0) {
+		readyForShipmentIs(true);
+	}
+
+	if (capacity_ == old) return;
+retry:
+    U32 ver = notifiee_.version();
+    if(notifiees()) for(NotifieeIterator n=notifieeIter(); n.ptr(); ++n) try {
+                n->onCapacity(this);
+                if( ver != notifiee_.version() ) goto retry;
+            } catch(...) {
+                n->onNotificationException(NotifieeConst::segment__);
+            }
+}
+
 void Segment::readyForShipmentIs(bool b) {
 	if (b == false) return;
+	
+	Activity::Manager::Ptr manager = activityManagerInstance();
+	string name = "forward shipment #";
+	ostringstream oss;
+	oss << rand();
+	name.append(oss.str());
+	Activity::Ptr fwd = manager->activityNew(name);
 
-	Shipment::Ptr p = shipmentQ_.front();
-	Fleet::Ptr fleet = engine_->fleet();
-	NumPackages capacity(fleet->capacity(mode()));
-	if (p->load() > capacity) {
-		// split shipment
+	ShipmentQueue shipments;
+	NumVehicles currentVehicles(capacity());
+	NumPackages vehicleCapacity(engine_->fleet()->capacity(mode()).value());
+	NumPackages totalCapacity(
+		currentVehicles.value() * vehicleCapacity.value());
+
+	NumVehicles vehicles(0);
+
+	for (Shipment::Ptr s = shipmentQ_.front(); !shipmentQ_.empty() && 
+			currentVehicles > 0; ) {
+		while (s->load() > vehicleCapacity && currentVehicles > 0) {
+			s->loadIs(s->load().value() - vehicleCapacity.value());
+			currentVehicles = currentVehicles.value() - 1;
+		}
+		if (currentVehicles == 0) {
+			break;
+		} else {
+			currentVehicles = currentVehicles.value() - 1;
+		}
+
+		if (s->load() > 0)
+			shipmentQ_.pop();
 	}
+
+	//producer 1 produces at rate of once every 2 seconds
+	fwd->lastNotifieeIs(new ForwardShipmentReactor(manager,
+								fwd.ptr(), 0, this, shipments, vehicles)); 
 }
 
 Segment::NotifieeConst::~NotifieeConst()
