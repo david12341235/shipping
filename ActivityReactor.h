@@ -3,10 +3,11 @@
 
 #include "Engine.h"
 #include "Location.h"
+#include "Segment.h"
 #include "ActivityImpl.h"
     
 namespace Shipping {
-
+	
 class InjectShipmentReactor : public Activity::Notifiee {
  public:
  InjectShipmentReactor(Fwk::Ptr<Activity::Manager> manager, Activity*
@@ -21,6 +22,22 @@ class InjectShipmentReactor : public Activity::Notifiee {
     Activity::Ptr activity_;
     Fwk::Ptr<Activity::Manager> manager_;
 	Customer::Ptr source_;
+};      
+
+class ForwardShipmentReactor : public Activity::Notifiee {
+ public:
+ ForwardShipmentReactor(Fwk::Ptr<Activity::Manager> manager, Activity*
+			 activity, double rate, Segment::Ptr segment) 
+     : Notifiee(activity), rate_(rate), activity_(activity), 
+	 manager_(manager), segment_(segment) {}
+
+    void onStatus();
+
+ protected:
+    double rate_;
+    Activity::Ptr activity_;
+    Fwk::Ptr<Activity::Manager> manager_;
+	Segment::Ptr segment_;
 };      
 
 } // namespace

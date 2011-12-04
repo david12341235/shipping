@@ -2,6 +2,7 @@
 #define SEGMENT_H
 
 #include <string>
+#include <queue>
 #include "fwk/Ptr.h"
 #include "fwk/NamedInterface.h"
 #include "ShippingTypes.h"
@@ -120,8 +121,10 @@ public:
     NumPackages shipmentsPending() { return shipmentsPending_; }
     NumPackages capacity() { return capacity_; }
     void capacityIs( NumPackages _capacity ) { capacity_ = _capacity; }
-
+	
     virtual void shipmentIs( Shipment::Ptr _newShipment );
+
+    virtual void readyForShipmentIs(bool b);
 
     class NotifieeConst : public virtual Fwk::NamedInterface::NotifieeConst
     {
@@ -231,6 +234,8 @@ protected:
     Mode mode_;
     Fwk::Ptr<Engine> engine_;
     Fwk::Ptr<Location> source_;
+    typedef queue<Shipment::Ptr> ShipmentQueue;
+    ShipmentQueue shipmentQ_;
     Mile length_;
     Difficulty difficulty_;
     ExpVal expedite_;

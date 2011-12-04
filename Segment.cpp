@@ -117,6 +117,17 @@ retry:
             }
 }
 
+void Segment::readyForShipmentIs(bool b) {
+	if (b == false) return;
+
+	Shipment::Ptr p = shipmentQ_.front();
+	Fleet::Ptr fleet = engine_->fleet();
+	NumPackages capacity(fleet->capacity(mode()));
+	if (p->load() > capacity) {
+		// split shipment
+	}
+}
+
 Segment::NotifieeConst::~NotifieeConst()
 {
     if(notifier_ != NULL ) {

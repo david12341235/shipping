@@ -184,7 +184,6 @@ public:
 
 protected:
     typedef vector<Segment::PtrConst > SegmentList;
-    typedef map<string, queue<Shipment::Ptr> > ShipmentQueue;
     typedef map<string, Segment::Ptr > routeTable;
     mutable Location::Ptr fwkHmNext_;
     Location( const Location& );
@@ -195,7 +194,6 @@ protected:
     SegmentList segment_;
     NotifieeList notifiee_;
     void onZeroReferences();
-    ShipmentQueue shipmentQ_;
     routeTable nextSegment_;
 
 };

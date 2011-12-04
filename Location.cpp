@@ -33,14 +33,14 @@ void Location::shipmentIs( Shipment::Ptr _newShipment )
 	// or put it in its own queue for that segment if that segment
 	// is at capacity.
 	Segment::Ptr _segment = nextSegment_[ _newShipment->destination()];
-	if( _segment->capacity() < _segment->shipmentsPending() + _newShipment->load() )
+/*	if( _segment->capacity() < _segment->shipmentsPending() + _newShipment->load() )
 	{
 		shipmentQ_[ _segment->name() ].push( _newShipment );
 	}
 	else
-	{
+	{*/
 		_segment->shipmentIs( _newShipment );
-	}
+	//}
 }
 
 void
