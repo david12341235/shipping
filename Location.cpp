@@ -28,19 +28,10 @@ void Location::segmentDel( Segment::PtrConst _segment )
 
 void Location::shipmentIs( Shipment::Ptr _newShipment )
 {
-	// must determine which segment to send it too, and should
-	// either queue it onto that segment by calling shipmentIs
-	// or put it in its own queue for that segment if that segment
-	// is at capacity.
+	// figure out the next segment to forward the packet to and immediately
+	// queue it onto that segment
 	Segment::Ptr _segment = nextSegment_[ _newShipment->destination()];
-/*	if( _segment->capacity() < _segment->shipmentsPending() + _newShipment->load() )
-	{
-		shipmentQ_[ _segment->name() ].push( _newShipment );
-	}
-	else
-	{*/
-		_segment->shipmentIs( _newShipment );
-	//}
+	_segment->shipmentIs( _newShipment );
 }
 
 void
@@ -161,9 +152,36 @@ Customer::NotifieeConst::notifierIs(const Customer::PtrConst& _notifier)
 }
 
 void Customer::shipmentIs(Shipment::Ptr _newShipment) {
-    ++shipmentsReceived_;
-    totalLatency_ = totalLatency_.value() + _newShipment->timeTaken().value();
-    totalCost_ = totalCost_.value() + _newShipment->cost().value();
+	if( _newShipment->destination() == name() )
+	{
+		map<string, NumPackages>::iterator found = shipmentsPending_.find( _newShipment->destination() );
+		if( found == shipmentsPending_.end() )
+		{
+			shipmentsPending_.insert( pair<string, NumPackages>( _newShipment->destination(), _newShipment->load() ) );
+		}
+		else if( found->second.value() + _newShipment->load().value() == _newShipment->origSize().value() )
+		{
+			// one complete shipment received. update stats
+		    ++shipmentsReceived_;
+		    // this calculation is not correct. Maybe we should consider time stamping the
+		    // shipment, once for when the shipment is first injected and also whenever
+		    // it arrives at a new location
+		    //totalLatency_ = totalLatency_.value() + _newShipment->timeTaken().value();
+		    totalCost_ = totalCost_.value() + _newShipment->cost().value();
+		    shipmentsPending_.erase( found );
+		}
+		else
+		{
+			// update the count for this package
+			found->second = NumPackages( found->second.value() + _newShipment->load().value() );
+		}
+	}
+	else
+	{
+		// initial injection
+		Segment::Ptr _segment = nextSegment_[ _newShipment->destination()];
+		_segment->shipmentIs( _newShipment );
+	}
 }
 
 Customer::NotifieeConst::~NotifieeConst()

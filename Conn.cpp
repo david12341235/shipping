@@ -29,10 +29,9 @@ string Conn::PathUnit::output() const
     return s.str();
 }
 
-void Conn::algorithmIs( Algorithm _algorithm )
+void Conn::simulationStartedIs( bool _simulationStarted )
 {
-	algorithm_ = _algorithm;
-	if( _algorithm == dijkstra_ )
+	if( algorithm_ == dijkstra_ )
 	{
 		vector<Location::Ptr> nodeVector;
 		for( Engine::LocationIterator iter = engine_->locationIter(); iter.ptr(); ++iter )
@@ -125,7 +124,7 @@ void Conn::algorithmIs( Algorithm _algorithm )
 			}
 		}
 	}
-	else if( _algorithm == bfs_ )
+	else if( algorithm_ == bfs_ )
 	{
 		vector<Location::Ptr> nodeVector;
 		for( Engine::LocationIterator iter = engine_->locationIter(); iter.ptr(); ++iter )
