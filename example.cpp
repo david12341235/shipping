@@ -114,7 +114,7 @@ int main(int argc, char *argv[])
     conn->attributeIs("routing algorithm", "Dijkstra"); 
 
     // print the routing tables of each location
-    manager->printTables();
+    //manager->printTables();
     
 
     // -- Statistics queries

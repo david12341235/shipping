@@ -70,9 +70,11 @@ public:
     }
 
     static Type TypeInstance( Fwk::String );
+
     Type type() const {
         return type_;
     }
+
     virtual void typeIs( Type _type ) {
         type_ = _type;
     }

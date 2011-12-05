@@ -31,6 +31,7 @@ string Conn::PathUnit::output() const
 
 void Conn::simulationStartedIs( bool _simulationStarted )
 {
+	simulationStarted_ = _simulationStarted;
 	if( algorithm_ == dijkstra_ )
 	{
 		vector<Location::Ptr> nodeVector;
@@ -56,7 +57,10 @@ void Conn::simulationStartedIs( bool _simulationStarted )
 				else
 				{
 					tentativeDistance.insert( pair<string, Mile>(name, Mile::max() ) );
-					unvisited.push_back(*i);
+					if( (*i)->type() != Location::customer() )
+					{
+						unvisited.push_back(*i);
+					}
 				}
 				nextSegment[ name ] = NULL;
 			}
@@ -157,6 +161,10 @@ void Conn::simulationStartedIs( bool _simulationStarted )
 			{
 			    Location::Ptr cur = q.front();
 			    q.pop();
+			    if( cur->type() == Location::customer() )
+			    {
+			    	  continue;
+			    }
 			    segId = 1;
 			    segment = cur->segment( segId );
 			    while( segment != Segment::PtrConst(NULL) )
@@ -164,6 +172,7 @@ void Conn::simulationStartedIs( bool _simulationStarted )
 					if( segment->returnSegment() && segment->returnSegment()->source() && !visited[ segment->returnSegment()->source()->name() ] )
 					{
 						q.push( segment->returnSegment()->source() );
+
 						nextSegment[ segment->returnSegment()->source()->name() ] = nextSegment[ cur->name() ];
 						visited[ segment->returnSegment()->source()->name() ] = true;
 					}
