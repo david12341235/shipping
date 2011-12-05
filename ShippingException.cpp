@@ -1,31 +1,42 @@
 // Copyright (c) 2005-2006_2007 David R. Cheriton.  All rights reserved.
 
 #include "ShippingException.h"
-#include "fwk/Exception.h"
 #include <assert.h>
 #include <iostream>
 #include <signal.h>
 
-using namespace Shipping;
-
-Exception::Id Exception::IdInstance( U32 v ) {
+Shipping::Exception::Id Shipping::Exception::IdInstance( U32 v ) {
    switch( v ) {
     case noException_ : return noException_;
     case unknownException_ : return unknownException_;
-    default : throw Fwk::RangeException( "Fwk::Exception::Id" );
+    case nameExistsException_ : return nameExistsException_;
+    case unknownAttrException_ : return unknownAttrException_;
+    case rangeException_ : return rangeException_;
+    default : throw Shipping::RangeException( "Shipping::Exception::Id" );
    }
 }
 
-Exception::~Exception() {
+Shipping::Exception::~Exception() {
 }
 
-Exception::Id
-Exception::id() {
+
+Shipping::Exception::Id
+Shipping::Exception::id() {
    return unknownException_;
 }
 
-Exception::Id
-UnknownCommandException::id() {
-   return unknownCommandException_;
+Shipping::Exception::Id
+Shipping::NameExistsException::id() {
+   return nameExistsException_;
+}
+
+Shipping::Exception::Id
+Shipping::UnknownAttrException::id() {
+   return unknownAttrException_;
+}
+
+Shipping::Exception::Id
+Shipping::RangeException::id() {
+   return rangeException_;
 }
 

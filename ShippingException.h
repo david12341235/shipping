@@ -1,19 +1,31 @@
-#ifndef __EXCEPTIONS_H__
-#define __EXCEPTIONS_H__
+// Framework Exception types
+// Copyright(c) 1993-2006_2007, David R. Cheriton, all rights reserved.
 
-#include <string>
-#include "fwk/Types.h"
+#ifndef SHIPPING_EXCEPTION_H
+#define SHIPPING_EXCEPTION_H
+
+#include <string.h>
+#include "String.h"
+#include "fwk/Ptr.h"
+#include "fwk/PtrInterface.h"
+
+#ifdef _MSC_VER // Don't want to see strerror warnings, assume we won't get buffer overflowed
+  #pragma warning(disable: 4996)
+#endif
 
 namespace Shipping {
 
 class Exception {
-public:   
-    enum Id { // Enum for remote designation
+public:
+
+   enum Id { // Enum for remote designation
       noException_ = 0,
       unknownException_ = 1,
-      unknownCommandException_ = 2
+      nameExistsException_ = 2,
+      unknownAttrException_ = 3,
+      rangeException_ = 4,
    };
-    
+
    static Id IdInstance( U32 v );
 
    std::string what() const { return what_; }
@@ -28,12 +40,32 @@ private:
    std::string what_;
 };
 
-class UnknownCommandException : public Exception {
+std::ostream & operator<<( std::ostream &, Exception const & );
+
+class NameExistsException : public Exception {
 public:
-   UnknownCommandException( std::string what )  : Exception(what) {}
+   NameExistsException( std::string what )  : Exception(what) {}
    virtual Id id();
 };
 
-} // namespace Shipping
+class UnknownAttrException : public Exception {
+public:
+   UnknownAttrException( std::string what )  : Exception(what) {}
+   virtual Id id();
+};
 
-#endif
+class UnknownDelimiterException : public Exception {
+public:
+   UnknownDelimiterException( std::string what )  : Exception(what) {}
+   virtual Id id();
+};
+
+class RangeException : public Exception {
+public:
+   RangeException( std::string what )  : Exception(what) {}
+   virtual Id id();
+};
+
+}
+
+#endif /* EXCEPTION_H */
