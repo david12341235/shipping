@@ -79,10 +79,8 @@ namespace ActivityImpl {
         virtual void lastActivityIs(Activity::Ptr activity);
 	
 	//specific to this example
-	Queue::Ptr queue() const { return queue_; }
     protected:
         ManagerImpl() : now_(0) {
-	    queue_ = new Queue();
 	}
 	
         //Data members

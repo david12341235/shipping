@@ -14,7 +14,7 @@ void Segment::sourceIs( Fwk::Ptr<Location> _source )
 
 Segment::Segment( const string& _name, Mode _mode, Fwk::Ptr<Engine> _engine ) :
     NamedInterface(_name), mode_(_mode), engine_(_engine),
-    length_(0), difficulty_(1), expedite_(expNo_), shipmentsReceived_(0), shipmentsRefused_(0),
+    length_(100), difficulty_(1), expedite_(expNo_), shipmentsReceived_(0), shipmentsRefused_(0),
     shipmentsPending_(0), capacity_(10)
 {
     engine_->segmentIs(this);
@@ -22,8 +22,8 @@ Segment::Segment( const string& _name, Mode _mode, Fwk::Ptr<Engine> _engine ) :
 
 void Segment::shipmentIs( Shipment::Ptr _newShipment )
 {
+	shipmentQ_.push_back(_newShipment);
 	if (capacity_ == 0) {
-		shipmentQ_.push_back(_newShipment);
 		++shipmentsRefused_;
 	} else {
 		readyForShipmentIs(true);
@@ -148,7 +148,7 @@ retry:
 }
 
 void Segment::readyForShipmentIs(bool b) {
-	if (b == false) return;
+	if (b == false || shipmentQ_.empty()) return;
 	
 	Activity::Manager::Ptr manager = activityManagerInstance();
 	string name = "forward shipment #";
@@ -192,6 +192,9 @@ void Segment::readyForShipmentIs(bool b) {
 
 	fwd->lastNotifieeIs(new ForwardShipmentReactor(manager,
 								fwd.ptr(), 0, this, shipments, vehicles)); 
+	Time timeTaken = this->length().value() / engine_->fleet()->speed(mode()).value();
+	fwd->nextTimeIs(manager->now().value() + timeTaken.value());
+	fwd->statusIs(Activity::nextTimeScheduled);
 }
 
 Segment::NotifieeConst::~NotifieeConst()

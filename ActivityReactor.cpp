@@ -9,13 +9,18 @@ void InjectShipmentReactor::onStatus() {
     switch (activity_->status()) {
 	
     case Activity::executing:
-	//I am executing now
+		{
+		string name = "shipment #";
+		ostringstream oss;
+		oss << rand();
+		name.append(oss.str());
 		source_->shipmentIs(
 			Shipment::ShipmentNew(
-				"x", 
+				name, 
 				source_->name(), 
 				source_->destination(), 
 				source_->shipmentSize()));
+		}
 	break;
 	
     case Activity::free:
@@ -47,14 +52,15 @@ void ForwardShipmentReactor::onStatus() {
 	break;
 	
     case Activity::free:
-	//when done, automatically enqueue myself for next execution
+	//when done, automatically delete myself
+		manager_->activityDel(activity_->name());
 	break;
-
+	
     case Activity::nextTimeScheduled:
 	//add myself to be scheduled
 	manager_->lastActivityIs(activity_);
 	break;
-	
+
     default:
 	break;
     }

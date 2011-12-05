@@ -82,9 +82,6 @@ namespace ActivityImpl {
 	    
 	    now_ = nextToRun->nextTime();
 
-	    //print out size of queue
-	    cout << "size of queue: " << queue_->size() << endl;
-
 	    //run the minimum time activity and remove it from the queue
 	    scheduledActivities_.pop();
 

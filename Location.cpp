@@ -152,6 +152,7 @@ Customer::NotifieeConst::notifierIs(const Customer::PtrConst& _notifier)
 }
 
 void Customer::shipmentIs(Shipment::Ptr _newShipment) {
+	cout << this->name() << " received shipment: " << _newShipment->name() << endl;
 	if( _newShipment->destination() == name() )
 	{
 		map<string, NumPackages>::iterator found = shipmentsPending_.find( _newShipment->destination() );

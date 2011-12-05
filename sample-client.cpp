@@ -69,8 +69,8 @@ int main(int argc, char *argv[]) {
 	seg[1]->attributeIs("return segment", "ps1");
 
 	seg[2]->attributeIs("source", "customer2");
-	seg[2]->attributeIs("source", "port1");
-	seg[3]->attributeIs("return segment", "ps2");
+	seg[3]->attributeIs("source", "port1");
+	seg[3]->attributeIs("return segment", "bs1");
 
 	// And so on...
 
@@ -136,8 +136,9 @@ int main(int argc, char *argv[]) {
 	// Stop injection activity from the first two customers
     loc[0]->attributeIs("Transfer Rate", "0");
     loc[1]->attributeIs("Transfer Rate", "0");
-
+	
     activityManager->nowIs(24.0);
+    activityManager->nowIs(100.0);
 //  realTimeManager->realTimePassedIs(18.0);
 
 	/* Print simulation statistics for analysis 
@@ -157,7 +158,9 @@ int main(int argc, char *argv[]) {
   catch(...)
   {
   }
-
+  
+  cout << "simulation done!" << endl;
+  getchar();
   return 0;
 }
 
