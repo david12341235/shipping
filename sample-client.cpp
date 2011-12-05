@@ -127,9 +127,9 @@ int main(int argc, char *argv[]) {
     loc[0]->attributeIs("Shipment Size", "1");
     loc[0]->attributeIs("Destination", "customer2");
 
-    Activity::Manager::Ptr activityManager = activityManagerInstance();
+    Activity::RealTimeManager::Ptr activityManager = realTimeManagerInstance();
 	conn->attributeIs("simulation started", ""); 
-    activityManager->nowIs(6.0);
+    activityManager->realTimePassedIs(6.0);
 //    RealTimeManager::Ptr realTimeManager = realTimeManagerInstance();
 //  realTimeManager->realTimePassedIs(6.0);
 
@@ -137,8 +137,7 @@ int main(int argc, char *argv[]) {
     loc[0]->attributeIs("Transfer Rate", "0");
     loc[1]->attributeIs("Transfer Rate", "0");
 	
-    activityManager->nowIs(24.0);
-    activityManager->nowIs(100.0);
+    activityManager->realTimePassedIs(100.0);
 //  realTimeManager->realTimePassedIs(18.0);
 
 	/* Print simulation statistics for analysis 
@@ -150,6 +149,7 @@ int main(int argc, char *argv[]) {
 //
 //
 //	printSimStats();
+  cout << "simulation done!" << endl;
   }
   catch(Exception e)
   {
@@ -159,7 +159,6 @@ int main(int argc, char *argv[]) {
   {
   }
   
-  cout << "simulation done!" << endl;
   getchar();
   return 0;
 }

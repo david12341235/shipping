@@ -11,6 +11,7 @@
 using namespace std;
 
 Fwk::Ptr<Activity::Manager> activityManagerInstance();
+Fwk::Ptr<Activity::RealTimeManager> realTimeManagerInstance();
 
 namespace ActivityImpl {
     
@@ -63,7 +64,6 @@ namespace ActivityImpl {
     };
     
  class ManagerImpl : public Activity::Manager {
-	
     public:
         typedef Fwk::Ptr<ManagerImpl> Ptr;
 	
@@ -88,12 +88,32 @@ namespace ActivityImpl {
         map<string, Activity::Ptr> activities_; //pool of all activities
         Time now_;
 	
-	//specific to this example
-	Queue::Ptr queue_;
-	
         //singleton instance
         static Fwk::Ptr<Activity::Manager> activityInstance_;	
 	
+    };
+    
+ class RealTimeManagerImpl : virtual public Activity::RealTimeManager {
+    public:
+        typedef Fwk::Ptr<RealTimeManagerImpl> Ptr;
+	
+        virtual Activity::Ptr activityNew(const string& name);
+        virtual Activity::Ptr activity(const string& name) const;
+        virtual void activityDel(const string& name);
+	
+        virtual Time now() const;
+        virtual void nowIs(Time time);
+
+        virtual void lastActivityIs(Activity::Ptr activity);
+
+        static Fwk::Ptr<Activity::RealTimeManager> realTimeManagerInstance();
+        virtual void realTimePassedIs(Time time);
+	
+    protected:
+        RealTimeManagerImpl();
+        //singleton instance
+        static Fwk::Ptr<Activity::RealTimeManager> instance_;
+		Activity::Manager::Ptr managerImp_;
     };
     
 }

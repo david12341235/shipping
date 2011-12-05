@@ -34,6 +34,7 @@ class Activity : public Fwk::PtrInterface<Activity> {
     };
 
     class Manager;
+	class RealTimeManager;
 
     enum Status {
         free, waiting, ready, executing, nextTimeScheduled, deleted
@@ -78,8 +79,15 @@ public:
 
 
 private:
-    /* Up to you */
+};
 
+class Activity::RealTimeManager : public Activity::Manager {
+public:
+    typedef Fwk::Ptr<Activity::RealTimeManager> Ptr;
+
+    virtual void realTimePassedIs(Time time) = 0;
+
+private:
 };
 
 extern Fwk::Ptr<Activity::Manager> activityManagerInstance();
