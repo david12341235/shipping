@@ -2,6 +2,7 @@
 #include "Segment.h"
 #include "Activity.h"
 #include "ActivityReactor.h"
+#include "ShippingException.h"
 
 using namespace Shipping;
 
@@ -52,7 +53,7 @@ void TruckSegment::sourceIs( Fwk::Ptr<Location> _source )
         source_ = _source;
         source_->segmentIs( this );
     } else {
-        cerr << "Truck segment " << name() << " can't be connected to a plane or boat terminal." << endl;
+        throw LocationTypeException("Truck segment " + name() + " can't be connected to a plane or boat terminal.");
     }
     return;
 }
@@ -69,7 +70,7 @@ void BoatSegment::sourceIs( Fwk::Ptr<Location> _source )
         source_ = _source;
         source_->segmentIs( this );
     } else {
-        cerr << "Boat segment " << name() << " can't be connected to a truck or plane terminal." << endl;
+        throw LocationTypeException("Boat segment " + name() + " can't be connected to a plane or truck terminal.");
     }
     return;
 }
@@ -86,7 +87,7 @@ void PlaneSegment::sourceIs( Fwk::Ptr<Location> _source )
         source_ = _source;
         source_->segmentIs( this );
     } else {
-        cerr << "Plane segment " << name() << " can't be connected to a truck or boat terminal." << endl;
+        throw LocationTypeException("Plane segment " + name() + " can't be connected to a truck or boat terminal.");
     }
     return;
 }

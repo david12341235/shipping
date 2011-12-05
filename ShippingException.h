@@ -24,6 +24,8 @@ public:
       nameExistsException_ = 2,
       unknownAttrException_ = 3,
       rangeException_ = 4,
+      locationTypeException_ = 5,
+      unknownTypeException_ = 6,
    };
 
    static Id IdInstance( U32 v );
@@ -63,6 +65,18 @@ public:
 class RangeException : public Exception {
 public:
    RangeException( std::string what )  : Exception(what) {}
+   virtual Id id();
+};
+
+class LocationTypeException : public Exception {
+public:
+   LocationTypeException( std::string what )  : Exception(what) {}
+   virtual Id id();
+};
+
+class UnknownTypeException : public Exception {
+public:
+   UnknownTypeException( std::string what )  : Exception(what) {}
    virtual Id id();
 };
 

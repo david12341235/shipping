@@ -1,5 +1,3 @@
-// Copyright (c) 2005-2006_2007 David R. Cheriton.  All rights reserved.
-
 #include "ShippingException.h"
 #include <assert.h>
 #include <iostream>
@@ -12,6 +10,8 @@ Shipping::Exception::Id Shipping::Exception::IdInstance( U32 v ) {
     case nameExistsException_ : return nameExistsException_;
     case unknownAttrException_ : return unknownAttrException_;
     case rangeException_ : return rangeException_;
+    case locationTypeException_ : return locationTypeException_;
+    case unknownTypeException_ : return unknownTypeException_;
     default : throw Shipping::RangeException( "Shipping::Exception::Id" );
    }
 }
@@ -38,5 +38,15 @@ Shipping::UnknownAttrException::id() {
 Shipping::Exception::Id
 Shipping::RangeException::id() {
    return rangeException_;
+}
+
+Shipping::Exception::Id
+Shipping::LocationTypeException::id() {
+   return locationTypeException_;
+}
+
+Shipping::Exception::Id
+Shipping::UnknownTypeException::id() {
+   return unknownTypeException_;
 }
 

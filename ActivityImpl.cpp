@@ -1,6 +1,7 @@
 #include <iostream>
 #include <time.h>
 
+#include "ShippingException.h"
 #include "ActivityImpl.h"
 #ifdef WIN32
 #include <Windows.h>
@@ -32,7 +33,7 @@ namespace ActivityImpl {
 	Activity::Ptr activity = activities_[name];
 
 	if (activity != NULL) {
-	    cerr << "Activity already exists!" << endl;
+	    throw Shipping::NameExistsException("Activity already exists!");
 	    return NULL;
 	}
 	

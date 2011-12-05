@@ -6,6 +6,7 @@
 #include <string>
 #include "Instance.h"
 #include "Engine.h"
+#include "ShippingException.h"
 #include "fwk/ListRaw.h"
 #include "fwk/NamedInterface.h"
 
@@ -82,7 +83,7 @@ protected:
         try {
             location_ = Customer::CustomerNew(name, manager->engine());
         } catch (Fwk::NameInUseException ex) {
-            cerr << "ERROR: Name " << name << " already in use." << endl;
+		    throw Shipping::NameExistsException("Location name" + name + " already exists!");
         }
     }
 };
@@ -101,7 +102,7 @@ protected:
         try {
             location_ = Port::PortNew(name, manager->engine());
         } catch (Fwk::NameInUseException ex) {
-            cerr << "ERROR: Name " << name << " already in use." << endl;
+		    throw Shipping::NameExistsException("Location name" + name + " already exists!");
         }
     }
 };
@@ -120,7 +121,7 @@ protected:
         try {
             location_ = TruckLocation::TruckLocationNew(name, manager->engine());
         } catch (Fwk::NameInUseException ex) {
-            cerr << "ERROR: Name " << name << " already in use." << endl;
+		    throw Shipping::NameExistsException("Location name" + name + " already exists!");
         }
     }
 };
@@ -139,7 +140,7 @@ protected:
         try {
             location_ = BoatLocation::BoatLocationNew(name, manager->engine());
         } catch (Fwk::NameInUseException ex) {
-            cerr << "ERROR: Name " << name << " already in use." << endl;
+		    throw Shipping::NameExistsException("Location name" + name + " already exists!");
         }
     }
 };
@@ -158,7 +159,7 @@ protected:
         try {
             location_ = PlaneLocation::PlaneLocationNew(name, manager->engine());
         } catch (Fwk::NameInUseException ex) {
-            cerr << "ERROR: Name " << name << " already in use." << endl;
+		    throw Shipping::NameExistsException("Location name" + name + " already exists!");
         }
     }
 };
@@ -200,7 +201,7 @@ protected:
         try {
             segment_ = TruckSegment::TruckSegmentNew(name, manager->engine());
         } catch (Fwk::NameInUseException ex) {
-            cerr << "ERROR: Name " << name << " already in use." << endl;
+		    throw Shipping::NameExistsException("Location name" + name + " already exists!");
         }
     }
 };
@@ -220,7 +221,7 @@ private:
         try {
             segment_ = BoatSegment::BoatSegmentNew(name, manager->engine());
         } catch (Fwk::NameInUseException ex) {
-            cerr << "ERROR: Name " << name << " already in use." << endl;
+		    throw Shipping::NameExistsException("Location name" + name + " already exists!");
         }
     }
 
@@ -241,7 +242,7 @@ protected:
         try {
             segment_ = PlaneSegment::PlaneSegmentNew(name, manager->engine());
         } catch (Fwk::NameInUseException ex) {
-            cerr << "ERROR: Name " << name << " already in use." << endl;
+		    throw Shipping::NameExistsException("Location name" + name + " already exists!");
         }
     }
 };
@@ -271,8 +272,7 @@ public:
         } else if (sub.find("Truck") != string::npos) {
             m = Segment::truck_;
         } else {
-            cerr << "Error: unsupported Fleet attribute: " << name << endl;
-            return "";
+		    throw Shipping::UnknownAttrException("Unsupported attribute: " + name);
         }
 
         iss >> sub;
@@ -283,7 +283,7 @@ public:
         } else if (sub == "capacity") {
             return fleet_->capacity(m);
         } else {
-            cerr << "Error: unsupported Fleet attribute: " << name << endl;
+		    throw Shipping::UnknownAttrException("Unsupported attribute: " + name);
         }
         return "";
     };
@@ -301,8 +301,7 @@ public:
         } else if (sub.find("Truck") != string::npos) {
             m = Segment::truck();
         } else {
-            cerr << "Error: unsupported Fleet attribute: " << name << endl;
-            return;
+		    throw Shipping::UnknownAttrException("Unsupported attribute: " + name);
         }
 
         try {
@@ -321,8 +320,7 @@ public:
                 ss2 >> val;
                 fleet_->capacityIs(m, val);
             } else {
-                cerr << "Error: unsupported Fleet attribute: " << name << endl;
-                return;
+			    throw Shipping::UnknownAttrException("Unsupported attribute: " + name);
             }
         } catch (Fwk::RangeException ex) {
             cerr << "Error processing \"" << name << " = "
@@ -401,8 +399,7 @@ public:
         } else if (name == "expedite percentage") {
             return stats_->expedite();
         } else {
-            cerr << "Error: unsupported Stats attribute: " << name << endl;
-            return "unknown";
+		    throw Shipping::UnknownAttrException("Unsupported attribute: " + name);
         }
 
         stringstream ss;
@@ -494,7 +491,7 @@ Ptr<Instance> ManagerImpl::instanceNew(const string& name, const string& type)
         instance_[name] = t;
         return t;
     } else {
-        cerr << "Error: unsupported Shipping object: " << type << endl;
+        throw UnknownTypeException("Error: unsupported Shipping object: " + type);
     }
 
     return NULL;
@@ -556,14 +553,13 @@ string LocationRep::attribute(const string& name)
             if (p != NULL )
                 return p->name();
             else
-                cerr << "Error: Location has no segment # " << name << endl;
+                throw RangeException("Error: Location has no segment # " + name);
         } catch (...) {
-            cerr << "Error: Location has no segment # " << name << endl;
+            throw RangeException("Error: Location has no segment # " + name);
         }
         return "";
     } else {
-        cerr << "Error: unsupported Location attribute: " << name << endl;
-        return "";
+        throw RangeException("Error: Location has no segment # " + name);
     }
 }
 
@@ -656,7 +652,7 @@ string SegmentRep::attribute(const string& name)
     } else if( name == "expedite support" ) {
         return expVal( segment_->expedite() );
     } else {
-        cerr << "Error: unsupported segment attribute: " << name << endl;
+        throw UnknownAttrException("Unknown segment attribute: " + name);
     }
     return "";
 }
@@ -677,7 +673,7 @@ void SegmentRep::attributeIs(const string& name, const string& v)
     } else if( name == "expedite support" ) {
         segment_->expediteIs( Segment::ExpValInstance( v ) );
     } else {
-        cerr << "Error: unsupported segment attribute: " << name << endl;
+        throw UnknownAttrException("Unknown segment attribute: " + name);
     }
 }
 
@@ -811,6 +807,8 @@ void ConnRep::attributeIs(const string& name, const string& v)
 		}
 	} else if (name == "simulation started") { // temporary
 		conn_->simulationStartedIs(true);
+	} else {
+        throw UnknownAttrException("Unknown Conn attribute: " + name);
 	}
 }
 
