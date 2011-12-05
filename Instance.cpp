@@ -809,6 +809,8 @@ void ConnRep::attributeIs(const string& name, const string& v)
 		{
 			conn_->algorithmIs( Conn::bfs() );
 		}
+	} else if (name == "simulation started") { // temporary
+		conn_->simulationStartedIs(true);
 	}
 }
 
