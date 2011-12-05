@@ -2,8 +2,6 @@
 #define __ACTIVITY_REACTOR_H__
 
 #include "Engine.h"
-#include "Location.h"
-#include "Segment.h"
 #include "ActivityImpl.h"
     
 namespace Shipping {
@@ -29,13 +27,12 @@ class ForwardShipmentReactor : public Activity::Notifiee {
  ForwardShipmentReactor(Fwk::Ptr<Activity::Manager> manager, Activity*
 			 activity, double rate, Segment::Ptr segment, 
 			 ShipmentQueue shipments, NumVehicles numVehicles) 
-     : Notifiee(activity), rate_(rate), activity_(activity), 
+     : Notifiee(activity), activity_(activity), 
 	 manager_(manager), segment_(segment), numVehicles_(numVehicles), shipments_(shipments) {}
 
     void onStatus();
 
  protected:
-    double rate_;
     Activity::Ptr activity_;
     Fwk::Ptr<Activity::Manager> manager_;
 	Segment::Ptr segment_;

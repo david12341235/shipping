@@ -23,8 +23,10 @@ Segment::Segment( const string& _name, Mode _mode, Fwk::Ptr<Engine> _engine ) :
 void Segment::shipmentIs( Shipment::Ptr _newShipment )
 {
 	if (capacity_ == 0) {
-		shipmentQ_.push(_newShipment);
+		shipmentQ_.push_back(_newShipment);
 		++shipmentsRefused_;
+	} else {
+		readyForShipmentIs(true);
 	}
 
 
@@ -160,26 +162,34 @@ void Segment::readyForShipmentIs(bool b) {
 	NumPackages vehicleCapacity(engine_->fleet()->capacity(mode()).value());
 	NumPackages totalCapacity(
 		currentVehicles.value() * vehicleCapacity.value());
+	NumPackages packageCount(0);
 
 	NumVehicles vehicles(0);
 
 	for (Shipment::Ptr s = shipmentQ_.front(); !shipmentQ_.empty() && 
-			currentVehicles > 0; ) {
-		while (s->load() > vehicleCapacity && currentVehicles > 0) {
-			s->loadIs(s->load().value() - vehicleCapacity.value());
-			currentVehicles = currentVehicles.value() - 1;
+			packageCount < totalCapacity; ) {
+		NumPackages load = s->load();
+		if (load.value() > totalCapacity.value()) { // split shipment
+			s->loadIs(load.value() - totalCapacity.value());
+			load = totalCapacity;
+			shipmentQ_.push_front(
+				Shipment::ShipmentNew(
+					s->name(), 
+					s->source(), 
+					s->destination(), 
+					load));
 		}
-		if (currentVehicles == 0) {
-			break;
-		} else {
-			currentVehicles = currentVehicles.value() - 1;
-		}
-
-		if (s->load() > 0)
-			shipmentQ_.pop();
+		// now we're guaranteed to have at least one shipment at the
+		// front of the queue that we can send off
+		shipments.push_front(s);
+		shipmentQ_.pop_front();
+		packageCount = packageCount.value() + load.value();
+		totalCapacity = totalCapacity.value() - load.value();
 	}
 
-	//producer 1 produces at rate of once every 2 seconds
+	vehicles = packageCount.value() / vehicleCapacity.value() +
+		packageCount.value() % vehicleCapacity.value();
+
 	fwd->lastNotifieeIs(new ForwardShipmentReactor(manager,
 								fwd.ptr(), 0, this, shipments, vehicles)); 
 }

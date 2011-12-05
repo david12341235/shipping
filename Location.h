@@ -6,7 +6,7 @@
 #include "fwk/Ptr.h"
 #include "fwk/NamedInterface.h"
 #include "ShippingTypes.h"
-#include "Engine.h"
+#include "Segment.h"
 
 using namespace std;
 

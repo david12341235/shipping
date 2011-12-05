@@ -6,6 +6,8 @@
 #include <sstream>
 #include <iomanip>
 #include <queue>
+#include <string>
+#include "Nominal.h"
 
 namespace Shipping
 {
@@ -16,7 +18,7 @@ public:
     Mile( double num ) : Ordinal<Mile, double>(num) {
         if (num < 0.0) throw Fwk::RangeException("Miles must be non-negative.");
     }
-    operator string() const {
+    operator std::string() const {
         std::ostringstream oss;
         oss << std::fixed;
         oss << std::setprecision (2) << value();
@@ -24,7 +26,7 @@ public:
     }
 
     friend std::ostream& operator<< (std::ostream& out, Mile val) {
-        out << string(val);
+        out << std::string(val);
         return out;
     }
     friend std::istream& operator>> (std::istream& in, Mile& val) {
@@ -45,7 +47,7 @@ public:
     Difficulty( double num ) : Ordinal<Difficulty, double>(num) {
         if (num < 1.0 || num > 5.0) throw Fwk::RangeException("Difficulty must be between 1 and 5.");
     }
-    operator string() const {
+    operator std::string() const {
         std::ostringstream oss;
         oss << std::fixed;
         oss << std::setprecision (2) << value();
@@ -53,7 +55,7 @@ public:
     }
 
     friend std::ostream& operator<< (std::ostream& out, Difficulty val) {
-        out << string(val);
+        out << std::string(val);
         return out;
     }
     friend std::istream& operator>> (std::istream& in, Difficulty& val) {
@@ -70,14 +72,14 @@ public:
     NumPackages( unsigned int num ) : Ordinal<NumPackages, unsigned int>(num) {
         if (num < 0.0) throw Fwk::RangeException("NumPackages must be non-negative");
     }
-    operator string() const {
+    operator std::string() const {
         std::ostringstream oss;
         oss << value();
         return oss.str();
     }
 
     friend std::ostream& operator<< (std::ostream& out, NumPackages val) {
-        out << string(val);
+        out << std::string(val);
         return out;
     }
 
@@ -95,14 +97,14 @@ public:
     NumVehicles( unsigned int num ) : Ordinal<NumVehicles, unsigned int>(num) {
         if (num < 0.0) throw Fwk::RangeException("NumPackages must be non-negative");
     }
-    operator string() const {
+    operator std::string() const {
         std::ostringstream oss;
         oss << value();
         return oss.str();
     }
 
     friend std::ostream& operator<< (std::ostream& out, NumVehicles val) {
-        out << string(val);
+        out << std::string(val);
         return out;
     }
 
@@ -120,7 +122,7 @@ public:
     Percentage( double num ) : Ordinal<Percentage, double>(num) {
         if (num < 0.0 || num > 100.0) throw Fwk::RangeException("Percentage must between 0 and 100.");
     }
-    operator string() const {
+    operator std::string() const {
         std::ostringstream oss;
         oss << std::fixed;
         oss << std::setprecision (2) << value();
@@ -128,7 +130,7 @@ public:
     }
 
     friend std::ostream& operator<< (std::ostream& out, Percentage val) {
-        out << string(val);
+        out << std::string(val);
         return out;
     }
     friend std::istream& operator>> (std::istream& in, Percentage& val) {
@@ -145,7 +147,7 @@ public:
     Mph( double num ) : Ordinal<Mph, double>(num) {
         if (num < 0.0) throw Fwk::RangeException("Mph must be non-negative");
     }
-    operator string() const {
+    operator std::string() const {
         std::ostringstream oss;
         oss << std::fixed;
         oss << std::setprecision (2) << value();
@@ -153,7 +155,7 @@ public:
     }
 
     friend std::ostream& operator<< (std::ostream& out, Mph val) {
-        out << string(val);
+        out << std::string(val);
         return out;
     }
     friend std::istream& operator>> (std::istream& in, Mph& val) {
@@ -168,14 +170,14 @@ class ShipmentsPerDay : public Ordinal<ShipmentsPerDay, unsigned int>
 {
 public:
     ShipmentsPerDay( unsigned int num ) : Ordinal<ShipmentsPerDay, unsigned int>(num) {}
-    operator string() const {
+    operator std::string() const {
         std::ostringstream oss;
         oss << value();
         return oss.str();
     }
 
     friend std::ostream& operator<< (std::ostream& out, ShipmentsPerDay val) {
-        out << string(val);
+        out << std::string(val);
         return out;
     }
 
@@ -193,7 +195,7 @@ public:
     Dollar( double num ) : Ordinal<Dollar, double>(num) {
         if (num < 0.0) throw Fwk::RangeException("Dollar value must be non-negative");
     }
-    operator string() const {
+    operator std::string() const {
         std::ostringstream oss;
         oss << std::fixed;
         oss << std::setprecision (2) << value();
@@ -201,7 +203,7 @@ public:
     }
 
     friend std::ostream& operator<< (std::ostream& out, Dollar val) {
-        out << string(val);
+        out << std::string(val);
         return out;
     }
     friend std::istream& operator>> (std::istream& in, Dollar& val) {
@@ -222,7 +224,7 @@ public:
     Hour( double num ) : Ordinal<Hour, double>(num) {
         if (num < 0.0) throw Fwk::RangeException("Hour must be non-negative.");
     }
-    operator string() const {
+    operator std::string() const {
         std::ostringstream oss;
         oss << std::fixed;
         oss << std::setprecision (2) << value();
@@ -230,7 +232,7 @@ public:
     }
 
     friend std::ostream& operator<< (std::ostream& out, Hour val) {
-        out << string(val);
+        out << std::string(val);
         return out;
     }
     friend std::istream& operator>> (std::istream& in, Hour& val) {
@@ -251,17 +253,20 @@ public:
     typedef Fwk::Ptr<Shipment const> PtrConst;
     typedef Fwk::Ptr<Shipment> Ptr;
     
-    static Shipment::Ptr ShipmentNew(const string& name, string sourceName, string destinationName, NumPackages load) {
+    static Shipment::Ptr ShipmentNew(const std::string& name, 
+			const std::string& sourceName, 
+			const std::string& destinationName, 
+			NumPackages load) {
         Ptr m = new Shipment(name, sourceName, destinationName, load);
         m->referencesDec(1);
         return m;
     }
             
-    string source() { return source_; }
-    void sourceIs(const string& source) { source_ = source; }
+    std::string source() { return source_; }
+    void sourceIs(const std::string& source) { source_ = source; }
 
-    string destination() { return destination_; }
-    void destinationIs(const string& destination) { destination_ = destination; }
+    std::string destination() { return destination_; }
+    void destinationIs(const std::string& destination) { destination_ = destination; }
 
     NumPackages load() { return load_; }
     void loadIs(NumPackages load) { load_ = load; }
@@ -275,20 +280,21 @@ public:
     void timeTakenIs(Hour time) { time_ = time; }
 
 protected:
-    Shipment(const string& name, string sourceName, string destinationName, NumPackages origSize) :
+    Shipment(const std::string& name, const std::string& sourceName, 
+		const std::string& destinationName, NumPackages origSize) :
             Fwk::NamedInterface(name), origSize_(origSize), load_(origSize), source_(sourceName), 
             destination_(destinationName), cost_(0), time_(0) {}
     Shipment(const Shipment&);
 
     NumPackages origSize_;
     NumPackages load_;
-    string source_;
-    string destination_;
+    std::string source_;
+    std::string destination_;
     Dollar cost_;
     Hour time_;
 };
 
-typedef std::queue<Shipment::Ptr> ShipmentQueue;
+typedef std::deque<Shipment::Ptr> ShipmentQueue;
 
 } /* end namespace */
 

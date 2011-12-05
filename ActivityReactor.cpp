@@ -19,7 +19,6 @@ void InjectShipmentReactor::onStatus() {
 	break;
 	
     case Activity::free:
-	//when done, automatically enqueue myself for next execution
 	activity_->nextTimeIs(Time(activity_->nextTime().value() + rate_));
 	activity_->statusIs(Activity::nextTimeScheduled);
 	break;
@@ -41,7 +40,7 @@ void ForwardShipmentReactor::onStatus() {
 	
     case Activity::executing:
 	//I am executing now
-		for (Shipment::Ptr p = shipments_.front(); shipments_.size() > 0; shipments_.pop())
+		for (Shipment::Ptr p = shipments_.front(); shipments_.size() > 0; shipments_.pop_front())
 			segment_->returnSegment()->source()->shipmentIs(p);
 
 		segment_->capacityIs(segment_->capacity().value() + numVehicles_.value());
@@ -49,8 +48,6 @@ void ForwardShipmentReactor::onStatus() {
 	
     case Activity::free:
 	//when done, automatically enqueue myself for next execution
-	activity_->nextTimeIs(Time(activity_->nextTime().value() + rate_));
-	activity_->statusIs(Activity::nextTimeScheduled);
 	break;
 
     case Activity::nextTimeScheduled:

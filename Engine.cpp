@@ -1,4 +1,5 @@
 #include "Engine.h"
+#include "LocationSegmentReactor.h"
 
 using namespace Shipping;
 
