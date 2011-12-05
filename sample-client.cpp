@@ -90,7 +90,7 @@ int main(int argc, char *argv[]) {
 	 */
 	Ptr<Instance> conn = manager->instanceNew("myConn", "Conn");
 	conn->attributeIs("routing algorithm", "Dijkstra"); 
-	manager->printTables();
+	//manager->printTables();
 	// conn->attributeIs("routing algorithm", "Some very cool algorithm worthy of a Turing award");
 
 	/* Switching between real-time and virtual-time managers
