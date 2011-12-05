@@ -323,8 +323,8 @@ public:
 			    throw Shipping::UnknownAttrException("Unsupported attribute: " + name);
             }
         } catch (Fwk::RangeException ex) {
-            cerr << "Error processing \"" << name << " = "
-                 << v << "\": " << ex.what() << endl;
+            throw RangeException("Error processing \"" + name + " = "
+                 + v + "\": " + ex.what());
         }
     };
 
@@ -429,8 +429,7 @@ Ptr<Instance> ManagerImpl::instanceNew(const string& name, const string& type)
     // Return null if an instance for this name already exists
 
     if( instance_.find( name ) != instance_.end() ) {
-        cerr << "Error: name in use: " << name << endl;
-        return NULL;
+        throw NameExistsException("Error: name in use: " + name);
     }
 
     static StatsRep::Ptr stats;
