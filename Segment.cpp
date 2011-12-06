@@ -182,7 +182,7 @@ void Segment::readyForShipmentIs(bool b) {
 		}
 		// now we're guaranteed to have at least one shipment at the
 		// front of the queue that we can send off
-		shipments.push_front(s);
+		shipments.push_front(shipmentQ_.front());
 		shipmentQ_.pop_front();
 		packageCount = packageCount.value() + load.value();
 		totalCapacity = totalCapacity.value() - load.value();

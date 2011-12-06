@@ -23,3 +23,5 @@ Notes for assignment3:
 default segment length is now 100 miles, and fleet speed is 60mph.
 once transfer rate, shipment size, and destination are set for a Customer, shipments get injected once per day.
 activity manager scales time down to 0.1 second per hour, real time manager advances clock 1 hour per (real-time) 1/10 second.
+routing tables get initiated upon indicating to the Conn object that the simulation has started. is this ideal?
+expedited segments?
