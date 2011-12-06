@@ -5,7 +5,7 @@
 #define SHIPPING_EXCEPTION_H
 
 #include <string.h>
-#include "String.h"
+#include "fwk/String.h"
 #include "fwk/Ptr.h"
 #include "fwk/PtrInterface.h"
 

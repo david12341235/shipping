@@ -19,7 +19,7 @@ void InjectShipmentReactor::onStatus() {
 				name, 
 				source_->name(), 
 				source_->destination(), 
-				source_->shipmentSize()));
+				source_->shipmentSize(), manager_->now()));
 		}
 	break;
 	

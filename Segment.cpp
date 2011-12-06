@@ -16,7 +16,7 @@ void Segment::sourceIs( Fwk::Ptr<Location> _source )
 Segment::Segment( const string& _name, Mode _mode, Fwk::Ptr<Engine> _engine ) :
     NamedInterface(_name), mode_(_mode), engine_(_engine),
     length_(100), difficulty_(1), expedite_(expNo_), shipmentsReceived_(0), shipmentsRefused_(0),
-    shipmentsPending_(0), capacity_(10)
+    shipmentsFragmented_(0), capacity_(10)
 {
     engine_->segmentIs(this);
 }
@@ -24,6 +24,7 @@ Segment::Segment( const string& _name, Mode _mode, Fwk::Ptr<Engine> _engine ) :
 void Segment::shipmentIs( Shipment::Ptr _newShipment )
 {
 	shipmentQ_.push_back(_newShipment);
+	++shipmentsReceived_;
 	if (capacity_ == 0) {
 		++shipmentsRefused_;
 	} else {
@@ -167,18 +168,13 @@ void Segment::readyForShipmentIs(bool b) {
 
 	NumVehicles vehicles(0);
 
-	for (Shipment::Ptr s = shipmentQ_.front(); !shipmentQ_.empty() && 
-			packageCount < totalCapacity; ) {
+	for (Shipment::Ptr s = shipmentQ_.front(); !shipmentQ_.empty() && packageCount < totalCapacity; ) {
 		NumPackages load = s->load();
 		if (load.value() > totalCapacity.value()) { // split shipment
+			++shipmentsFragmented_;
 			s->loadIs(load.value() - totalCapacity.value());
 			load = totalCapacity;
-			shipmentQ_.push_front(
-				Shipment::ShipmentNew(
-					s->name(), 
-					s->source(), 
-					s->destination(), 
-					load));
+			shipmentQ_.push_front( Shipment::ShipmentNew( s->name(), s->source(), s->destination(), load, s->timeShipped() ));
 		}
 		// now we're guaranteed to have at least one shipment at the
 		// front of the queue that we can send off

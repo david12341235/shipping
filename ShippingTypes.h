@@ -8,6 +8,7 @@
 #include <queue>
 #include <string>
 #include "Nominal.h"
+#include "Activity.h"
 
 namespace Shipping
 {
@@ -256,8 +257,8 @@ public:
     static Shipment::Ptr ShipmentNew(const std::string& name, 
 			const std::string& sourceName, 
 			const std::string& destinationName, 
-			NumPackages load) {
-        Ptr m = new Shipment(name, sourceName, destinationName, load);
+			NumPackages load, Time timeShipped) {
+        Ptr m = new Shipment(name, sourceName, destinationName, load, timeShipped);
         m->referencesDec(1);
         return m;
     }
@@ -276,14 +277,13 @@ public:
     Dollar cost() { return cost_; }
     void costIs(Dollar cost) { cost_ = cost; }
 
-    Hour timeTaken() { return time_; }
-    void timeTakenIs(Hour time) { time_ = time; }
+    Time timeShipped() { return timeShipped_; }
 
 protected:
     Shipment(const std::string& name, const std::string& sourceName, 
-		const std::string& destinationName, NumPackages origSize) :
+		const std::string& destinationName, NumPackages origSize, Time timeShipped ) :
             Fwk::NamedInterface(name), origSize_(origSize), load_(origSize), source_(sourceName), 
-            destination_(destinationName), cost_(0), time_(0) {}
+            destination_(destinationName), cost_(0), timeShipped_( timeShipped ) {}
     Shipment(const Shipment&);
 
     NumPackages origSize_;
@@ -291,7 +291,7 @@ protected:
     std::string source_;
     std::string destination_;
     Dollar cost_;
-    Hour time_;
+    Time timeShipped_;
 };
 
 typedef std::deque<Shipment::Ptr> ShipmentQueue;

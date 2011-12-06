@@ -75,8 +75,8 @@ public:
     virtual void lastActivityIs(Activity::Ptr) = 0;
 
     virtual Time now() const = 0;
-    virtual void nowIs(Time) = 0;
 
+    virtual void nowIs(Time) = 0;
 
 private:
 };

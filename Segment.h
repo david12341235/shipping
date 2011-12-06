@@ -118,7 +118,7 @@ public:
     void expediteIs( ExpVal e );
     NumPackages shipmentsReceived() { return shipmentsReceived_; }
     NumPackages shipmentsRefused() { return shipmentsRefused_; }
-    NumPackages shipmentsPending() { return shipmentsPending_; }
+    NumPackages shipmentsFragmented() { return shipmentsFragmented_; }
     NumVehicles capacity() { return capacity_; }
     void capacityIs( NumVehicles _capacity );
 	
@@ -245,7 +245,7 @@ protected:
     NotifieeList notifiee_;
     NumPackages shipmentsReceived_;
     NumPackages shipmentsRefused_;
-    NumPackages shipmentsPending_;
+    NumPackages shipmentsFragmented_;
     NumVehicles capacity_;
 };
 

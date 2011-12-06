@@ -167,7 +167,7 @@ void Customer::shipmentIs(Shipment::Ptr _newShipment) {
 		    // this calculation is not correct. Maybe we should consider time stamping the
 		    // shipment, once for when the shipment is first injected and also whenever
 		    // it arrives at a new location
-		    //totalLatency_ = totalLatency_.value() + _newShipment->timeTaken().value();
+		    totalLatency_ = totalLatency_.value() + _newShipment->timeShipped().value();
 		    totalCost_ = totalCost_.value() + _newShipment->cost().value();
 		    shipmentsPending_.erase( found );
 		}
