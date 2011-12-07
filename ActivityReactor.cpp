@@ -68,3 +68,31 @@ void ForwardShipmentReactor::onStatus() {
     }
 
 }
+
+void ScheduledAttributeReactor::onStatus() {
+    ActivityImpl::ManagerImpl::Ptr managerImpl = Fwk::ptr_cast<ActivityImpl::ManagerImpl>(manager_);
+    switch (activity_->status()) {
+	
+    case Activity::executing:
+	//I am executing now
+		cout << "setting attribute: " << attributeName_ << " = " 
+			<< attributeValue_ << " time: " << manager_->now().value() << endl;
+	instance_->attributeIs(attributeName_, attributeValue_);
+	break;
+	
+    case Activity::free:
+	if (manager_->activity(this->activity_->name()) != NULL) {
+		activity_->nextTimeIs(Time(activity_->nextTime().value() + 24));
+		activity_->statusIs(Activity::nextTimeScheduled);
+	}
+	break;
+	
+    case Activity::nextTimeScheduled:
+	//add myself to be scheduled
+	manager_->lastActivityIs(activity_);
+	break;
+
+    default:
+	break;
+    }
+}

@@ -26,3 +26,9 @@ Notes for assignment3:
 -routing tables get initiated upon indicating to the Conn object that the simulation has started. is this ideal?
 -expedited segments?
 -when a Customer's attributes change such that it no longer injects shipments, shipments that were already scheduled will still be sent out.
+-to specify fleet attributes for two periods of time, such as one from 8pm to 8am, and one from 8am to 8pm, it's necessary to set the fleet's "AtTime" attribute as follows:
+
+	fleet->attributeIs("AtTime", "8 Plane cost 2");
+	fleet->attributeIs("AtTime", "20 Plane cost 1");
+
+Where 8 and 20 refer to 8am and 8pm respectively. More generally, scheduled fleet attributes changes can be set with fleet->attributeIs("AtTime", "t [attribute] [value]");
