@@ -65,6 +65,7 @@ public:
     U32 boatSegment() const {
         return boatSegment_;
     }
+
     void boatSegmentIs(U32 v) {
         boatSegment_ = v;
     }
@@ -84,6 +85,7 @@ public:
     U32 expediteNum() const {
         return expedite_;
     };
+
     void expediteNumIs(U32 v) {
         expedite_ = v;
     }
@@ -92,9 +94,22 @@ public:
         return boatSegment_ + truckSegment_ + planeSegment_;
     };
 
+    Dollar totalCost(string name);
+
+	NumPackages received(string name);
+
+	Hour latency(string name);
+
+	NumPackages forwarded(string name);
+
+	NumPackages refused(string name);
+
+	NumPackages fragmented(string name);
+
     Fwk::Ptr<Engine> engine() const {
         return engine_;
     };
+
     void engineIs(Fwk::Ptr<Engine> e) {
         engine_ = e;
     };
