@@ -128,7 +128,7 @@ public:
 			Activity::Ptr ship = manager->activityNew(c->name().append(" shipment"));
     
 			ship->lastNotifieeIs(new InjectShipmentReactor(manager,
-					ship.ptr(), 24.0, c));		
+					ship.ptr(), 24.0, c));
 		    ship->statusIs(Activity::nextTimeScheduled);
 		} else {
 			manager->activityDel(c->name().append(" shipment"));

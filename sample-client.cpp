@@ -77,6 +77,8 @@ int main(int argc, char *argv[]) {
     Ptr<Instance> fleet = manager->instanceNew("Fleet", "Fleet");
     fleet->attributeIs("Truck speed", "1");
     fleet->attributeIs("Truck capacity", "1");
+	fleet->attributeIs("AtTime", "3 Plane cost 2");
+	fleet->attributeIs("AtTime", "15 Plane cost 1");
 
 	// Set some segment (shipment) capacities
 	//seg[4]->attributeIs("Capacity", "1");
