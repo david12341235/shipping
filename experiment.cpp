@@ -823,8 +823,8 @@ void funnel( )
 	    Ptr<Instance> stats = manager->instanceNew("myStats", "Stats");
 
 	    Ptr<Instance> fleet = manager->instanceNew("Fleet", "Fleet");
-	    fleet->attributeIs("Truck speed", "1");
-	    fleet->attributeIs("Truck capacity", "1");
+	    fleet->attributeIs("Truck speed", "60");
+	    fleet->attributeIs("Truck capacity", "50");
 
 		Ptr<Instance> conn = manager->instanceNew("myConn", "Conn");
 		conn->attributeIs("routing algorithm", "Dijkstra"); 
