@@ -1,7 +1,7 @@
 CPPFLAGS = -I.
 CXXFLAGS = -Wall -g
 
-OBJECTS = Instance.o Engine.o Segment.o Location.o Conn.o ActivityImpl.o ActivityReactor.o ShippingException.o
+OBJECTS = Instance.o Engine.o Segment.o Location.o Conn.o ActivityImpl.o ActivityReactor.o ShippingException.o Stats.o
 LIBS = fwk/BaseCollection.o fwk/BaseNotifiee.o fwk/Exception.o
 
 default:	test1 test2 example experiment
@@ -21,7 +21,7 @@ experiment:	experiment.o $(OBJECTS) $(LIBS)
 clean:
 	rm -f example $(OBJECTS) *~
 
-Instance.o: Instance.cpp Instance.h fwk/PtrInterface.h fwk/Ptr.h Engine.h
+Instance.o: Instance.cpp Instance.h fwk/PtrInterface.h fwk/Ptr.h Engine.h Stats.h
 test1.o: test1.cpp Instance.h fwk/PtrInterface.h fwk/Ptr.h
 example.o: example.cpp Instance.h fwk/PtrInterface.h fwk/Ptr.h
 Engine.o: Engine.cpp Engine.h Instance.h fwk/PtrInterface.h fwk/Ptr.h fwk/NamedInterface.h
@@ -31,3 +31,4 @@ Conn.o: Conn.cpp Conn.h Instance.h fwk/PtrInterface.h fwk/Ptr.h fwk/NamedInterfa
 ActivityImpl.o: ActivityImpl.cpp ActivityImpl.h Instance.h fwk/PtrInterface.h fwk/Ptr.h fwk/NamedInterface.h
 ActivityReactor.o: ActivityReactor.cpp ActivityReactor.h Activity.h Instance.h fwk/PtrInterface.h fwk/Ptr.h fwk/NamedInterface.h
 ShippingException.o: ShippingException.cpp ShippingException.h fwk/Types.h
+Stats.o: Stats.cpp Stats.h Instance.h fwk/PtrInterface.h fwk/Ptr.h fwk/NamedInterface.h

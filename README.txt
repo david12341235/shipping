@@ -20,8 +20,15 @@ In general, when a query or input is invalid, the default value returned is the 
 
 Notes for assignment3:
 
-default segment length is now 100 miles, and fleet speed is 60mph.
-once transfer rate, shipment size, and destination are set for a Customer, shipments get injected once per day.
-activity manager scales time down to 0.1 second per hour, real time manager advances clock 1 hour per (real-time) 1/10 second.
-routing tables get initiated upon indicating to the Conn object that the simulation has started. is this ideal?
-expedited segments?
+-default segment length is now 100 miles, and fleet speed is 60mph.
+-once transfer rate, shipment size, and destination are set for a Customer, shipments get injected once per day.
+-activity manager scales time down to 0.1 second per hour, real time manager advances clock 1 hour per (real-time) 1/10 second.
+-routing tables get initiated upon indicating to the Conn object that the simulation has started. is this ideal?
+-expedited segments?
+-when a Customer's attributes change such that it no longer injects shipments, shipments that were already scheduled will still be sent out.
+-to specify fleet attributes for two periods of time, such as one from 8pm to 8am, and one from 8am to 8pm, it's necessary to set the fleet's "AtTime" attribute as follows:
+
+	fleet->attributeIs("AtTime", "8 Plane cost 2");
+	fleet->attributeIs("AtTime", "20 Plane cost 1");
+
+Where 8 and 20 refer to 8am and 8pm respectively. More generally, scheduled fleet attributes changes can be set with fleet->attributeIs("AtTime", "t [attribute] [value]");

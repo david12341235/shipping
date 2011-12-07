@@ -291,33 +291,59 @@ public:
     // Instance method
     void attributeIs(const string& name, const string& v) {
         stringstream ss(name);
-        string sub;
-        ss >> sub;
+        string first, second;
+        ss >> first;
         Segment::Mode m;
-        if (sub.find("Boat") != string::npos) {
+		bool timed = false;
+		string value(v);
+
+        if (first.find("AtTime") != string::npos) {
+            double time;
+            stringstream ss2(v);
+            ss2 >> time;
+			time = time - static_cast<int>(time/24.0)*24.0;
+			// still want to check the validity of the values below, but don't 
+			// actually set the attribute until the activity is triggered
+			ss2 >> first >> second >> value;
+			timed = true;
+
+			Activity::RealTimeManager::Ptr activityManager = realTimeManagerInstance();
+			Activity::Ptr attr = activityManager->activityNew("timedAttribute:" + name + " " + v);
+			
+			attr->lastNotifieeIs(new ScheduledAttributeReactor(activityManager, attr.ptr(),
+				this, first + " " + second, value));
+			attr->nextTimeIs(time);
+		    attr->statusIs(Activity::nextTimeScheduled);
+		} else {
+			ss >> second;
+		}
+		
+		if (first.find("Boat") != string::npos) {
             m = Segment::boat();
-        } else if (sub.find("Plane") != string::npos) {
+        } else if (first.find("Plane") != string::npos) {
             m = Segment::plane();
-        } else if (sub.find("Truck") != string::npos) {
+        } else if (first.find("Truck") != string::npos) {
             m = Segment::truck();
         } else {
 		    throw Shipping::UnknownAttrException("Unsupported attribute: " + name);
         }
 
         try {
-            ss >> sub;
-            stringstream ss2(v);
-            if (sub == "speed") {
+            stringstream ss2(value);
+            if (second == "speed") {
                 double val;
                 ss2 >> val;
+				if (timed) return;
                 fleet_->speedIs(m, val);
-            } else if (sub == "cost") {
+            } else if (second == "cost") {
                 double val;
                 ss2 >> val;
+				if (timed) return;
                 fleet_->costIs(m, val);
-            } else if (sub == "capacity") {
+            } else if (second == "capacity") {
                 unsigned int val;
                 ss2 >> val;
+				if (timed) return;
                 fleet_->capacityIs(m, val);
             } else {
 			    throw Shipping::UnknownAttrException("Unsupported attribute: " + name);
@@ -380,6 +406,8 @@ public:
     // Instance method
     string attribute(const string& name) {
         U32 val;
+        stringstream ss;
+
         if (name == "Customer") {
             val = stats_->customer();
         } else if (name == "Port") {
@@ -398,11 +426,57 @@ public:
             val = stats_->planeSegment();
         } else if (name == "expedite percentage") {
             return stats_->expedite();
-        } else {
+        }
+	   
+	   else
+	   {
+	   	char* q = new char[name.length()+1];
+		strcpy(q, name.c_str());
+		char* tok = strtok( q, " " );
+		if( !tok )
+		{
 		    throw Shipping::UnknownAttrException("Unsupported attribute: " + name);
+		}
+
+		string first( tok );
+		tok = strtok( NULL, " " );
+		if( !tok )
+		{
+		    throw Shipping::UnknownAttrException("Unsupported attribute: " + name);
+		}
+
+		string second( tok );
+		try {
+			if( first == "cost") {
+				ss << stats_->totalCost( second );
+				return ss.str();
+			} else if ( first == "received" ) {
+				ss << stats_->received( second );
+				return ss.str();
+			} else if ( first == "latency" ) {
+				ss << stats_->latency( second );
+				return ss.str();
+			} else if ( first == "forwarded" ) {
+				ss << stats_->forwarded( second );
+				return ss.str();
+			} else if ( first == "refused" ) {
+				ss << stats_->refused( second );
+				return ss.str();
+			} else if ( first == "fragmented" ) {
+				ss << stats_->fragmented( second );
+				return ss.str();
+			} else
+			    throw Shipping::UnknownAttrException("Unsupported attribute: " + name);
+		}
+		catch(Fwk::UnknownAttrException ex) {
+			throw Shipping::LocationTypeException( name + " is not a Customer location!" );
+		}
+		catch(Fwk::EntityNotFoundException) {
+			throw Shipping::NameExistsException( name + " cannot be found among the segments");
+		}
+
         }
 
-        stringstream ss;
         ss << val;
         return ss.str();
     };

@@ -40,5 +40,24 @@ class ForwardShipmentReactor : public Activity::Notifiee {
 	ShipmentQueue shipments_;
 };      
 
+class ScheduledAttributeReactor : public Activity::Notifiee {
+ public:
+ ScheduledAttributeReactor(Fwk::Ptr<Activity::Manager> manager, Activity*
+			 activity, Fwk::Ptr<Instance> instance,
+			 string attributeName, string attributeValue) 
+     : Notifiee(activity), activity_(activity), 
+	 manager_(manager), instance_(instance),
+	 attributeName_(attributeName), attributeValue_(attributeValue) {}
+
+    void onStatus();
+
+ protected:
+    Activity::Ptr activity_;
+    Fwk::Ptr<Activity::Manager> manager_;
+	Fwk::Ptr<Instance> instance_;
+	string attributeName_;
+	string attributeValue_;
+};      
+
 } // namespace
 #endif
