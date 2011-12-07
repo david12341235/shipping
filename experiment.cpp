@@ -832,7 +832,7 @@ void funnel( )
         vector< Ptr<Instance> >::iterator i;
         for (i = source.begin(); i != source.end(); i++) {
             (*i)->attributeIs("Transfer Rate", "1");
-            (*i)->attributeIs("Shipment Size", "100");
+            (*i)->attributeIs("Shipment Size", "1000");
             (*i)->attributeIs("Destination", "CustomerL1");
         }
 
@@ -844,9 +844,9 @@ void funnel( )
 	    cout << "received CustomerL1: " << stats->attribute("received CustomerL1") << endl;
 	    cout << "latency CustomerL1: " << stats->attribute("latency CustomerL1") << endl;
 
-	    cout << "forwarded tsA1: " << stats->attribute("forwarded tsA1") << endl;
-	    cout << "refused tsA1: "  << stats->attribute("refused tsA1") << endl;
-	    cout << "fragmented tsA1: "  << stats->attribute("fragmented tsA1") << endl; 
+	    cout << "forwarded tsL1: " << stats->attribute("forwarded tsL1") << endl;
+	    cout << "refused tsL1: "  << stats->attribute("refused tsL1") << endl;
+	    cout << "fragmented tsL1: "  << stats->attribute("fragmented tsL1") << endl; 
 
   }
   catch(Exception e)

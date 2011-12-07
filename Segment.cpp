@@ -190,6 +190,7 @@ void Segment::readyForShipmentIs(bool b) {
 
 	vehicles = packageCount.value() / vehicleCapacity.value() +
 		packageCount.value() % vehicleCapacity.value();
+    capacity_ = capacity_.value() - vehicles.value();
 
 	fwd->lastNotifieeIs(new ForwardShipmentReactor(manager,
 								fwd.ptr(), 0, this, shipments, vehicles)); 
