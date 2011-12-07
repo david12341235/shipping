@@ -161,12 +161,14 @@ void Segment::readyForShipmentIs(bool b) {
 
 	ShipmentQueue shipments;
 	NumVehicles currentVehicles(capacity());
-	NumPackages vehicleCapacity(engine_->fleet()->capacity(mode()).value());
+    Fleet::Ptr fleet = engine_->fleet();
+	NumPackages vehicleCapacity(fleet->capacity(mode()).value());
 	NumPackages totalCapacity(
 		currentVehicles.value() * vehicleCapacity.value());
 	NumPackages packageCount(0);
 
 	NumVehicles vehicles(0);
+    Dollar costPerTrip = this->length().value()*this->difficulty().value()*fleet->speed(mode()).value();
 
 	for (Shipment::Ptr s = shipmentQ_.front(); !shipmentQ_.empty() && packageCount < totalCapacity; ) {
 		NumPackages load = s->load();
@@ -178,7 +180,9 @@ void Segment::readyForShipmentIs(bool b) {
 		}
 		// now we're guaranteed to have at least one shipment at the
 		// front of the queue that we can send off
-		shipments.push_front(shipmentQ_.front());
+        Shipment::Ptr shipment = shipmentQ_.front();
+        shipment->costIs(shipment->cost().value() + costPerTrip.value());
+		shipments.push_front(shipment);
 		shipmentQ_.pop_front();
 		packageCount = packageCount.value() + load.value();
 		totalCapacity = totalCapacity.value() - load.value();
@@ -189,7 +193,7 @@ void Segment::readyForShipmentIs(bool b) {
 
 	fwd->lastNotifieeIs(new ForwardShipmentReactor(manager,
 								fwd.ptr(), 0, this, shipments, vehicles)); 
-	Time timeTaken = this->length().value() / engine_->fleet()->speed(mode()).value();
+	Time timeTaken = this->length().value() / fleet->speed(mode()).value();
 	fwd->nextTimeIs(manager->now().value() + timeTaken.value());
 	fwd->statusIs(Activity::nextTimeScheduled);
 }

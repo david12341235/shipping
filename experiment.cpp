@@ -952,7 +952,8 @@ void hourGlass( vector< Ptr<Instance> >& loc, vector< Ptr<Instance> >& seg, Ptr<
 }
 
 int main(int argc, char *argv[]) {
-	funnel();
-  return 0;
+    funnel();
+    getchar();
+    return 0;
 }
 

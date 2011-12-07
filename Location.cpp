@@ -163,7 +163,8 @@ void Customer::shipmentIs(Shipment::Ptr _newShipment) {
             if (_newShipment->load() == _newShipment->origSize()) {
 			    // one complete shipment received. update stats
 		        ++shipmentsReceived_;
-		        totalLatency_ = totalLatency_.value() + _newShipment->timeShipped().value();
+		        totalLatency_ = totalLatency_.value() + 
+                    (activityManagerInstance()->now().value() - _newShipment->timeShipped().value());
 		        totalCost_ = totalCost_.value() + _newShipment->cost().value();
             } else {
     			shipmentsPending_.insert( pair<string, NumPackages>( _newShipment->destination(), _newShipment->load() ) );
@@ -173,7 +174,8 @@ void Customer::shipmentIs(Shipment::Ptr _newShipment) {
 		{
 			// one complete shipment received. update stats
 		    ++shipmentsReceived_;
-		    totalLatency_ = totalLatency_.value() + _newShipment->timeShipped().value();
+		    totalLatency_ = totalLatency_.value() + 
+                (activityManagerInstance()->now().value() - _newShipment->timeShipped().value());
 		    totalCost_ = totalCost_.value() + _newShipment->cost().value();
 		    shipmentsPending_.erase( found );
 		}
