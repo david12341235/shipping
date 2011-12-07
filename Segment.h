@@ -2,6 +2,7 @@
 #define SEGMENT_H
 
 #include <string>
+#include <queue>
 #include "fwk/Ptr.h"
 #include "fwk/NamedInterface.h"
 #include "ShippingTypes.h"
@@ -115,6 +116,15 @@ public:
         return expedite_;
     }
     void expediteIs( ExpVal e );
+    NumPackages shipmentsReceived() { return shipmentsReceived_; }
+    NumPackages shipmentsRefused() { return shipmentsRefused_; }
+    NumPackages shipmentsFragmented() { return shipmentsFragmented_; }
+    NumVehicles capacity() { return capacity_; }
+    void capacityIs( NumVehicles _capacity );
+	
+    virtual void shipmentIs( Shipment::Ptr _newShipment );
+
+    virtual void readyForShipmentIs(bool b);
 
     class NotifieeConst : public virtual Fwk::NamedInterface::NotifieeConst
     {
@@ -152,6 +162,8 @@ public:
         virtual void onReturnSegment() {}
         virtual void onDifficulty() {}
         virtual void onExpedite(Segment::Ptr s, ExpVal old) {}
+        virtual void onShipmentsRefused(Segment::Ptr s) {}
+        virtual void onCapacity(Segment::Ptr s) {}
 
         static NotifieeConst::Ptr NotifieeConstIs() {
             Ptr m = new NotifieeConst();
@@ -220,15 +232,21 @@ public:
 protected:
     Segment( const Segment& );
     Segment( const string& _name, Mode _mode, Fwk::Ptr<Engine> _engine );
+	void readyForShipmentsIs(bool b);
     mutable Segment::Ptr fwkHmNext_;
     Mode mode_;
     Fwk::Ptr<Engine> engine_;
     Fwk::Ptr<Location> source_;
+    ShipmentQueue shipmentQ_;
     Mile length_;
     Difficulty difficulty_;
     ExpVal expedite_;
     Ptr returnSegment_;
     NotifieeList notifiee_;
+    NumPackages shipmentsReceived_;
+    NumPackages shipmentsRefused_;
+    NumPackages shipmentsFragmented_;
+    NumVehicles capacity_;
 };
 
 class TruckSegment : public Segment

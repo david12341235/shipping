@@ -88,6 +88,7 @@ public:
     ///
     virtual void instanceDel(const string& name) = 0;
 
+    //virtual void printTables() = 0;
 };
 
 ///

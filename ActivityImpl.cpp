@@ -1,16 +1,28 @@
 #include <iostream>
 #include <time.h>
 
+#include "ShippingException.h"
 #include "ActivityImpl.h"
-
+#ifdef WIN32
+#include <Windows.h>
+	void sleep(long s) { Sleep(s); }
+#else
+#include <unistd.h>
+//	void sleep(long s) { usleep(s); }
+#endif
 
 Fwk::Ptr<Activity::Manager> activityManagerInstance() {
     return ActivityImpl::ManagerImpl::activityManagerInstance();
 }
 
+Fwk::Ptr<Activity::RealTimeManager> realTimeManagerInstance() {
+    return ActivityImpl::RealTimeManagerImpl::realTimeManagerInstance();
+}
+
 namespace ActivityImpl {
     //Definition of static member
     Fwk::Ptr<Activity::Manager> ManagerImpl::activityInstance_ = NULL;
+    Fwk::Ptr<Activity::RealTimeManager> RealTimeManagerImpl::instance_ = NULL;
     
     //Gets the singleton instance of ManagerImpl
     Fwk::Ptr<Activity::Manager> ManagerImpl::activityManagerInstance() {
@@ -26,7 +38,7 @@ namespace ActivityImpl {
 	Activity::Ptr activity = activities_[name];
 
 	if (activity != NULL) {
-	    cerr << "Activity already exists!" << endl;
+	    throw Shipping::NameExistsException("Activity already exists!");
 	    return NULL;
 	}
 	
@@ -68,16 +80,7 @@ namespace ActivityImpl {
 		break;
 	    }
 	    
-	    //calculate amount of time to sleep
-	    Time diff = Time(nextToRun->nextTime().value() - now_.value());
-	    
-	    //sleep 100ms (100,000 microseconds) for every unit of time
-	    usleep(( ((int)diff.value()) * 100000));
-	    
 	    now_ = nextToRun->nextTime();
-
-	    //print out size of queue
-	    cout << "size of queue: " << queue_->size() << endl;
 
 	    //run the minimum time activity and remove it from the queue
 	    scheduledActivities_.pop();
@@ -89,6 +92,55 @@ namespace ActivityImpl {
 
 	//syncrhonize the time
 	now_ = t;
-    }
+	}
+
+
+RealTimeManagerImpl::RealTimeManagerImpl() {
+	managerImp_ = activityManagerInstance();
+}
+
+Activity::Ptr RealTimeManagerImpl::activityNew(const string& name) {
+	return managerImp_->activityNew(name);
+}
+
+Activity::Ptr RealTimeManagerImpl::activity(const string& name) const {
+	return managerImp_->activity(name);
+}
+
+void RealTimeManagerImpl::activityDel(const string& name) {
+	managerImp_->activityDel(name);
+}
+	
+Time RealTimeManagerImpl::now() const {
+	return managerImp_->now();
+}
+
+void RealTimeManagerImpl::nowIs(Time time) {
+	managerImp_->nowIs(time);
+}
+	
+void RealTimeManagerImpl::lastActivityIs(Activity::Ptr activity) {
+	managerImp_->lastActivityIs(activity);
+}
+
+Fwk::Ptr<Activity::RealTimeManager> RealTimeManagerImpl::realTimeManagerInstance() {
+	if (instance_ == NULL) {
+	    instance_ = new RealTimeManagerImpl();
+	}
+	
+	return instance_;
+}
+
+void RealTimeManagerImpl::realTimePassedIs(Time time) {
+	long msPerHour = 100; // 0.1 second advance per hour
+	while (time >= 1.0) {
+		Time currTime = managerImp_->now();
+
+		managerImp_->nowIs(currTime.value() + 1);
+	    //sleep 100ms
+	    sleep(msPerHour);
+		time = time.value() - 1;
+	}
+}
 
 } //end namespace ActivityImpl

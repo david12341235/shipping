@@ -1,5 +1,8 @@
 #include "Engine.h"
 #include "Segment.h"
+#include "Activity.h"
+#include "ActivityReactor.h"
+#include "ShippingException.h"
 
 using namespace Shipping;
 
@@ -12,9 +15,31 @@ void Segment::sourceIs( Fwk::Ptr<Location> _source )
 
 Segment::Segment( const string& _name, Mode _mode, Fwk::Ptr<Engine> _engine ) :
     NamedInterface(_name), mode_(_mode), engine_(_engine),
-    length_(0), difficulty_(1), expedite_(expNo_)
+    length_(100), difficulty_(1), expedite_(expNo_), shipmentsReceived_(0), shipmentsRefused_(0),
+    shipmentsFragmented_(0), capacity_(10)
 {
     engine_->segmentIs(this);
+}
+
+void Segment::shipmentIs( Shipment::Ptr _newShipment )
+{
+	shipmentQ_.push_back(_newShipment);
+	++shipmentsReceived_;
+	if (capacity_ == 0) {
+		++shipmentsRefused_;
+	} else {
+		readyForShipmentIs(true);
+	}
+
+
+	// must schedule a forwarding activity. Should be scheduled for a time
+	// based on segment length, speed, and number of carriers it has, per
+	// the assignment example. Shipment may consist of many packages
+	// in which case several forwarding activities may have to be scheduled
+	// for one shipment. Also, maybe good to throw an exception if this new
+	// shipment causes overflow of the capacity, since this isn't supposed to
+	// happen if the source location is following the protocol of queuing a
+	// new shipment onto Segment only when Segment has the capacity to do so.
 }
 
 void TruckSegment::sourceIs( Fwk::Ptr<Location> _source )
@@ -29,7 +54,7 @@ void TruckSegment::sourceIs( Fwk::Ptr<Location> _source )
         source_ = _source;
         source_->segmentIs( this );
     } else {
-        cerr << "Truck segment " << name() << " can't be connected to a plane or boat terminal." << endl;
+        throw LocationTypeException("Truck segment " + name() + " can't be connected to a plane or boat terminal.");
     }
     return;
 }
@@ -46,7 +71,7 @@ void BoatSegment::sourceIs( Fwk::Ptr<Location> _source )
         source_ = _source;
         source_->segmentIs( this );
     } else {
-        cerr << "Boat segment " << name() << " can't be connected to a truck or plane terminal." << endl;
+        throw LocationTypeException("Boat segment " + name() + " can't be connected to a plane or truck terminal.");
     }
     return;
 }
@@ -63,7 +88,7 @@ void PlaneSegment::sourceIs( Fwk::Ptr<Location> _source )
         source_ = _source;
         source_->segmentIs( this );
     } else {
-        cerr << "Plane segment " << name() << " can't be connected to a truck or boat terminal." << endl;
+        throw LocationTypeException("Plane segment " + name() + " can't be connected to a truck or boat terminal.");
     }
     return;
 }
@@ -102,6 +127,71 @@ retry:
             } catch(...) {
                 n->onNotificationException(NotifieeConst::segment__);
             }
+}
+
+void Segment::capacityIs(NumVehicles v) {
+	if (v == capacity_) return;
+	NumVehicles old(capacity_);
+	capacity_ = v;
+
+	if (capacity_ > 0) {
+		readyForShipmentIs(true);
+	}
+
+	if (capacity_ == old) return;
+retry:
+    U32 ver = notifiee_.version();
+    if(notifiees()) for(NotifieeIterator n=notifieeIter(); n.ptr(); ++n) try {
+                n->onCapacity(this);
+                if( ver != notifiee_.version() ) goto retry;
+            } catch(...) {
+                n->onNotificationException(NotifieeConst::segment__);
+            }
+}
+
+void Segment::readyForShipmentIs(bool b) {
+	if (b == false || shipmentQ_.empty()) return;
+	
+	Activity::Manager::Ptr manager = activityManagerInstance();
+	string name = "forward shipment #";
+	ostringstream oss;
+	oss << rand();
+	name.append(oss.str());
+	Activity::Ptr fwd = manager->activityNew(name);
+
+	ShipmentQueue shipments;
+	NumVehicles currentVehicles(capacity());
+	NumPackages vehicleCapacity(engine_->fleet()->capacity(mode()).value());
+	NumPackages totalCapacity(
+		currentVehicles.value() * vehicleCapacity.value());
+	NumPackages packageCount(0);
+
+	NumVehicles vehicles(0);
+
+	for (Shipment::Ptr s = shipmentQ_.front(); !shipmentQ_.empty() && packageCount < totalCapacity; ) {
+		NumPackages load = s->load();
+		if (load.value() > totalCapacity.value()) { // split shipment
+			++shipmentsFragmented_;
+			s->loadIs(load.value() - totalCapacity.value());
+			load = totalCapacity;
+			shipmentQ_.push_front( Shipment::ShipmentNew( s->name(), s->source(), s->destination(), load, s->timeShipped() ));
+		}
+		// now we're guaranteed to have at least one shipment at the
+		// front of the queue that we can send off
+		shipments.push_front(shipmentQ_.front());
+		shipmentQ_.pop_front();
+		packageCount = packageCount.value() + load.value();
+		totalCapacity = totalCapacity.value() - load.value();
+	}
+
+	vehicles = packageCount.value() / vehicleCapacity.value() +
+		packageCount.value() % vehicleCapacity.value();
+
+	fwd->lastNotifieeIs(new ForwardShipmentReactor(manager,
+								fwd.ptr(), 0, this, shipments, vehicles)); 
+	Time timeTaken = this->length().value() / engine_->fleet()->speed(mode()).value();
+	fwd->nextTimeIs(manager->now().value() + timeTaken.value());
+	fwd->statusIs(Activity::nextTimeScheduled);
 }
 
 Segment::NotifieeConst::~NotifieeConst()

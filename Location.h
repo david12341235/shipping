@@ -2,10 +2,11 @@
 #define LOCATION_H
 
 #include <string>
+#include <queue>
 #include "fwk/Ptr.h"
 #include "fwk/NamedInterface.h"
 #include "ShippingTypes.h"
-#include "Engine.h"
+#include "Segment.h"
 
 using namespace std;
 
@@ -19,6 +20,7 @@ class Location : public Fwk::NamedInterface
 public:
     typedef Fwk::Ptr<Location const> PtrConst;
     typedef Fwk::Ptr<Location> Ptr;
+
     Fwk::String fwkKey() const {
         return this->name();
     }
@@ -68,9 +70,11 @@ public:
     }
 
     static Type TypeInstance( Fwk::String );
+
     Type type() const {
         return type_;
     }
+
     virtual void typeIs( Type _type ) {
         type_ = _type;
     }
@@ -81,6 +85,15 @@ public:
         segment_.push_back(_segment);
     };
     void segmentDel( Segment::PtrConst _segment );
+	virtual void shipmentIs(Shipment::Ptr _newShipment);
+
+    void nextSegmentIs( string _destination, Segment::Ptr _nextSeg ) { nextSegment_[_destination] = _nextSeg; }
+
+	Segment::Ptr nextSegment( string _destination )
+	{
+		// will return a pointer to the next segment
+		return nextSegment_[_destination];
+	}
 
     class NotifieeConst : public virtual Fwk::NamedInterface::NotifieeConst
     {
@@ -130,9 +143,6 @@ public:
     public:
         typedef Fwk::Ptr<Notifiee const> PtrConst;
         typedef Fwk::Ptr<Notifiee> Ptr;
-        Location::PtrConst notifier() const {
-            return NotifieeConst::notifier();
-        }
         Location::Ptr notifier() {
             return const_cast<Location *>(NotifieeConst::notifier().ptr());
         }
@@ -165,25 +175,29 @@ public:
     NotifieeIterator notifieeIter() {
         return notifiee_.iterator();
     }
-
-protected:
-    typedef vector<Segment::PtrConst > SegmentList;
-    mutable Location::Ptr fwkHmNext_;
-    Location( const Location& );
-    Location( const string& _name, Type _type, Fwk::Ptr<Engine> _engine );
-    void newNotifiee( Location::NotifieeConst * n ) const {
+    virtual void newNotifiee( Location::NotifieeConst * n ) const {
         Location* me = const_cast<Location*>(this);
         me->notifiee_.newMember(n);
     }
-    void deleteNotifiee( Location::NotifieeConst * n ) const {
+    virtual void deleteNotifiee( Location::NotifieeConst * n ) const {
         Location* me = const_cast<Location*>(this);
         me->notifiee_.deleteMember(n);
     }
+
+protected:
+    typedef vector<Segment::PtrConst > SegmentList;
+    typedef map<string, Segment::Ptr > routeTable;
+    mutable Location::Ptr fwkHmNext_;
+    Location( const Location& );
+    Location( const string& _name, Type _type, Fwk::Ptr<Engine> _engine );
+    Location( const string& _name, Type _type);
     Type type_;
     Fwk::Ptr<Engine> engine_;
     SegmentList segment_;
     NotifieeList notifiee_;
     void onZeroReferences();
+    routeTable nextSegment_;
+
 };
 
 class Customer : public Location
@@ -210,12 +224,12 @@ public:
 	virtual void sendingShipmentsIs(bool _sendingShipments);
     
 	virtual NumPackages shipmentsReceived() const { return shipmentsReceived_; }
-	virtual Hour averageLatency() const { return totalLatency_.value() / (1.0) * shipmentsReceived().value(); }
+	virtual Hour averageLatency() const { return totalLatency_.value() / ( (1.0) * shipmentsReceived().value() ); }
 	virtual Dollar totalCost() const { return totalCost_; }
 
 	virtual void shipmentIs(Shipment::Ptr _newShipment);
 
-    class NotifieeConst : public virtual Fwk::NamedInterface::NotifieeConst
+    class NotifieeConst : public Location::NotifieeConst, public virtual Fwk::NamedInterface::NotifieeConst
     {
     public:
         typedef Fwk::Ptr<NotifieeConst const> PtrConst;
@@ -246,7 +260,7 @@ public:
         void isNonReferencingIs(bool _isNonReferencing) {
             isNonReferencing_ = _isNonReferencing;
         };
-        virtual void onSendingShipmentsIs(Customer::Ptr p) {}
+        virtual void onSendingShipmentsIs(Customer::Ptr c) {}
 
         static NotifieeConst::Ptr NotifieeConstIs() {
             Ptr m = new NotifieeConst();
@@ -262,16 +276,13 @@ public:
             lrNext_(0) { }
     };
 	
-    class Notifiee : public virtual NotifieeConst, public virtual Fwk::NamedInterface::Notifiee
+    class Notifiee : public virtual Location::NotifieeConst, public virtual Fwk::NamedInterface::Notifiee
     {
     public:
         typedef Fwk::Ptr<Notifiee const> PtrConst;
         typedef Fwk::Ptr<Notifiee> Ptr;
-        Customer::PtrConst notifier() const {
-            return NotifieeConst::notifier();
-        }
         Customer::Ptr notifier() {
-            return const_cast<Customer*>(NotifieeConst::notifier().ptr());
+            return const_cast<Customer*>(Notifiee::notifier().ptr());
         }
 
         static Notifiee::Ptr NotifieeIs() {
@@ -296,11 +307,11 @@ public:
         return notifiee_.members();
     }
 
-    void newNotifiee( Customer::NotifieeConst * n ) const {
+    virtual void newNotifiee( Customer::NotifieeConst * n ) const {
         Customer* me = const_cast<Customer*>(this);
         me->notifiee_.newMember(n);
     }
-    void deleteNotifiee( Customer::NotifieeConst * n ) const {
+    virtual void deleteNotifiee( Customer::NotifieeConst * n ) const {
         Customer* me = const_cast<Customer*>(this);
         me->notifiee_.deleteMember(n);
     }
@@ -313,9 +324,7 @@ public:
 
 protected:
     Customer( const Customer& );
-    Customer( const string& _name, Fwk::Ptr<Engine> _engine ) : 
-		Location( _name, customer_, _engine ), transferRate_(0), shipmentSize_(0), 
-        shipmentsReceived_(0), totalLatency_(0), totalCost_(0) {};
+    Customer( const string& _name, Fwk::Ptr<Engine> _engine );
 	ShipmentsPerDay transferRate_;
 	NumPackages shipmentSize_;
 	NumPackages shipmentsReceived_;
@@ -323,6 +332,7 @@ protected:
 	bool sendingShipments_;
     Hour totalLatency_;
     Dollar totalCost_;
+    map< string, NumPackages > shipmentsPending_;
     NotifieeList notifiee_;
 };
 

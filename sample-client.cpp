@@ -69,8 +69,8 @@ int main(int argc, char *argv[]) {
 	seg[1]->attributeIs("return segment", "ps1");
 
 	seg[2]->attributeIs("source", "customer2");
-	seg[2]->attributeIs("source", "port1");
-	seg[3]->attributeIs("return segment", "ps2");
+	seg[3]->attributeIs("source", "port1");
+	seg[3]->attributeIs("return segment", "bs1");
 
 	// And so on...
 
@@ -79,8 +79,8 @@ int main(int argc, char *argv[]) {
     fleet->attributeIs("Truck capacity", "1");
 
 	// Set some segment (shipment) capacities
-	seg[4]->attributeIs("Capacity", "1");
-	seg[6]->attributeIs("Capacity", "1");
+	//seg[4]->attributeIs("Capacity", "1");
+	//seg[6]->attributeIs("Capacity", "1");
 
 	/* For groups, you could set routing algorithm here
 	 * Note that we are not advocating any particular design
@@ -90,6 +90,7 @@ int main(int argc, char *argv[]) {
 	 */
 	Ptr<Instance> conn = manager->instanceNew("myConn", "Conn");
 	conn->attributeIs("routing algorithm", "Dijkstra"); 
+	//manager->printTables();
 	// conn->attributeIs("routing algorithm", "Some very cool algorithm worthy of a Turing award");
 
 	/* Switching between real-time and virtual-time managers
@@ -120,16 +121,23 @@ int main(int argc, char *argv[]) {
 	 * batch size is determined by the client's settings of the real/virtual 
 	 * times at difference places.
 	 */
-//    Activity::Manager::Ptr activityManager = activityManagerInstance();
-//    activityManager->nowIs(6.0);
+
+	
+    loc[0]->attributeIs("Transfer Rate", "1");
+    loc[0]->attributeIs("Shipment Size", "1");
+    loc[0]->attributeIs("Destination", "customer2");
+
+    Activity::RealTimeManager::Ptr activityManager = realTimeManagerInstance();
+	conn->attributeIs("simulation started", ""); 
+    activityManager->realTimePassedIs(6.0);
 //    RealTimeManager::Ptr realTimeManager = realTimeManagerInstance();
 //  realTimeManager->realTimePassedIs(6.0);
 
 	// Stop injection activity from the first two customers
     loc[0]->attributeIs("Transfer Rate", "0");
     loc[1]->attributeIs("Transfer Rate", "0");
-
-//    activityManager->nowIs(24.0);
+	
+    activityManager->realTimePassedIs(100.0);
 //  realTimeManager->realTimePassedIs(18.0);
 
 	/* Print simulation statistics for analysis 
@@ -141,6 +149,7 @@ int main(int argc, char *argv[]) {
 //
 //
 //	printSimStats();
+  cout << "simulation done!" << endl;
   }
   catch(Exception e)
   {
@@ -149,7 +158,8 @@ int main(int argc, char *argv[]) {
   catch(...)
   {
   }
-
+  
+  getchar();
   return 0;
 }
 

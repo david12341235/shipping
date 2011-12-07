@@ -3,17 +3,17 @@
 
 #include <string>
 
-#include "fwk/PtrInterface.h"
-#include "fwk/Ptr.h"
+#include "PtrInterface.h"
+#include "Ptr.h"
 
 using namespace std;
 
-namespace ActFwk {
+namespace Fwk {
 
- class RootNotifiee : public Fwk::PtrInterface<RootNotifiee> {
+ class RootNotifiee : public PtrInterface<RootNotifiee> {
 	/* Deliberately empty */
     };
- 
+
     template<typename Notifier>
 	class BaseNotifiee : public RootNotifiee {
 	
@@ -30,11 +30,11 @@ namespace ActFwk {
 	    }
 	}
 	
-	Fwk::Ptr<Notifier> notifier() const {
+	Ptr<Notifier> notifier() const {
 	    return notifier_;
 	}
 	
-	void notifierIs(Fwk::Ptr<Notifier> n) {
+	void notifierIs(Ptr<Notifier> n) {
 	    if (notifier_ != n) {
 		if (notifier_ != NULL) {
 		    notifier_->lastNotifieeIs(0);
@@ -49,10 +49,10 @@ namespace ActFwk {
 	}
 	
     private:
-	Fwk::Ptr<Notifier> notifier_;
+	Ptr<Notifier> notifier_;
 	
     };
-
+ 
 } //end namespace Fwk   
 #endif
     

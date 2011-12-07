@@ -26,7 +26,7 @@ public:
         Dollar cost_;
 
     public:
-        fleetInfo() : speed_(1.0), capacity_(1), cost_(1.0) {}
+        fleetInfo() : speed_(60.0), capacity_(1), cost_(1.0) {}
     };
 
     static Segment::Mode TypeInstance( Fwk::String );

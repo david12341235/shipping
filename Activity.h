@@ -23,17 +23,18 @@ class Activity : public Fwk::PtrInterface<Activity> {
     typedef Fwk::Ptr<Activity> Ptr;
     
     /* Notifiee class for Activities */
- class Notifiee : public Fwk::BaseNotifiee<Activity> {
+ class Notifiee : public ActFwk::BaseNotifiee<Activity> {
     public:
 	typedef Fwk::Ptr<Notifiee> Ptr;
 
-        Notifiee(Activity* act) : Fwk::BaseNotifiee<Activity>(act) {}
+        Notifiee(Activity* act) : ActFwk::BaseNotifiee<Activity>(act) {}
 
         virtual void onNextTime() {}
 	virtual void onStatus() {}
     };
 
     class Manager;
+	class RealTimeManager;
 
     enum Status {
         free, waiting, ready, executing, nextTimeScheduled, deleted
@@ -74,12 +75,19 @@ public:
     virtual void lastActivityIs(Activity::Ptr) = 0;
 
     virtual Time now() const = 0;
+
     virtual void nowIs(Time) = 0;
 
+private:
+};
+
+class Activity::RealTimeManager : public Activity::Manager {
+public:
+    typedef Fwk::Ptr<Activity::RealTimeManager> Ptr;
+
+    virtual void realTimePassedIs(Time time) = 0;
 
 private:
-    /* Up to you */
-
 };
 
 extern Fwk::Ptr<Activity::Manager> activityManagerInstance();

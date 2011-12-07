@@ -1,4 +1,5 @@
 #include "Engine.h"
+#include "LocationSegmentReactor.h"
 
 using namespace Shipping;
 
@@ -11,6 +12,14 @@ void Engine::locationIs(Location::Ptr l)
     } else {
         m = l;
         location_.newMember(m);
+
+		if (l->type() == Location::customer()) {
+			if (!sshipreactor_)
+				sshipreactor_ = SendingShipmentsReactor::SendingShipmentsReactorIs(this);
+			Customer *c = dynamic_cast<Customer*>(l.ptr());
+			if (c)
+				c->newNotifiee(sshipreactor_);
+		}
     }
 retrycell:
     U32 ver = notifiee_.version();

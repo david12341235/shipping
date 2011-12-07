@@ -8,6 +8,11 @@ Location::Location( const string& _name, Type _type, Fwk::Ptr<Engine> _engine ) 
     engine_->locationIs(this);
 }
 
+Location::Location( const string& _name, Type _type) :
+    NamedInterface(_name), type_(_type), engine_(NULL)
+{
+}
+
 
 // ------- Location
 
@@ -19,6 +24,14 @@ void Location::segmentDel( Segment::PtrConst _segment )
             break;
         }
     }
+}
+
+void Location::shipmentIs( Shipment::Ptr _newShipment )
+{
+	// figure out the next segment to forward the packet to and immediately
+	// queue it onto that segment
+	Segment::Ptr _segment = nextSegment_[ _newShipment->destination()];
+	_segment->shipmentIs( _newShipment );
 }
 
 void
@@ -107,9 +120,11 @@ void Customer::destinationIs(string _destination) {
 	
 void Customer::sendingShipmentsIs(bool _sendingShipments) {
 	if (sendingShipments_ == _sendingShipments) return;
-	if (_sendingShipments && (destination_ == "" || transferRate_ == 0 || shipmentSize_ == 0)) return;
 
-    sendingShipments_ = sendingShipments_;
+	 if (_sendingShipments && (destination_ == "" || transferRate_ == 0 || shipmentSize_ == 0)) return;
+
+    sendingShipments_ = _sendingShipments;
+
 retry:
     U32 ver = notifiee_.version();
     if(notifiees()) for(NotifieeIterator n=notifieeIter(); n.ptr(); ++n) try {
@@ -139,7 +154,76 @@ Customer::NotifieeConst::notifierIs(const Customer::PtrConst& _notifier)
 }
 
 void Customer::shipmentIs(Shipment::Ptr _newShipment) {
-    ++shipmentsReceived_;
-    totalLatency_ = totalLatency_.value() + _newShipment->timeTaken().value();
-    totalCost_ = totalCost_.value() + _newShipment->cost().value();
+	cout << this->name() << " received shipment: " << _newShipment->name() << endl;
+	if( _newShipment->destination() == name() )
+	{
+		map<string, NumPackages>::iterator found = shipmentsPending_.find( _newShipment->destination() );
+		if( found == shipmentsPending_.end() )
+		{
+			shipmentsPending_.insert( pair<string, NumPackages>( _newShipment->destination(), _newShipment->load() ) );
+		}
+		else if( found->second.value() + _newShipment->load().value() == _newShipment->origSize().value() )
+		{
+			// one complete shipment received. update stats
+		    ++shipmentsReceived_;
+		    // this calculation is not correct. Maybe we should consider time stamping the
+		    // shipment, once for when the shipment is first injected and also whenever
+		    // it arrives at a new location
+		    totalLatency_ = totalLatency_.value() + _newShipment->timeShipped().value();
+		    totalCost_ = totalCost_.value() + _newShipment->cost().value();
+		    shipmentsPending_.erase( found );
+		}
+		else
+		{
+			// update the count for this package
+			found->second = NumPackages( found->second.value() + _newShipment->load().value() );
+		}
+	}
+	else
+	{
+		// initial injection
+		Segment::Ptr _segment = nextSegment_[ _newShipment->destination()];
+		_segment->shipmentIs( _newShipment );
+	}
 }
+
+Customer::NotifieeConst::~NotifieeConst()
+{
+    if(notifier_ != NULL ) {
+        notifier_->deleteNotifiee(this);
+    }
+    if(notifier_ != NULL &&isNonReferencing()) notifier_->newRef();
+}
+
+Location::NotifieeConst::~NotifieeConst()
+{
+    if(notifier_ != NULL ) {
+        notifier_->deleteNotifiee(this);
+    }
+    if(notifier_ != NULL &&isNonReferencing()) notifier_->newRef();
+}
+
+void
+Location::NotifieeConst::notifierIs(const Location::PtrConst& _notifier)
+{
+    Location::Ptr notifierSave(const_cast<Location*>(notifier_.ptr()));
+    if(_notifier==notifier_) return;
+    notifier_ = _notifier;
+    if(notifierSave != NULL ) {
+        notifierSave->deleteNotifiee(this);
+    }
+    if(_notifier != NULL ) {
+        _notifier->newNotifiee(this);
+    }
+    if(isNonReferencing_) {
+        if(notifierSave != NULL ) notifierSave->newRef();
+        if(notifier_ != NULL ) notifier_->deleteRef();
+    }
+}
+
+Customer::Customer( const string& _name, Fwk::Ptr<Engine> _engine ) : 
+	Location( _name, customer_), transferRate_(0), shipmentSize_(0), 
+    shipmentsReceived_(0), totalLatency_(0), totalCost_(0) {
+	engine_ = _engine;
+	engine_->locationIs(this);
+};
