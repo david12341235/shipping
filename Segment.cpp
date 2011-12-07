@@ -155,7 +155,7 @@ void Segment::readyForShipmentIs(bool b) {
 	Activity::Manager::Ptr manager = activityManagerInstance();
 	string name = "forward shipment #";
 	ostringstream oss;
-	oss << rand();
+	oss << rand() << rand() << rand();
 	name.append(oss.str());
 	Activity::Ptr fwd = manager->activityNew(name);
 
