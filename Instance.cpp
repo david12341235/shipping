@@ -380,6 +380,8 @@ public:
     // Instance method
     string attribute(const string& name) {
         U32 val;
+        stringstream ss;
+
         if (name == "Customer") {
             val = stats_->customer();
         } else if (name == "Port") {
@@ -398,11 +400,57 @@ public:
             val = stats_->planeSegment();
         } else if (name == "expedite percentage") {
             return stats_->expedite();
-        } else {
+        }
+	   
+	   else
+	   {
+	   	char* q = new char[name.length()+1];
+		strcpy(q, name.c_str());
+		char* tok = strtok( q, " " );
+		if( !tok )
+		{
 		    throw Shipping::UnknownAttrException("Unsupported attribute: " + name);
+		}
+
+		string first( tok );
+		tok = strtok( NULL, " " );
+		if( !tok )
+		{
+		    throw Shipping::UnknownAttrException("Unsupported attribute: " + name);
+		}
+
+		string second( tok );
+		try {
+			if( first == "cost") {
+				ss << stats_->totalCost( second );
+				return ss.str();
+			} else if ( first == "received" ) {
+				ss << stats_->received( second );
+				return ss.str();
+			} else if ( first == "latency" ) {
+				ss << stats_->latency( second );
+				return ss.str();
+			} else if ( first == "forwarded" ) {
+				ss << stats_->forwarded( second );
+				return ss.str();
+			} else if ( first == "refused" ) {
+				ss << stats_->refused( second );
+				return ss.str();
+			} else if ( first == "fragmented" ) {
+				ss << stats_->fragmented( second );
+				return ss.str();
+			} else
+			    throw Shipping::UnknownAttrException("Unsupported attribute: " + name);
+		}
+		catch(Fwk::UnknownAttrException ex) {
+			throw Shipping::LocationTypeException( name + " is not a Customer location!" );
+		}
+		catch(Fwk::EntityNotFoundException) {
+			throw Shipping::NameExistsException( name + " cannot be found among the segments");
+		}
+
         }
 
-        stringstream ss;
         ss << val;
         return ss.str();
     };
