@@ -12,6 +12,7 @@ Shipping::Exception::Id Shipping::Exception::IdInstance( U32 v ) {
     case rangeException_ : return rangeException_;
     case locationTypeException_ : return locationTypeException_;
     case unknownTypeException_ : return unknownTypeException_;
+    case entityNotFoundException_ : return entityNotFoundException_;
     default : throw Shipping::RangeException( "Shipping::Exception::Id" );
    }
 }
@@ -48,5 +49,10 @@ Shipping::LocationTypeException::id() {
 Shipping::Exception::Id
 Shipping::UnknownTypeException::id() {
    return unknownTypeException_;
+}
+
+Shipping::Exception::Id
+Shipping::EntityNotFoundException::id() {
+   return entityNotFoundException_;
 }
 

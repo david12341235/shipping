@@ -26,7 +26,7 @@ void funnel( )
 		loc.push_back( manager->instanceNew("customerA8", "Customer") );
 		loc.push_back( manager->instanceNew("customerA9", "Customer") );
 		loc.push_back( manager->instanceNew("customerA10", "Customer") );
-		loc.push_back( manager->instanceNew("ttA1", "Truck Terminal") );
+		loc.push_back( manager->instanceNew("ttA1", "Truck terminal") );
 		
 		seg.push_back( manager->instanceNew("tsA1", "Truck segment") );
 		seg.push_back( manager->instanceNew("tsA2", "Truck segment") );
@@ -99,7 +99,7 @@ void funnel( )
 		loc.push_back( manager->instanceNew("customerB8", "Customer") );
 		loc.push_back( manager->instanceNew("customerB9", "Customer") );
 		loc.push_back( manager->instanceNew("customerB10", "Customer") );
-		loc.push_back( manager->instanceNew("ttB1", "Truck Terminal") );
+		loc.push_back( manager->instanceNew("ttB1", "Truck terminal") );
 		
 		seg.push_back( manager->instanceNew("tsB1", "Truck segment") );
 		seg.push_back( manager->instanceNew("tsB2", "Truck segment") );
@@ -172,7 +172,7 @@ void funnel( )
 		loc.push_back( manager->instanceNew("customerC8", "Customer") );
 		loc.push_back( manager->instanceNew("customerC9", "Customer") );
 		loc.push_back( manager->instanceNew("customerC10", "Customer") );
-		loc.push_back( manager->instanceNew("ttC1", "Truck Terminal") );
+		loc.push_back( manager->instanceNew("ttC1", "Truck terminal") );
 		
 		seg.push_back( manager->instanceNew("tsC1", "Truck segment") );
 		seg.push_back( manager->instanceNew("tsC2", "Truck segment") );
@@ -245,7 +245,7 @@ void funnel( )
 		loc.push_back( manager->instanceNew("customerD8", "Customer") );
 		loc.push_back( manager->instanceNew("customerD9", "Customer") );
 		loc.push_back( manager->instanceNew("customerD10", "Customer") );
-		loc.push_back( manager->instanceNew("ttD1", "Truck Terminal") );
+		loc.push_back( manager->instanceNew("ttD1", "Truck terminal") );
 		
 		seg.push_back( manager->instanceNew("tsD1", "Truck segment") );
 		seg.push_back( manager->instanceNew("tsD2", "Truck segment") );
@@ -318,7 +318,7 @@ void funnel( )
 		loc.push_back( manager->instanceNew("customerE8", "Customer") );
 		loc.push_back( manager->instanceNew("customerE9", "Customer") );
 		loc.push_back( manager->instanceNew("customerE10", "Customer") );
-		loc.push_back( manager->instanceNew("ttE1", "Truck Terminal") );
+		loc.push_back( manager->instanceNew("ttE1", "Truck terminal") );
 		
 		seg.push_back( manager->instanceNew("tsE1", "Truck segment") );
 		seg.push_back( manager->instanceNew("tsE2", "Truck segment") );
@@ -391,7 +391,7 @@ void funnel( )
 		loc.push_back( manager->instanceNew("customerF8", "Customer") );
 		loc.push_back( manager->instanceNew("customerF9", "Customer") );
 		loc.push_back( manager->instanceNew("customerF10", "Customer") );
-		loc.push_back( manager->instanceNew("ttF1", "Truck Terminal") );
+		loc.push_back( manager->instanceNew("ttF1", "Truck terminal") );
 		
 		seg.push_back( manager->instanceNew("tsF1", "Truck segment") );
 		seg.push_back( manager->instanceNew("tsF2", "Truck segment") );
@@ -464,7 +464,7 @@ void funnel( )
 		loc.push_back( manager->instanceNew("customerG8", "Customer") );
 		loc.push_back( manager->instanceNew("customerG9", "Customer") );
 		loc.push_back( manager->instanceNew("customerG10", "Customer") );
-		loc.push_back( manager->instanceNew("ttG1", "Truck Terminal") );
+		loc.push_back( manager->instanceNew("ttG1", "Truck terminal") );
 		
 		seg.push_back( manager->instanceNew("tsG1", "Truck segment") );
 		seg.push_back( manager->instanceNew("tsG2", "Truck segment") );
@@ -537,7 +537,7 @@ void funnel( )
 		loc.push_back( manager->instanceNew("customerH8", "Customer") );
 		loc.push_back( manager->instanceNew("customerH9", "Customer") );
 		loc.push_back( manager->instanceNew("customerH10", "Customer") );
-		loc.push_back( manager->instanceNew("ttH1", "Truck Terminal") );
+		loc.push_back( manager->instanceNew("ttH1", "Truck terminal") );
 		
 		seg.push_back( manager->instanceNew("tsH1", "Truck segment") );
 		seg.push_back( manager->instanceNew("tsH2", "Truck segment") );
@@ -610,7 +610,7 @@ void funnel( )
 		loc.push_back( manager->instanceNew("customerI8", "Customer") );
 		loc.push_back( manager->instanceNew("customerI9", "Customer") );
 		loc.push_back( manager->instanceNew("customerI10", "Customer") );
-		loc.push_back( manager->instanceNew("ttI1", "Truck Terminal") );
+		loc.push_back( manager->instanceNew("ttI1", "Truck terminal") );
 		
 		seg.push_back( manager->instanceNew("tsI1", "Truck segment") );
 		seg.push_back( manager->instanceNew("tsI2", "Truck segment") );
@@ -683,7 +683,7 @@ void funnel( )
 		loc.push_back( manager->instanceNew("customerJ8", "Customer") );
 		loc.push_back( manager->instanceNew("customerJ9", "Customer") );
 		loc.push_back( manager->instanceNew("customerJ10", "Customer") );
-		loc.push_back( manager->instanceNew("ttJ1", "Truck Terminal") );
+		loc.push_back( manager->instanceNew("ttJ1", "Truck terminal") );
 		
 		seg.push_back( manager->instanceNew("tsJ1", "Truck segment") );
 		seg.push_back( manager->instanceNew("tsJ2", "Truck segment") );
@@ -747,7 +747,7 @@ void funnel( )
 		seg[199]->attributeIs("return segment", "tsJ19");
 
 		// 10 truck terminals connected to one, ttK1
-		loc.push_back( manager->instanceNew("ttK1", "Truck Terminal") );
+		loc.push_back( manager->instanceNew("ttK1", "Truck terminal") );
 
 		seg.push_back( manager->instanceNew("tsK1", "Truck segment") );
 		seg.push_back( manager->instanceNew("tsK2", "Truck segment") );
@@ -830,15 +830,15 @@ void funnel( )
 
 		conn->attributeIs("simulation started", ""); 
 	    Activity::RealTimeManager::Ptr activityManager = realTimeManagerInstance();
-	    activityManager->realTimePassedIs(6.0);
+	    activityManager->realTimePassedIs(24.0);
 
-	    cout << stats->attribute("cost customerA1") << endl;
-	    cout << stats->attribute("received customerA1") << endl;
-	    cout << stats->attribute("latency customerA1") << endl;
+	    cout << "cost customerA1: " << stats->attribute("cost customerA1") << endl;
+	    cout << "received customerA1: " << stats->attribute("received customerA1") << endl;
+	    cout << "latency customerA1: " << stats->attribute("latency customerA1") << endl;
 
-	    cout << stats->attribute("forwarded tsA1") << endl;
-	    cout << stats->attribute("refused tsA1") << endl;
-	    cout << stats->attribute("fragmented tsA1") << endl;
+	    cout << "forwarded tsA1: " << stats->attribute("forwarded tsA1") << endl;
+	    cout << "refused tsA1: "  << stats->attribute("refused tsA1") << endl;
+	    cout << "fragmented tsA1: "  << stats->attribute("fragmented tsA1") << endl; 
 
   }
   catch(Exception e)

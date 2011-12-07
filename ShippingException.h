@@ -26,6 +26,7 @@ public:
       rangeException_ = 4,
       locationTypeException_ = 5,
       unknownTypeException_ = 6,
+      entityNotFoundException_ = 7,
    };
 
    static Id IdInstance( U32 v );
@@ -77,6 +78,12 @@ public:
 class UnknownTypeException : public Exception {
 public:
    UnknownTypeException( std::string what )  : Exception(what) {}
+   virtual Id id();
+};
+    
+class EntityNotFoundException : public Exception {
+public:
+   EntityNotFoundException( std::string what )  : Exception(what) {}
    virtual Id id();
 };
 
