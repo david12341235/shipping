@@ -120,7 +120,7 @@ void Customer::destinationIs(string _destination) {
 	
 void Customer::sendingShipmentsIs(bool _sendingShipments) {
 	if (sendingShipments_ == _sendingShipments) return;
-
+			
 	 if (_sendingShipments && (destination_ == "" || transferRate_ == 0 || shipmentSize_ == 0)) return;
 
     sendingShipments_ = _sendingShipments;

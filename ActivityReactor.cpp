@@ -24,8 +24,10 @@ void InjectShipmentReactor::onStatus() {
 	break;
 	
     case Activity::free:
-	activity_->nextTimeIs(Time(activity_->nextTime().value() + rate_));
-	activity_->statusIs(Activity::nextTimeScheduled);
+	if (manager_->activity(this->activity_->name()) != NULL) {
+		activity_->nextTimeIs(Time(activity_->nextTime().value() + rate_));
+		activity_->statusIs(Activity::nextTimeScheduled);
+	}
 	break;
 
     case Activity::nextTimeScheduled:
