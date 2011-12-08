@@ -125,8 +125,11 @@ public:
     virtual void onSendingShipmentsIs(Customer::Ptr c) {
 		// make sure conn is instantiated so we don't enqueue
 		// the activity before the SimulationStarted activity
-		if (engine_->conn() == NULL)
-			throw InitializationException("Conn must be initialized before shipments can be injected!!!");
+		if (engine_->conn() == NULL) {
+			// warn since we're in a notifiee and exceptions won't propagate
+			cerr << "Warning: shipment injected without Conn being initialized." << endl;
+			return;
+		}
 		Activity::Manager::Ptr manager = activityManagerInstance();
 
 		if (c->sendingShipments()) {

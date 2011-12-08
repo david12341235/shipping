@@ -138,12 +138,7 @@ public:
 
 protected:
     Fleet( const Fleet& );
-    Fleet( const string& _name, Fwk::Ptr<Engine> _engine ) :
-        NamedInterface(_name), engine_(_engine) {
-        fleet_[Segment::boat()] = fleetInfo();
-        fleet_[Segment::truck()] = fleetInfo();
-        fleet_[Segment::plane()] = fleetInfo();
-    };
+    Fleet( const string& _name, Fwk::Ptr<Engine> _engine );
     map<Segment::Mode, fleetInfo> fleet_;
     NotifieeList notifiee_;
     Fwk::Ptr<Engine> engine_;

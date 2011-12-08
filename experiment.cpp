@@ -11,6 +11,7 @@ using Shipping::Exception;
 void funnel( )
 {
 	try {
+		
 	    Ptr<Instance::Manager> manager = shippingInstanceManager();
 		vector< Ptr<Instance> > source;
 		vector< Ptr<Instance> > loc;
@@ -836,7 +837,6 @@ void funnel( )
             (*i)->attributeIs("Destination", "CustomerL1");
         }
 
-		conn->attributeIs("simulation started", ""); 
 	    Activity::Manager::Ptr activityManager = activityManagerInstance();
 	    activityManager->nowIs(1000.0);
 
