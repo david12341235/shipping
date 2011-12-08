@@ -832,14 +832,18 @@ void funnel( )
 		conn->attributeIs("routing algorithm", "Dijkstra"); 
 
         vector< Ptr<Instance> >::iterator i;
-        for (i = source.begin(); i != source.end(); i++) {
+        for (i = source.begin(); i != source.end(); ++i) {
             (*i)->attributeIs("Transfer Rate", "1");
-            (*i)->attributeIs("Shipment Size", "100");
+            (*i)->attributeIs("Shipment Size", "1");
             (*i)->attributeIs("Destination", "CustomerL1");
         }
 
+        for (i = seg.begin(); i != seg.end(); ++i) {
+	   	 (*i)->attributeIs("capacity", "1" );
+	   }
+
 	    Activity::Manager::Ptr activityManager = activityManagerInstance();
-	    activityManager->nowIs(3.0);
+	    activityManager->nowIs(4.0);
 
 	    cout << "forwarded tsA1: " << stats->attribute("forwarded tsA1") << endl;
 	    cout << "refused tsA1: "  << stats->attribute("refused tsA1") << endl;
