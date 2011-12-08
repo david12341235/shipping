@@ -9,6 +9,18 @@
 using namespace std;
 using Shipping::Exception;
 
+void printLocationStats(Ptr<Instance> stats, Ptr<Instance> loc) {
+	cout << "cost " << loc->name() << ": " << stats->attribute("cost " + loc->name()) << endl;
+	cout << "received " << loc->name() << ": " << stats->attribute("received " + loc->name()) << endl;
+	cout << "latency " << loc->name() << ": " << stats->attribute("latency " + loc->name()) << endl << endl;
+}
+
+void printSegmentStats(Ptr<Instance> stats, Ptr<Instance> seg) {
+	cout << "forwarded " << seg->name() << ": " << stats->attribute("forwarded " + seg->name()) << endl;
+	cout << "refused " << seg->name() << ": " << stats->attribute("refused " + seg->name()) << endl;
+	cout << "fragmented " << seg->name() << ": " << stats->attribute("fragmented " + seg->name()) << endl << endl;
+}
+
 void funnel( )
 {
 	try {
@@ -954,8 +966,121 @@ void hourGlass( vector< Ptr<Instance> >& loc, vector< Ptr<Instance> >& seg, Ptr<
 
 }
 
+void diamond( )
+{
+	try {
+		
+	    Ptr<Instance::Manager> manager = shippingInstanceManager();
+		vector< Ptr<Instance> > cust;
+		vector< Ptr<Instance> > loc;
+		vector< Ptr<Instance> > seg;
+
+		// 10 sets of 10 sources
+		cust.push_back( manager->instanceNew("CN", "Customer") );
+		cust.push_back( manager->instanceNew("CW", "Customer") );
+		cust.push_back( manager->instanceNew("CE", "Customer") );
+		cust.push_back( manager->instanceNew("CS", "Customer") );
+		loc.push_back( manager->instanceNew("n", "Port") );
+		loc.push_back( manager->instanceNew("w", "Port") );
+		loc.push_back( manager->instanceNew("e", "Port") );
+		loc.push_back( manager->instanceNew("s", "Port") );
+		
+		seg.push_back( manager->instanceNew("tsA1", "Truck segment") );
+		seg.push_back( manager->instanceNew("tsA2", "Truck segment") );
+		seg.push_back( manager->instanceNew("tsA3", "Truck segment") );
+		seg.push_back( manager->instanceNew("tsA4", "Truck segment") );
+		seg.push_back( manager->instanceNew("tsA5", "Truck segment") );
+		seg.push_back( manager->instanceNew("tsA6", "Truck segment") );
+		seg.push_back( manager->instanceNew("tsA7", "Truck segment") );
+		seg.push_back( manager->instanceNew("tsA8", "Truck segment") );
+		seg.push_back( manager->instanceNew("tsA9", "Truck segment") );
+		seg.push_back( manager->instanceNew("tsA10", "Truck segment") );
+		seg.push_back( manager->instanceNew("tsA11", "Truck segment") );
+		seg.push_back( manager->instanceNew("tsA12", "Truck segment") );
+		seg.push_back( manager->instanceNew("tsA13", "Truck segment") );
+		seg.push_back( manager->instanceNew("tsA14", "Truck segment") );
+		seg.push_back( manager->instanceNew("tsA15", "Truck segment") );
+		seg.push_back( manager->instanceNew("tsA16", "Truck segment") );
+		seg.push_back( manager->instanceNew("tsA17", "Truck segment") );
+		seg.push_back( manager->instanceNew("tsA18", "Truck segment") );
+		
+		seg[0]->attributeIs("source", "CN");
+		seg[1]->attributeIs("source", "n");
+		seg[1]->attributeIs("return segment", "tsA1");
+
+		seg[2]->attributeIs("source", "n");
+		seg[3]->attributeIs("source", "w");
+		seg[3]->attributeIs("return segment", "tsA3");
+
+		seg[4]->attributeIs("source", "n");
+		seg[5]->attributeIs("source", "e");
+		seg[5]->attributeIs("return segment", "tsA5");
+
+		seg[6]->attributeIs("source", "CW");
+		seg[7]->attributeIs("source", "w");
+		seg[7]->attributeIs("return segment", "tsA7");
+
+		seg[8]->attributeIs("source", "w");
+		seg[9]->attributeIs("source", "e");
+		seg[9]->attributeIs("return segment", "tsA9");
+
+		seg[10]->attributeIs("source", "e");
+		seg[11]->attributeIs("source", "CE");
+		seg[11]->attributeIs("return segment", "tsA11");
+
+		seg[12]->attributeIs("source", "w");
+		seg[13]->attributeIs("source", "s");
+		seg[13]->attributeIs("return segment", "tsA13");
+
+		seg[14]->attributeIs("source", "e");
+		seg[15]->attributeIs("source", "s");
+		seg[15]->attributeIs("return segment", "tsA15");
+
+		seg[16]->attributeIs("source", "s");
+		seg[17]->attributeIs("source", "CS");
+		seg[17]->attributeIs("return segment", "tsA17");
+
+	    Ptr<Instance> stats = manager->instanceNew("myStats", "Stats");
+
+	    Ptr<Instance> fleet = manager->instanceNew("Fleet", "Fleet");
+	    fleet->attributeIs("Truck speed", "600");
+	    fleet->attributeIs("Truck capacity", "50");
+
+		Ptr<Instance> conn = manager->instanceNew("myConn", "Conn");
+		conn->attributeIs("routing algorithm", "Dijkstra"); 
+
+        cust[0]->attributeIs("Transfer Rate", "2");
+        cust[0]->attributeIs("Shipment Size", "10");
+        cust[0]->attributeIs("Destination", "CS");
+
+        cust[1]->attributeIs("Transfer Rate", "2");
+        cust[1]->attributeIs("Shipment Size", "10");
+        cust[1]->attributeIs("Destination", "CS");
+
+        cust[2]->attributeIs("Transfer Rate", "2");
+        cust[2]->attributeIs("Shipment Size", "10");
+        cust[2]->attributeIs("Destination", "CS");
+
+	    Activity::Manager::Ptr activityManager = activityManagerInstance();
+	    activityManager->nowIs(1000.0);
+
+		vector<Ptr<Instance>>::iterator i;
+		for (i = cust.begin(); i != cust.end(); i++)
+			printLocationStats(stats, *i);
+		for (i = seg.begin(); i != seg.end(); i++)
+			printSegmentStats(stats, *i);
+  }
+  catch(Exception e)
+  {
+	cout << e.what() << endl;
+  }
+  catch(...)
+  {
+  }
+}
+
 int main(int argc, char *argv[]) {
-    funnel();
+    diamond();
     getchar();
     return 0;
 }

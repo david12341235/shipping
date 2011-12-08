@@ -82,3 +82,16 @@ Segments:
 - total number of shipments received
 - total number of shipments fragmented into smaller shipments due to limited vehicle carrying capacity
 - total number of shipments rejected (put on hold)
+
+
+Analysis
+--------
+
+Diamond:
+
+   n
+ /   \
+w-----e
+ \   /
+   s
+
