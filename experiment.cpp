@@ -855,7 +855,7 @@ void funnel( )
 	   }
 
 	    Activity::Manager::Ptr activityManager = activityManagerInstance();
-	    activityManager->nowIs(4.0);
+	    activityManager->nowIs(5.0);
 
 	    cout << "forwarded tsA1: " << stats->attribute("forwarded tsA1") << endl;
 	    cout << "refused tsA1: "  << stats->attribute("refused tsA1") << endl;
@@ -872,8 +872,6 @@ void funnel( )
 	    cout << "forwarded tsL1: " << stats->attribute("forwarded tsL1") << endl;
 	    cout << "refused tsL1: "  << stats->attribute("refused tsL1") << endl;
 	    cout << "fragmented tsL1: "  << stats->attribute("fragmented tsL1") << endl; 
-
-	    //manager->printTables();
 
   }
   catch(Exception e)
@@ -1076,7 +1074,7 @@ void diamond( )
 	    Activity::Manager::Ptr activityManager = activityManagerInstance();
 	    activityManager->nowIs(1000.0);
 
-		vector<Ptr<Instance>>::iterator i;
+		vector< Ptr<Instance> >::iterator i;
 		for (i = cust.begin(); i != cust.end(); i++)
 			printLocationStats(stats, *i);
 		for (i = seg.begin(); i != seg.end(); i++)
