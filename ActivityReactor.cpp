@@ -2,7 +2,6 @@
 #include "ShippingTypes.h"
 
 using namespace Shipping;
-static int num = 0;
 
 void InjectShipmentReactor::onStatus() {
     ActivityImpl::ManagerImpl::Ptr managerImpl = Fwk::ptr_cast<ActivityImpl::ManagerImpl>(manager_);
