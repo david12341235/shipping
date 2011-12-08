@@ -2,10 +2,10 @@
 #define STATS_H
 
 #include <string>
+#include "Engine.h"
 #include "fwk/Ptr.h"
 #include "fwk/NamedInterface.h"
 #include "ShippingTypes.h"
-#include "Engine.h"
 
 using namespace std;
 
@@ -94,17 +94,17 @@ public:
         return boatSegment_ + truckSegment_ + planeSegment_;
     };
 
-    Dollar totalCost(string name);
+    Dollar totalCost(string customerName);
 
-	NumPackages received(string name);
+	NumPackages received(string customerName);
 
-	Hour latency(string name);
+	Hour latency(string customerName);
 
-	NumPackages forwarded(string name);
+	NumPackages forwarded(string segmentName);
 
-	NumPackages refused(string name);
+	NumPackages refused(string segmentName);
 
-	NumPackages fragmented(string name);
+	NumPackages fragmented(string segmentName);
 
     Fwk::Ptr<Engine> engine() const {
         return engine_;

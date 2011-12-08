@@ -472,7 +472,7 @@ public:
 			throw Shipping::LocationTypeException( name + " is not a Customer location!" );
 		}
 		catch(Fwk::EntityNotFoundException) {
-			throw Shipping::NameExistsException( name + " cannot be found among the segments");
+			throw Shipping::EntityNotFoundException( name + " cannot be found among the segments");
 		}
 
         }

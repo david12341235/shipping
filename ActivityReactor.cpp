@@ -12,7 +12,7 @@ void InjectShipmentReactor::onStatus() {
 		{
 		string name = "shipment #";
 		ostringstream oss;
-		oss << rand();
+		oss << rand() << rand() << rand();
 		name.append(oss.str());
 		source_->shipmentIs(
 			Shipment::ShipmentNew(

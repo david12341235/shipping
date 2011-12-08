@@ -160,16 +160,22 @@ void Customer::shipmentIs(Shipment::Ptr _newShipment) {
 		map<string, NumPackages>::iterator found = shipmentsPending_.find( _newShipment->destination() );
 		if( found == shipmentsPending_.end() )
 		{
-			shipmentsPending_.insert( pair<string, NumPackages>( _newShipment->destination(), _newShipment->load() ) );
+            if (_newShipment->load() == _newShipment->origSize()) {
+			    // one complete shipment received. update stats
+		        ++shipmentsReceived_;
+		        totalLatency_ = totalLatency_.value() + 
+                    (activityManagerInstance()->now().value() - _newShipment->timeShipped().value());
+		        totalCost_ = totalCost_.value() + _newShipment->cost().value();
+            } else {
+    			shipmentsPending_.insert( pair<string, NumPackages>( _newShipment->destination(), _newShipment->load() ) );
+            }
 		}
 		else if( found->second.value() + _newShipment->load().value() == _newShipment->origSize().value() )
 		{
 			// one complete shipment received. update stats
 		    ++shipmentsReceived_;
-		    // this calculation is not correct. Maybe we should consider time stamping the
-		    // shipment, once for when the shipment is first injected and also whenever
-		    // it arrives at a new location
-		    totalLatency_ = totalLatency_.value() + _newShipment->timeShipped().value();
+		    totalLatency_ = totalLatency_.value() + 
+                (activityManagerInstance()->now().value() - _newShipment->timeShipped().value());
 		    totalCost_ = totalCost_.value() + _newShipment->cost().value();
 		    shipmentsPending_.erase( found );
 		}
