@@ -198,8 +198,7 @@ public:
     }
 
 private:
-    Engine() : expreactor_(NULL), slreactor_(NULL), sshipreactor_(NULL), 
-		conn_(NULL), fleet_(NULL), stats_(NULL) {}
+    Engine();
     Stats::Ptr stats_;
     Fleet::Ptr fleet_;
     Conn* conn_;
