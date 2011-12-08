@@ -837,8 +837,8 @@ void funnel( )
 	    Ptr<Instance> stats = manager->instanceNew("myStats", "Stats");
 
 	    Ptr<Instance> fleet = manager->instanceNew("Fleet", "Fleet");
-	    fleet->attributeIs("Truck speed", "60");
-	    fleet->attributeIs("Truck capacity", "50");
+	    fleet->attributeIs("Truck speed", "100");
+	    fleet->attributeIs("Truck capacity", "10000");
 
 		Ptr<Instance> conn = manager->instanceNew("myConn", "Conn");
 		conn->attributeIs("routing algorithm", "Dijkstra"); 
@@ -846,12 +846,20 @@ void funnel( )
         vector< Ptr<Instance> >::iterator i;
         for (i = source.begin(); i != source.end(); i++) {
             (*i)->attributeIs("Transfer Rate", "1");
-            (*i)->attributeIs("Shipment Size", "1000");
+            (*i)->attributeIs("Shipment Size", "100");
             (*i)->attributeIs("Destination", "CustomerL1");
         }
 
 	    Activity::Manager::Ptr activityManager = activityManagerInstance();
-	    activityManager->nowIs(1000.0);
+	    activityManager->nowIs(3.0);
+
+	    cout << "forwarded tsA1: " << stats->attribute("forwarded tsA1") << endl;
+	    cout << "refused tsA1: "  << stats->attribute("refused tsA1") << endl;
+	    cout << "fragmented tsA1: "  << stats->attribute("fragmented tsA1") << endl; 
+
+	    cout << "forwarded tsK1: " << stats->attribute("forwarded tsK1") << endl;
+	    cout << "refused tsK1: "  << stats->attribute("refused tsK1") << endl;
+	    cout << "fragmented tsK1: "  << stats->attribute("fragmented tsK1") << endl; 
 
 	    cout << "cost CustomerL1: " << stats->attribute("cost CustomerL1") << endl;
 	    cout << "received CustomerL1: " << stats->attribute("received CustomerL1") << endl;

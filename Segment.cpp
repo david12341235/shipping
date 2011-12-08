@@ -16,7 +16,7 @@ void Segment::sourceIs( Fwk::Ptr<Location> _source )
 Segment::Segment( const string& _name, Mode _mode, Fwk::Ptr<Engine> _engine ) :
     NamedInterface(_name), mode_(_mode), engine_(_engine),
     length_(100), difficulty_(1), expedite_(expNo_), shipmentsReceived_(0), shipmentsRefused_(0),
-    shipmentsFragmented_(0), capacity_(10)
+    shipmentsFragmented_(0), capacity_(1)
 {
     engine_->segmentIs(this);
 }
@@ -30,16 +30,6 @@ void Segment::shipmentIs( Shipment::Ptr _newShipment )
 	} else {
 		readyForShipmentIs(true);
 	}
-
-
-	// must schedule a forwarding activity. Should be scheduled for a time
-	// based on segment length, speed, and number of carriers it has, per
-	// the assignment example. Shipment may consist of many packages
-	// in which case several forwarding activities may have to be scheduled
-	// for one shipment. Also, maybe good to throw an exception if this new
-	// shipment causes overflow of the capacity, since this isn't supposed to
-	// happen if the source location is following the protocol of queuing a
-	// new shipment onto Segment only when Segment has the capacity to do so.
 }
 
 void TruckSegment::sourceIs( Fwk::Ptr<Location> _source )
