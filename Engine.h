@@ -198,16 +198,17 @@ public:
     }
 
 private:
-    Engine();
-    Stats::Ptr stats_;
-    Fleet::Ptr fleet_;
-    Conn* conn_;
-    NotifieeList notifiee_;
-    SegmentMap segment_;
-    LocationMap location_;
+    Engine() : expreactor_(NULL), slreactor_(NULL), sshipreactor_(NULL), 
+		conn_(NULL), fleet_(NULL), stats_(NULL) {}
     Stats::SegmentExpediteReactor* expreactor_;
     Stats::LocationSegmentReactor* slreactor_;
     SendingShipmentsReactor* sshipreactor_;
+    Conn* conn_;
+    Fleet::Ptr fleet_;
+    Stats::Ptr stats_;
+    NotifieeList notifiee_;
+    SegmentMap segment_;
+    LocationMap location_;
     void newNotifiee( Engine::NotifieeConst * n ) const {
         Engine* me = const_cast<Engine*>(this);
         me->notifiee_.newMember(n);

@@ -34,7 +34,7 @@ public:
     // Manager method
     void instanceDel(const string& name);
 
-    //void printTables();
+    void printTables();
 
     Engine::Ptr engine();
 
@@ -595,7 +595,6 @@ void ManagerImpl::instanceDel(const string& name)
     } catch (...) {}
 }
 
-/*
 void ManagerImpl::printTables()
 {
 	for( Engine::LocationIterator iter = engine_->locationIter(); iter.ptr(); ++iter )
@@ -615,7 +614,6 @@ void ManagerImpl::printTables()
 		cout  << endl;
 	}
 }
-*/
 
 string LocationRep::attribute(const string& name)
 {

@@ -1,6 +1,7 @@
 
 #include <iostream>
 #include <vector>
+#include <cstdio>
 #include "Instance.h"
 #include "ShippingException.h"
 #include "ActivityImpl.h"
@@ -91,7 +92,7 @@ void funnel( )
 		seg[19]->attributeIs("source", "ttA1");
 		seg[19]->attributeIs("return segment", "tsA19");
 
-		loc.push_back( manager->instanceNew("customerB1", "Customer") );
+		source.push_back( manager->instanceNew("customerB1", "Customer") );
 		source.push_back( manager->instanceNew("customerB2", "Customer") );
 		source.push_back( manager->instanceNew("customerB3", "Customer") );
 		source.push_back( manager->instanceNew("customerB4", "Customer") );
@@ -164,7 +165,7 @@ void funnel( )
 		seg[39]->attributeIs("source", "ttB1");
 		seg[39]->attributeIs("return segment", "tsB19");
 
-		loc.push_back( manager->instanceNew("customerC1", "Customer") );
+		source.push_back( manager->instanceNew("customerC1", "Customer") );
 		source.push_back( manager->instanceNew("customerC2", "Customer") );
 		source.push_back( manager->instanceNew("customerC3", "Customer") );
 		source.push_back( manager->instanceNew("customerC4", "Customer") );
@@ -847,6 +848,8 @@ void funnel( )
 	    cout << "forwarded tsL1: " << stats->attribute("forwarded tsL1") << endl;
 	    cout << "refused tsL1: "  << stats->attribute("refused tsL1") << endl;
 	    cout << "fragmented tsL1: "  << stats->attribute("fragmented tsL1") << endl; 
+
+	    //manager->printTables();
 
   }
   catch(Exception e)

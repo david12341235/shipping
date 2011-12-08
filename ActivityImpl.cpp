@@ -90,7 +90,7 @@ namespace ActivityImpl {
 
 	}
 
-	//syncrhonize the time
+	//synchronize the time
 	now_ = t;
 	}
 

@@ -146,10 +146,6 @@ Fwk::String valueToStrep(string s)
     return s;
 }
 
-Engine::Engine() : expreactor_(NULL), slreactor_(NULL), sshipreactor_(NULL), 
-		conn_(NULL), fleet_(NULL), stats_(NULL) {
-}
-
 Stats::~Stats()
 {
 }
