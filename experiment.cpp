@@ -1088,7 +1088,7 @@ void diamond( )
 }
 
 int main(int argc, char *argv[]) {
-    diamond();
+    funnel();
     getchar();
     return 0;
 }

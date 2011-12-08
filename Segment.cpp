@@ -23,6 +23,8 @@ Segment::Segment( const string& _name, Mode _mode, Fwk::Ptr<Engine> _engine ) :
 
 void Segment::shipmentIs( Shipment::Ptr _newShipment )
 {
+	if (this->name() == "tsL1")
+		cout << "";
 	shipmentQ_.push_back(_newShipment);
 	++shipmentsReceived_;
 	if (capacity_ == 0) {
@@ -179,7 +181,7 @@ void Segment::readyForShipmentIs(bool b) {
 	}
 
 	vehicles = packageCount.value() / vehicleCapacity.value() +
-		packageCount.value() % vehicleCapacity.value();
+		((packageCount.value() % vehicleCapacity.value() > 0) ? 1 : 0);
     capacity_ = capacity_.value() - vehicles.value();
 
 	fwd->lastNotifieeIs(new ForwardShipmentReactor(manager,
