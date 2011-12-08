@@ -256,9 +256,9 @@ public:
     
     static Shipment::Ptr ShipmentNew(const std::string& name, 
 			const std::string& sourceName, 
-			const std::string& destinationName, 
+			const std::string& destinationName, NumPackages origSize,
 			NumPackages load, Time timeShipped) {
-        Ptr m = new Shipment(name, sourceName, destinationName, load, timeShipped);
+        Ptr m = new Shipment(name, sourceName, destinationName, origSize, load, timeShipped);
         m->referencesDec(1);
         return m;
     }
@@ -281,8 +281,8 @@ public:
 
 protected:
     Shipment(const std::string& name, const std::string& sourceName, 
-		const std::string& destinationName, NumPackages origSize, Time timeShipped ) :
-            Fwk::NamedInterface(name), origSize_(origSize), load_(origSize), source_(sourceName), 
+		const std::string& destinationName, NumPackages origSize, NumPackages load, Time timeShipped ) :
+            Fwk::NamedInterface(name), origSize_(origSize), load_(load), source_(sourceName), 
             destination_(destinationName), cost_(0), timeShipped_( timeShipped ) {}
     Shipment(const Shipment&);
 

@@ -1005,80 +1005,98 @@ void diamond( )
 		loc.push_back( manager->instanceNew("e", "Port") );
 		loc.push_back( manager->instanceNew("s", "Port") );
 		
-		seg.push_back( manager->instanceNew("tsA1", "Truck segment") );
-		seg.push_back( manager->instanceNew("tsA2", "Truck segment") );
-		seg.push_back( manager->instanceNew("tsA3", "Truck segment") );
-		seg.push_back( manager->instanceNew("tsA4", "Truck segment") );
-		seg.push_back( manager->instanceNew("tsA5", "Truck segment") );
-		seg.push_back( manager->instanceNew("tsA6", "Truck segment") );
-		seg.push_back( manager->instanceNew("tsA7", "Truck segment") );
-		seg.push_back( manager->instanceNew("tsA8", "Truck segment") );
-		seg.push_back( manager->instanceNew("tsA9", "Truck segment") );
-		seg.push_back( manager->instanceNew("tsA10", "Truck segment") );
-		seg.push_back( manager->instanceNew("tsA11", "Truck segment") );
-		seg.push_back( manager->instanceNew("tsA12", "Truck segment") );
-		seg.push_back( manager->instanceNew("tsA13", "Truck segment") );
-		seg.push_back( manager->instanceNew("tsA14", "Truck segment") );
-		seg.push_back( manager->instanceNew("tsA15", "Truck segment") );
-		seg.push_back( manager->instanceNew("tsA16", "Truck segment") );
-		seg.push_back( manager->instanceNew("tsA17", "Truck segment") );
-		seg.push_back( manager->instanceNew("tsA18", "Truck segment") );
+		seg.push_back( manager->instanceNew("CNnr", "Truck segment") );
+		seg[0]->attributeIs("capacity", "3");
+		seg.push_back( manager->instanceNew("CNn", "Truck segment") );
+		seg[1]->attributeIs("capacity", "3");
+		seg.push_back( manager->instanceNew("nwr", "Truck segment") );
+		seg[2]->attributeIs("capacity", "3");
+		seg.push_back( manager->instanceNew("nw", "Truck segment") );
+		seg[3]->attributeIs("capacity", "3");
+		seg.push_back( manager->instanceNew("ner", "Truck segment") );
+		seg[4]->attributeIs("capacity", "3");
+		seg.push_back( manager->instanceNew("ne", "Truck segment") );
+		seg[5]->attributeIs("capacity", "3");
+		seg.push_back( manager->instanceNew("CWwr", "Truck segment") );
+		seg[6]->attributeIs("capacity", "3");
+		seg.push_back( manager->instanceNew("CWw", "Truck segment") );
+		seg[7]->attributeIs("capacity", "3");
+		seg.push_back( manager->instanceNew("wer", "Truck segment") );
+		seg[8]->attributeIs("capacity", "3");
+		seg.push_back( manager->instanceNew("we", "Truck segment") );
+		seg[9]->attributeIs("capacity", "3");
+		seg.push_back( manager->instanceNew("eCEr", "Truck segment") );
+		seg[10]->attributeIs("capacity", "3");
+		seg.push_back( manager->instanceNew("eCE", "Truck segment") );
+		seg[11]->attributeIs("capacity", "3");
+		seg.push_back( manager->instanceNew("wsr", "Truck segment") );
+		seg[12]->attributeIs("capacity", "3");
+		seg.push_back( manager->instanceNew("ws", "Truck segment") );
+		seg[13]->attributeIs("capacity", "3");
+		seg.push_back( manager->instanceNew("esr", "Truck segment") );
+		seg[14]->attributeIs("capacity", "3");
+		seg.push_back( manager->instanceNew("es", "Truck segment") );
+		seg[15]->attributeIs("capacity", "3");
+		seg.push_back( manager->instanceNew("sCSr", "Truck segment") );
+		seg[16]->attributeIs("capacity", "3");
+		seg.push_back( manager->instanceNew("sCS", "Truck segment") );
+		seg[17]->attributeIs("capacity", "3");
 		
 		seg[0]->attributeIs("source", "CN");
 		seg[1]->attributeIs("source", "n");
-		seg[1]->attributeIs("return segment", "tsA1");
+		seg[1]->attributeIs("return segment", "CNnr");
 
 		seg[2]->attributeIs("source", "n");
 		seg[3]->attributeIs("source", "w");
-		seg[3]->attributeIs("return segment", "tsA3");
+		seg[3]->attributeIs("return segment", "nwr");
 
 		seg[4]->attributeIs("source", "n");
 		seg[5]->attributeIs("source", "e");
-		seg[5]->attributeIs("return segment", "tsA5");
+		seg[5]->attributeIs("return segment", "ner");
 
 		seg[6]->attributeIs("source", "CW");
 		seg[7]->attributeIs("source", "w");
-		seg[7]->attributeIs("return segment", "tsA7");
+		seg[7]->attributeIs("return segment", "CWwr");
 
 		seg[8]->attributeIs("source", "w");
 		seg[9]->attributeIs("source", "e");
-		seg[9]->attributeIs("return segment", "tsA9");
+		seg[9]->attributeIs("return segment", "wer");
 
 		seg[10]->attributeIs("source", "e");
 		seg[11]->attributeIs("source", "CE");
-		seg[11]->attributeIs("return segment", "tsA11");
+		seg[11]->attributeIs("return segment", "eCEr");
 
 		seg[12]->attributeIs("source", "w");
 		seg[13]->attributeIs("source", "s");
-		seg[13]->attributeIs("return segment", "tsA13");
+		seg[13]->attributeIs("return segment", "wsr");
 
 		seg[14]->attributeIs("source", "e");
 		seg[15]->attributeIs("source", "s");
-		seg[15]->attributeIs("return segment", "tsA15");
+		seg[15]->attributeIs("return segment", "esr");
 
 		seg[16]->attributeIs("source", "s");
 		seg[17]->attributeIs("source", "CS");
-		seg[17]->attributeIs("return segment", "tsA17");
+		seg[17]->attributeIs("return segment", "sCSr");
 
 	    Ptr<Instance> stats = manager->instanceNew("myStats", "Stats");
 
 	    Ptr<Instance> fleet = manager->instanceNew("Fleet", "Fleet");
-	    fleet->attributeIs("Truck speed", "600");
+	    fleet->attributeIs("Truck speed", "60");
 	    fleet->attributeIs("Truck capacity", "50");
 
 		Ptr<Instance> conn = manager->instanceNew("myConn", "Conn");
 		conn->attributeIs("routing algorithm", "Dijkstra"); 
 
-        cust[0]->attributeIs("Transfer Rate", "2");
-        cust[0]->attributeIs("Shipment Size", "10");
+        cust[0]->attributeIs("Transfer Rate", "10");
+        cust[0]->attributeIs("Shipment Size", "100");
         cust[0]->attributeIs("Destination", "CS");
 
-        cust[1]->attributeIs("Transfer Rate", "2");
-        cust[1]->attributeIs("Shipment Size", "10");
+        cust[1]->attributeIs("Transfer Rate", "10");
+        cust[1]->attributeIs("Shipment Size", "100");
         cust[1]->attributeIs("Destination", "CS");
 
-        cust[2]->attributeIs("Transfer Rate", "2");
-        cust[2]->attributeIs("Shipment Size", "10");
+        cust[2]->attributeIs("Transfer Rate", "10");
+        cust[2]->attributeIs("Shipment Size", "100");
         cust[2]->attributeIs("Destination", "CS");
 
 	    Activity::Manager::Ptr activityManager = activityManagerInstance();
@@ -1100,7 +1118,11 @@ void diamond( )
 }
 
 int main(int argc, char *argv[]) {
-    funnel();
+	try {
+	    diamond();
+	} catch (Shipping::Exception ex) {
+		cerr << ex.what() << endl;
+	}
     getchar();
     return 0;
 }

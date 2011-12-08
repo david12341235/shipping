@@ -23,8 +23,6 @@ Segment::Segment( const string& _name, Mode _mode, Fwk::Ptr<Engine> _engine ) :
 
 void Segment::shipmentIs( Shipment::Ptr _newShipment )
 {
-	if (this->name() == "tsL1")
-		cout << "";
 	shipmentQ_.push_back(_newShipment);
 	++shipmentsReceived_;
 	if (capacity_ == 0) {
@@ -168,7 +166,7 @@ void Segment::readyForShipmentIs(bool b) {
 			++shipmentsFragmented_;
 			s->loadIs(load.value() - totalCapacity.value());
 			load = totalCapacity;
-			shipmentQ_.push_front( Shipment::ShipmentNew( s->name(), s->source(), s->destination(), load, s->timeShipped() ));
+			shipmentQ_.push_front( Shipment::ShipmentNew( s->name(), s->source(), s->destination(), s->origSize(), load, s->timeShipped() ));
 		}
 		// now we're guaranteed to have at least one shipment at the
 		// front of the queue that we can send off
