@@ -722,6 +722,8 @@ string SegmentRep::attribute(const string& name)
         return difficulty( segment_->difficulty() );
     } else if( name == "expedite support" ) {
         return expVal( segment_->expedite() );
+    } else if( name == "capacity" ) {
+    	   return NumVehicles( segment_->capacity() );
     } else {
         throw UnknownAttrException("Unknown segment attribute: " + name);
     }
@@ -743,6 +745,8 @@ void SegmentRep::attributeIs(const string& name, const string& v)
         segment_->difficultyIs( d );
     } else if( name == "expedite support" ) {
         segment_->expediteIs( Segment::ExpValInstance( v ) );
+    } else if( name == "capacity" ) {
+    	   segment_->capacityIs( atoi(v.c_str() ) );
     } else {
         throw UnknownAttrException("Unknown segment attribute: " + name);
     }

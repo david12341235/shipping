@@ -16,7 +16,7 @@ void Segment::sourceIs( Fwk::Ptr<Location> _source )
 Segment::Segment( const string& _name, Mode _mode, Fwk::Ptr<Engine> _engine ) :
     NamedInterface(_name), mode_(_mode), engine_(_engine),
     length_(100), difficulty_(1), expedite_(expNo_), shipmentsReceived_(0), shipmentsRefused_(0),
-    shipmentsFragmented_(0), capacity_(1)
+    shipmentsFragmented_(0), capacity_(10)
 {
     engine_->segmentIs(this);
 }
