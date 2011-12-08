@@ -57,7 +57,23 @@ class ScheduledAttributeReactor : public Activity::Notifiee {
 	Fwk::Ptr<Instance> instance_;
 	string attributeName_;
 	string attributeValue_;
-};      
+};
+
+
+class SimStartedReactor : public Activity::Notifiee {
+ public:
+ SimStartedReactor(Fwk::Ptr<Activity::Manager> manager, Activity*
+			 activity, Conn::Ptr conn) 
+     : Notifiee(activity), activity_(activity), 
+	 manager_(manager), conn_(conn) {}
+
+    void onStatus();
+
+ protected:
+    Activity::Ptr activity_;
+    Fwk::Ptr<Activity::Manager> manager_;
+	Conn::Ptr conn_;
+};
 
 } // namespace
 #endif

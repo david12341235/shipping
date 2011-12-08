@@ -130,7 +130,6 @@ int main(int argc, char *argv[]) {
     loc[0]->attributeIs("Destination", "customer2");
 
     Activity::RealTimeManager::Ptr activityManager = realTimeManagerInstance();
-	conn->attributeIs("simulation started", ""); 
     activityManager->realTimePassedIs(6.0);
 //    RealTimeManager::Ptr realTimeManager = realTimeManagerInstance();
 //  realTimeManager->realTimePassedIs(6.0);

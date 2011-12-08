@@ -1,7 +1,19 @@
 #include "Engine.h"
 #include "Conn.h"
+#include "Activity.h"
 
 using namespace Shipping;
+
+Conn::Conn( const string& _name, Fwk::Ptr<Engine> _engine ) :
+        NamedInterface(_name), engine_(_engine),
+        distance_(0), cost_(0), time_(0), simulationStarted_(false), startLocation_(NULL),
+        endLocation_(NULL), algorithm_(dijkstra_) {
+
+	Activity::Manager::Ptr am = activityManagerInstance();
+	Activity::Ptr simStarted = am->activityNew("sim started");
+	simStarted->lastNotifieeIs(new SimStartedReactor(am, simStarted.ptr(), this));
+	simStarted->statusIs(Activity::nextTimeScheduled);
+}
 
 void Conn::startLocationIs(const Fwk::String& name )
 {

@@ -75,8 +75,6 @@ void ScheduledAttributeReactor::onStatus() {
 	
     case Activity::executing:
 	//I am executing now
-		cout << "setting attribute: " << attributeName_ << " = " 
-			<< attributeValue_ << " time: " << manager_->now().value() << endl;
 	instance_->attributeIs(attributeName_, attributeValue_);
 	break;
 	
@@ -95,4 +93,29 @@ void ScheduledAttributeReactor::onStatus() {
     default:
 	break;
     }
+}
+
+void SimStartedReactor::onStatus() {
+    ActivityImpl::ManagerImpl::Ptr managerImpl = Fwk::ptr_cast<ActivityImpl::ManagerImpl>(manager_);
+    switch (activity_->status()) {
+	
+    case Activity::executing:
+	//I am executing now
+		conn_->simulationStartedIs(true);
+	break;
+	
+    case Activity::free:
+	//when done, automatically delete myself
+		manager_->activityDel(activity_->name());
+	break;
+	
+    case Activity::nextTimeScheduled:
+	//add myself to be scheduled
+	manager_->lastActivityIs(activity_);
+	break;
+
+    default:
+	break;
+    }
+
 }

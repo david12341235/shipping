@@ -32,3 +32,4 @@ Notes for assignment3:
 	fleet->attributeIs("AtTime", "20 Plane cost 1");
 
 Where 8 and 20 refer to 8am and 8pm respectively. More generally, scheduled fleet attributes changes can be set with fleet->attributeIs("AtTime", "t [attribute] [value]");
+-Location attributes that trigger shipment injection should only be set after the Conn object is initialized, otherwise there won't be routing information for the shipment. an exception will be thrown if this happens.

@@ -207,10 +207,7 @@ public:
 protected:
     Conn( const Conn& );
     Conn( const string& _name);
-    Conn( const string& _name, Fwk::Ptr<Engine> _engine ) :
-        NamedInterface(_name), engine_(_engine),
-        distance_(0), cost_(0), time_(0), simulationStarted_(false), startLocation_(NULL),
-        endLocation_(NULL), algorithm_(dijkstra_) {};
+    Conn( const string& _name, Fwk::Ptr<Engine> _engine );
     NotifieeList notifiee_;
     Fwk::Ptr<Engine> engine_;
     Mile distance_;

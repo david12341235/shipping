@@ -3,6 +3,7 @@
 
 #include "Engine.h"
 #include "Stats.h"
+#include "ShippingException.h"
 
 namespace Shipping {
 
@@ -122,6 +123,10 @@ class SendingShipmentsReactor : public Customer::NotifieeConst
 {
 public:
     virtual void onSendingShipmentsIs(Customer::Ptr c) {
+		// make sure conn is instantiated so we don't enqueue
+		// the activity before the SimulationStarted activity
+		if (engine_->conn() == NULL)
+			throw InitializationException("Conn must be initialized before shipments can be injected!!!");
 		Activity::Manager::Ptr manager = activityManagerInstance();
 
 		if (c->sendingShipments()) {
