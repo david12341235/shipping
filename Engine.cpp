@@ -156,6 +156,15 @@ Stats::Stats( const string& _name, Fwk::Ptr<Engine> _engine) :
     planeTerminal_(0), boatSegment_(0), truckSegment_(0),
     planeSegment_(0), expedite_(0)
 {
-    engine_->statsIs(this);
+	if (engine_)
+		engine_->statsIs(this);
 }
 
+Fleet::Fleet( const string& _name, Fwk::Ptr<Engine> _engine ) :
+        NamedInterface(_name), engine_(_engine) {
+		if (engine_)
+			engine_->fleetIs(this);
+        fleet_[Segment::boat()] = fleetInfo();
+        fleet_[Segment::truck()] = fleetInfo();
+        fleet_[Segment::plane()] = fleetInfo();
+}

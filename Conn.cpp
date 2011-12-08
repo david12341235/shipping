@@ -8,7 +8,8 @@ Conn::Conn( const string& _name, Fwk::Ptr<Engine> _engine ) :
         NamedInterface(_name), engine_(_engine),
         distance_(0), cost_(0), time_(0), simulationStarted_(false), startLocation_(NULL),
         endLocation_(NULL), algorithm_(dijkstra_) {
-
+	if (engine_)
+		engine_->connIs(this);
 	Activity::Manager::Ptr am = activityManagerInstance();
 	Activity::Ptr simStarted = am->activityNew("sim started");
 	simStarted->lastNotifieeIs(new SimStartedReactor(am, simStarted.ptr(), this));
