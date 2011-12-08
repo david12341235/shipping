@@ -1,4 +1,5 @@
 #include "Engine.h"
+#include "ShippingException.h"
 
 using namespace Shipping;
 
@@ -191,6 +192,10 @@ void Customer::shipmentIs(Shipment::Ptr _newShipment) {
 	{
 		// initial injection
 		Segment::Ptr _segment = nextSegment_[ _newShipment->destination()];
+		if( _segment.ptr() == NULL )
+		{
+			throw Shipping::NoSuchPathException( "No valid path exists between " + name() + " and " + _newShipment->destination() );
+		}
 		_segment->shipmentIs( _newShipment );
 	}
 }

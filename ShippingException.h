@@ -28,6 +28,7 @@ public:
       unknownTypeException_ = 6,
       initializationException_ = 7,
       entityNotFoundException_ = 8,
+	 noSuchPathException_ = 9,
    };
 
    static Id IdInstance( U32 v );
@@ -91,6 +92,12 @@ public:
 class InitializationException : public Exception {
 public:
    InitializationException( std::string what )  : Exception(what) {}
+   virtual Id id();
+};
+
+class NoSuchPathException : public Exception {
+public:
+   NoSuchPathException( std::string what )  : Exception(what) {}
    virtual Id id();
 };
 
