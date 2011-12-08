@@ -155,9 +155,11 @@ Customer::NotifieeConst::notifierIs(const Customer::PtrConst& _notifier)
 
 void Customer::shipmentIs(Shipment::Ptr _newShipment) {
 	//cout << this->name() << " received shipment: " << _newShipment->name() << endl;
+	if (this->name() == "CS")
+		cout << "";
 	if( _newShipment->destination() == name() )
 	{
-		map<string, NumPackages>::iterator found = shipmentsPending_.find( _newShipment->destination() );
+		map<string, NumPackages>::iterator found = shipmentsPending_.find( _newShipment->name() );
 		if( found == shipmentsPending_.end() )
 		{
             if (_newShipment->load() == _newShipment->origSize()) {
@@ -167,7 +169,7 @@ void Customer::shipmentIs(Shipment::Ptr _newShipment) {
                     (activityManagerInstance()->now().value() - _newShipment->timeShipped().value());
 		        totalCost_ = totalCost_.value() + _newShipment->cost().value();
             } else {
-    			shipmentsPending_.insert( pair<string, NumPackages>( _newShipment->destination(), _newShipment->load() ) );
+    			shipmentsPending_.insert( pair<string, NumPackages>( _newShipment->name(), _newShipment->load() ) );
             }
 		}
 		else if( found->second.value() + _newShipment->load().value() == _newShipment->origSize().value() )

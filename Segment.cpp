@@ -166,7 +166,7 @@ void Segment::readyForShipmentIs(bool b) {
 			++shipmentsFragmented_;
 			s->loadIs(load.value() - totalCapacity.value());
 			load = totalCapacity;
-			shipmentQ_.push_front( Shipment::ShipmentNew( s->name(), s->source(), s->destination(), load, s->timeShipped() ));
+			shipmentQ_.push_front( Shipment::ShipmentNew( s->name(), s->source(), s->destination(), s->origSize(), load, s->timeShipped() ));
 		}
 		// now we're guaranteed to have at least one shipment at the
 		// front of the queue that we can send off
