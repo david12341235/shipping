@@ -23,8 +23,6 @@ Segment::Segment( const string& _name, Mode _mode, Fwk::Ptr<Engine> _engine ) :
 
 void Segment::shipmentIs( Shipment::Ptr _newShipment )
 {
-	if (this->name() == "tsL1")
-		cout << "";
 	shipmentQ_.push_back(_newShipment);
 	++shipmentsReceived_;
 	if (capacity_ == 0) {
