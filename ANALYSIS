@@ -1,12 +1,3 @@
-Construct a shipping network with at least four locations, and confirm that shipments move between them as expected. Run tests with different segment capacity values to compare your network under light and heavy congestion. Add a diagram of this network to your README file, and discuss the tests performed. The code for this client should be named verification.cpp.
-
-In addition, set up a shipping network with 100 sources and 1 destination. The destination should be connected to a terminal, which is in turn connected to 10 terminals, each of which is connected to 10 sources. All connections are via truck segments. Have each source send shipments holding 100 packages to the destination at the normal truck speed. Run the simulation for a while.
-
-Now, reset the simulation and do the same thing, but vary the shipment sizes (use a randomly chosen shipment size for each source) from 1 package to 1,000 packages. Record the results for each case.
-
-Discuss in your README file the level of shipment delivery refusal observed in each case. The client implementing this test should be submitted as experiment.cpp. We would like you to include whatever statistics you think are relevant to your specific implementation, but at a bare minimum please provide us with the destination's shipments received and average latency, as well as some sort of measure of segment performance (an average for each of shipments received and refused, for example).
-
-
 
 
 The network with 100 sources and 1 destination is named "funnel" in our experiment.cpp. If we set the attributes so that truck capacity or segment capacity do not limit the simulation, we get the expected results of having no shipments refused/fragmented and the latency being the amount of time to get from source to destination without delay. This is what was done in the following simulation: time was set to 3 hours, the truck speeds 100 mph, the segment lengths 100 miles, the segment capacity 100 trucks and truck capacity 100 packages. Each customer shipped 100-package shipments at a rate of once per day (starting from time 0) and cost per package per mile was 1.0. The segment tsA1 is a segment connected to a customer source (by symmetry, all other sources will be the same) and the segment tsK1 connects to a truck terminal, one level of indirection away from the sources. CustomerL1 is the destination customer and the segment tsL1 is the segment which connects the destination customer to the central truck terminal.
@@ -37,13 +28,13 @@ forwarded tsK1: 100
 refused tsK1: 0
 fragmented tsK1: 0
 
-cost CustomerL1: 30000000.00
-received CustomerL1: 1000
-latency CustomerL1: 3.00
-
 forwarded tsL1: 1000
 refused tsL1: 0
 fragmented tsL1: 0
+
+cost CustomerL1: 30000000.00
+received CustomerL1: 1000
+latency CustomerL1: 3.00
 
 To make it clear that the 0-refusal rate is consequent of the segment's capacity and not the total carrying capacity of the network, we can make the truck sizes very large and the segment capacities very small. Here is the case for when truck capacity is 10,000, segment capacity is 1, and shipments are of size 1:
 
@@ -55,14 +46,68 @@ forwarded tsK1: 10
 refused tsK1: 9
 fragmented tsK1: 0
 
-cost CustomerL1: 10200000.00
-received CustomerL1: 100
-latency CustomerL1: 4.89
-
 forwarded tsL1: 100
 refused tsL1: 99
 fragmented tsL1: 0
 
+cost CustomerL1: 10200000.00
+received CustomerL1: 100
+latency CustomerL1: 4.89
+
 In this case, the latency is actually almost 5 hours instead of 4 or 3. Since shipments are scheduled as soon as they arrive, the single truck of a segment will be scheduled as soon as the segment receives a single shipment from one of its 10 sources. The other 9 sources then, end up queued for the next hour. However, this is true for segments along the length of the entire route - and since all the segments in our example are scheduled synchronously, the latencies end up accumulating to an extra 1+1 = 2 hours on top of the original 3.
 
-Now we are prepared to tackle the more random shipment sizes
+Now we are prepared to tackle the more random shipment size. For random shipments between 1 and 1000, truck capacity of 100 and segment capacity of 10 trucks, we ran the simulation for 10 days. Instead of showing all 111 segments, below we can see the the 11 segments closest to the destination (segments connecting to the central terminal denoted by tsK* and the segment connecting the central terminal to the destination, tsL1).
+
+forwarded tsK1: 100
+refused tsK1: 81
+fragmented tsK1: 16
+
+forwarded tsK3: 100
+refused tsK3: 79
+fragmented tsK3: 21
+
+forwarded tsK5: 100
+refused tsK5: 73
+fragmented tsK5: 38
+
+forwarded tsK7: 100
+refused tsK7: 81
+fragmented tsK7: 29
+
+forwarded tsK9: 100
+refused tsK9: 77
+fragmented tsK9: 28
+
+forwarded tsK11: 100
+refused tsK11: 67
+fragmented tsK11: 23
+
+forwarded tsK13: 100
+refused tsK13: 81
+fragmented tsK13: 23
+
+forwarded tsK15: 100
+refused tsK15: 75
+fragmented tsK15: 40
+
+forwarded tsK17: 100
+refused tsK17: 79
+fragmented tsK17: 40
+
+forwarded tsK19: 100
+refused tsK19: 77
+fragmented tsK19: 27
+
+forwarded tsL1: 1224
+refused tsL1: 1208
+fragmented tsL1: 974
+
+cost CustomerL1: 110000.00
+received CustomerL1: 5
+latency CustomerL1: 4.00
+
+Unsurprisingly, the number of forwarded shipments is kept at full capacity for the first 10 segments (there are ten iterations, and 10 trucks for each segment allowing for 100 truck trips during the entire simulation). This is because on average the ten truck terminals are receiving 500 shipments from each of their 10 customers; the 5000 shipments will keep all the trucks constantly shipping. Furthermore the maximum number of shipments that can be refused by each of these segments is 100 since at each iteration, only 10 shipments can be refused. By the end of every day, the queue is emptied because for 24 hours, the 10 trucks carry up to 1000 packages per hour meaning as many as 24000 packages. Thus the refusals all occur at the beginning of the next iteration when trucks take packages immediately to their destinations on arrival of a shipment. However, often many trucks must be employed for a single shipment since shipments will be on average 5 times larger than the truck's capacity. This means about 5 trucks per shipment, and so after the first two shipments all trucks will be gone on average. This is why we see about 8 refusals per iteration or ~80 refusals in total. Related to this, fragmentation happens on average 4 times per shipment (on average, a shipment of 500 fragmented 4 times will give 5 partial shipments at the truck's capacity). Since there are 100 shipments to each of the first 10 terminals, we see a fragmentation rate of ~40.
+
+For the central terminal, there are too many shipments arriving to empty the queue every day. 100 shipments each of about 500 packages will arrive, when it can only empty packets per day at a maximum rate of 24000. Thus most shipments are actually refused, and the "forward" statistic reflects the forwarding of partial shipments. There will also be fragmentation for nearly every trip that every truck makes to the destination because the partial shipments themselves are fragmented, and will in general not line up to a load of exactly 100.
+
+Finally, the average latency for the destination most likely reflects some of the smaller first shipments that got through. Clearly we see that only 5 out of the 1000 shipments sent successfully completely reached the destination. The latency can only be measured for those shipments that arrived and therefore is not an accurate reflection of the true latency for this network.

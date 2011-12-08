@@ -5,6 +5,8 @@
 #include "Instance.h"
 #include "ShippingException.h"
 #include "ActivityImpl.h"
+#include <cstdlib>
+#include <time.h>
 
 using namespace std;
 using Shipping::Exception;
@@ -23,6 +25,7 @@ void printSegmentStats(Ptr<Instance> stats, Ptr<Instance> seg) {
 
 void funnel( )
 {
+	srand( time(NULL) );
 	try {
 		
 	    Ptr<Instance::Manager> manager = shippingInstanceManager();
@@ -838,7 +841,7 @@ void funnel( )
 
 	    Ptr<Instance> fleet = manager->instanceNew("Fleet", "Fleet");
 	    fleet->attributeIs("Truck speed", "100");
-	    fleet->attributeIs("Truck capacity", "10000");
+	    fleet->attributeIs("Truck capacity", "100");
 
 		Ptr<Instance> conn = manager->instanceNew("myConn", "Conn");
 		conn->attributeIs("routing algorithm", "Dijkstra"); 
@@ -846,32 +849,39 @@ void funnel( )
         vector< Ptr<Instance> >::iterator i;
         for (i = source.begin(); i != source.end(); ++i) {
             (*i)->attributeIs("Transfer Rate", "1");
-            (*i)->attributeIs("Shipment Size", "1");
+		  int randnum = rand() % 1000 + 1;
+		  stringstream ss;
+		  ss << randnum;
+		  cout << (*i)->name() << ": " << ss.str() << endl;
+            (*i)->attributeIs("Shipment Size", ss.str() );
             (*i)->attributeIs("Destination", "CustomerL1");
         }
 
         for (i = seg.begin(); i != seg.end(); ++i) {
-	   	 (*i)->attributeIs("capacity", "1" );
+	   	 (*i)->attributeIs("capacity", "10" );
 	   }
 
 	    Activity::Manager::Ptr activityManager = activityManagerInstance();
-	    activityManager->nowIs(5.0);
+	    activityManager->nowIs(219.0);
 
-	    cout << "forwarded tsA1: " << stats->attribute("forwarded tsA1") << endl;
-	    cout << "refused tsA1: "  << stats->attribute("refused tsA1") << endl;
-	    cout << "fragmented tsA1: "  << stats->attribute("fragmented tsA1") << endl; 
+	   for( int j = 1; j <= 19; j+=2 )
+	   {
+	   	stringstream ss;
+		ss << j;
+	    cout << "forwarded tsK" << j << ": " << stats->attribute("forwarded tsK" + ss.str()) << endl;
+	    cout << "refused tsK" << j << ": "  << stats->attribute("refused tsK" + ss.str()) << endl;
+	    cout << "fragmented tsK" << j << ": "  << stats->attribute("fragmented tsK" + ss.str()) << endl << endl; 
 
-	    cout << "forwarded tsK1: " << stats->attribute("forwarded tsK1") << endl;
-	    cout << "refused tsK1: "  << stats->attribute("refused tsK1") << endl;
-	    cout << "fragmented tsK1: "  << stats->attribute("fragmented tsK1") << endl; 
+	   }
+
+	    cout << "forwarded tsL1: " << stats->attribute("forwarded tsL1") << endl;
+	    cout << "refused tsL1: "  << stats->attribute("refused tsL1") << endl;
+	    cout << "fragmented tsL1: "  << stats->attribute("fragmented tsL1") << endl << endl; 
 
 	    cout << "cost CustomerL1: " << stats->attribute("cost CustomerL1") << endl;
 	    cout << "received CustomerL1: " << stats->attribute("received CustomerL1") << endl;
 	    cout << "latency CustomerL1: " << stats->attribute("latency CustomerL1") << endl;
 
-	    cout << "forwarded tsL1: " << stats->attribute("forwarded tsL1") << endl;
-	    cout << "refused tsL1: "  << stats->attribute("refused tsL1") << endl;
-	    cout << "fragmented tsL1: "  << stats->attribute("fragmented tsL1") << endl; 
 
   }
   catch(Exception e)
